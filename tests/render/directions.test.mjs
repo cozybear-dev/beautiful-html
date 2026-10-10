@@ -18,11 +18,21 @@ for (const direction of ['analytical', 'narrative', 'presentation']) for (const 
   });
 }
 
-test('a dark report prints with the light colours', { skip }, async () => {
+test('a dark report prints with the light colours, margins included', { skip }, async () => {
   await withPage(specimen('presentation', 'dark'), { name: 'print', width: 794, height: 1123, media: 'print' }, async p => {
-    const bg = await p.evaluate(`getComputedStyle(document.body).backgroundColor`);
+    const [bg, scheme] = await p.evaluate(`[getComputedStyle(document.body).backgroundColor, getComputedStyle(document.documentElement).colorScheme]`);
     assert.equal(bg, 'rgb(255, 255, 255)');
+    assert.equal(scheme, 'light', 'a dark colour scheme on paper paints the page margins dark');
   });
+});
+// Browsers break a grid across pages badly, so paper is laid out as blocks.
+test('on paper the page grid is set aside: header and sections are plain blocks', { skip }, async () => {
+  for (const direction of ['analytical', 'narrative']) {
+    await withPage(specimen(direction, 'light'), { name: 'print', width: 794, height: 1123, media: 'print' }, async p => {
+      const shown = await p.evaluate(`['main.bh-report', '.bh-report > .bh-header', '.bh-report > .bh-section', '.bh-report > .bh-footer'].map(s => { const e = document.querySelector(s); return e ? getComputedStyle(e).display : 'block'; })`);
+      assert.deepEqual(shown, ['block', 'block', 'block', 'block'], direction);
+    });
+  }
 });
 test('presentation shows where you are and moves with the arrow keys', { skip }, async () => {
   await withPage(specimen('presentation', 'dark'), { ...DESKTOP, reducedMotion: true }, async p => {

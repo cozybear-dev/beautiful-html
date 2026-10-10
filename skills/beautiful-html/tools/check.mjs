@@ -248,9 +248,9 @@ export async function launch(browserPath) {
         const r = await send('Page.captureScreenshot', { format, quality, captureBeyondViewport: true, clip: { x: 0, y, width, height, scale: 1 } });
         return Buffer.from(r.data, 'base64');
       },
-      async pdf({ paper = 'a4', preferCss = true } = {}) {
+      async pdf({ paper = 'a4', preferCss = true, landscape = false } = {}) {
         const [w, h] = paper === 'letter' ? [8.5, 11] : [8.27, 11.69];
-        const r = await send('Page.printToPDF', { printBackground: true, preferCSSPageSize: preferCss, paperWidth: w, paperHeight: h });
+        const r = await send('Page.printToPDF', { printBackground: true, preferCSSPageSize: preferCss, paperWidth: w, paperHeight: h, landscape });
         return Buffer.from(r.data, 'base64');
       },
       async close() { try { await core.send('Target.closeTarget', { targetId }); } catch { /* gone */ } core.sessions.delete(sessionId); },
@@ -347,7 +347,9 @@ export async function checkReport(file, { out, pdf = false, paper = null, render
     try {
       const url = pathToFileURL(file).href;
       const all = [];
-      for (const mode of MODES) {
+      // A presentation prints on landscape pages, so its paper view is laid out for one.
+      const landscape = /<html[^>]*data-bh-direction="presentation"/.test(html);
+      for (const mode of MODES.map(m => (m.media === 'print' && landscape ? { ...m, width: 1123, height: 794, slice: 794 } : m))) {
         const page = await browser.newPage();
         try {
           await page.open(url, mode);
@@ -366,7 +368,7 @@ export async function checkReport(file, { out, pdf = false, paper = null, render
           }
           if (mode.media === 'print' && pdf) {
             report.pdf = join(dirname(file), `${basename(file, extname(file))}.pdf`);
-            writeFileSync(report.pdf, await page.pdf({ paper: paper || 'a4', preferCss: paper === null }));
+            writeFileSync(report.pdf, await page.pdf({ paper: paper || 'a4', preferCss: paper === null, landscape }));
           }
         } finally {
           await page.close();

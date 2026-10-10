@@ -56,7 +56,7 @@ Fix everything in one pass, assemble, check once more, deliver. If something sti
 | How it is shared | What to send | Note |
 |---|---|---|
 | Email | `report.html`, about 0.7 to 1 MB | Some mail systems block `.html` attachments. If so, send `report.pdf` or a link to the file on a shared drive |
-| Print or PDF | `report.pdf` from `--pdf` | A4 by default; `--paper letter` for US Letter. Print uses the light scheme; motion and controls are removed |
+| Print or PDF | `report.pdf` from `--pdf` | A4 by default; `--paper letter` for US Letter. Paper uses the light scheme, without motion or controls, and sets the page as plain blocks: side notes follow their text, and no figure is cut by a page. A `presentation` prints as a deck, one landscape page for each screen |
 | On a screen | `report.html` in a browser, full screen | `presentation` direction; arrow keys move between sections and step through diagram walkthroughs |
 | Shared drive or intranet | `report.html` | It needs no server and no other files |
 

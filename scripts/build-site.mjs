@@ -49,7 +49,7 @@ function describe(example) {
 }
 
 // Screens for the gallery, and a PDF, from the assembled report.
-async function picture(browser, file, dir, name, shot) {
+async function picture(browser, file, dir, name, shot, landscape) {
   const url = pathToFileURL(file).href;
   const settle = `(async () => { await (window.BH && BH.done); await new Promise(r => setTimeout(r, 300)); if (window.BH && BH.settle) BH.settle(); })()`;
   let page = await browser.newPage();
@@ -68,9 +68,9 @@ async function picture(browser, file, dir, name, shot) {
   } finally { await page.close(); }
   page = await browser.newPage();
   try {
-    await page.open(url, { name: 'print', width: 794, height: 1123, media: 'print' });
+    await page.open(url, { name: 'print', media: 'print', ...(landscape ? { width: 1123, height: 794 } : { width: 794, height: 1123 }) });
     await page.evaluate(settle);
-    writeFileSync(join(dir, `${name}.pdf`), await page.pdf({ paper: 'a4', preferCss: true }));
+    writeFileSync(join(dir, `${name}.pdf`), await page.pdf({ paper: 'a4', preferCss: true, landscape }));
   } finally { await page.close(); }
 }
 
@@ -93,7 +93,7 @@ export async function buildSite({ out = join(root, 'dist', 'site'), render = tru
       writeFileSync(join(dir, 'content.txt'), e.text);
       let shot = 'preview.png', phone = false, pdf = false;
       if (browser) {
-        await picture(browser, file, dir, g.name, g.shot);
+        await picture(browser, file, dir, g.name, g.shot, e.direction === 'presentation');
         shot = 'shot.jpg'; phone = true; pdf = true;
       } else copyFileSync(join(e.dir, 'preview.png'), join(dir, 'preview.png'));
       log(`${g.name.padEnd(20)} ${e.direction} ${e.scheme}${browser ? '' : '  (no browser: preview only)'}`);

@@ -94,7 +94,7 @@ export function figure(kind, target, options, draw, { table, inline, after } = {
     // `scale` is set while printing: the page is still laid out for the screen, so the
     // figure is drawn at the width it will have on paper.
     const measured = Math.floor(el.getBoundingClientRect().width) || 640;
-    const width = Math.max(240, Math.round(measured * (entry.scale || 1)));
+    const width = entry.paper || Math.max(240, Math.round(measured * (entry.scale || 1)));
     entry.width = entry.scale ? measured : width;
     try {
       const out = draw(el, entry.options, width, entry);
@@ -130,8 +130,9 @@ export const rerenderAll = () => live.forEach(e => e.render());
 // The entry of the figure drawn in `el`, for page furniture that drives a figure.
 export const entryFor = el => [...live].find(e => e.el === el) || null;
 // Paper shows the final state: finish all motion, then redraw every figure at
-// the width it will have on the page. A4 with the kit's margins holds 178 mm.
-const PAPER_WIDTH = 178 / 25.4 * 96;
+// the width it will have on the page. A4 with the kit's margins holds 178 mm;
+// a presentation prints on landscape pages, which hold 261 mm.
+const PAPER_WIDTH = (__BH_DIRECTION__ === 'presentation' ? 261 : 178) / 25.4 * 96;
 function paperScale() {
   const main = document.querySelector('main.bh-report');
   if (!main || matchMedia('print').matches) return 1;         // already laid out for print
@@ -142,8 +143,14 @@ function paperScale() {
   probe.remove();
   return wide > 0 ? Math.min(1.5, Math.max(0.4, PAPER_WIDTH / wide)) : 1;
 }
-addEventListener('beforeprint', () => { settle(); const scale = paperScale(); live.forEach(e => { e.scale = scale; e.render(); }); });
-addEventListener('afterprint', () => live.forEach(e => { e.scale = 0; e.render(); }));
+// A figure that sits beside its text on screen (a split section) has the whole width of the page on paper;
+// in a presentation it stays beside its text, in the wider of two columns.
+addEventListener('beforeprint', () => {
+  settle();
+  const scale = paperScale();
+  live.forEach(e => { e.scale = scale; e.paper = scale !== 1 && e.el.closest('.bh-split > .bh-figure') ? Math.round(PAPER_WIDTH * (__BH_DIRECTION__ === 'presentation' ? 0.58 : 1)) : 0; e.render(); });
+});
+addEventListener('afterprint', () => live.forEach(e => { e.scale = 0; e.paper = 0; e.render(); }));
 
 // --------------------------------------------------------------- data table
 

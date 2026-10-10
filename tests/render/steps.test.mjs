@@ -21,7 +21,7 @@ const readAt = n => `(async () => {
 
 for (const [direction, scheme] of [['narrative', 'light'], ['analytical', 'dark'], ['presentation', 'dark']]) {
   test(`${direction} ${scheme}: reading steps have no findings on desktop, phone, in print or with reduced motion`, { skip }, async () => {
-    for (const mode of [DESKTOP, PHONE, PRINT, { ...still, name: 'reduced-motion' }]) {
+    for (const mode of [DESKTOP, PHONE, direction === 'presentation' ? { ...PRINT, width: 1123, height: 794 } : PRINT, { ...still, name: 'reduced-motion' }]) {
       const { findings } = await audit(page(direction, scheme), mode);
       assert.deepEqual(findings.map(f => `${f.level} ${f.code}: ${f.message}`), [], mode.name);
     }

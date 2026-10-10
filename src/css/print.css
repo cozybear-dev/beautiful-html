@@ -2,18 +2,38 @@
 @page { size: A4; margin: 18mm 16mm 20mm; }
 @media print {
   html { font-size: 9.5pt; }
-  html { color-scheme: light; }
-  .bh-report { padding-block: 0; grid-template-columns: [full-start wide-start text-start] minmax(0, var(--bh-measure)) [text-end] 2rem [side-start] minmax(0, 1fr) [side-end wide-end full-end]; }
-  .bh-report .bh-aside, .bh-header > .bh-meta { grid-column: side; padding: 0; border: 0; }
-  .bh-meta { grid-template-columns: none; }
+  /* Paper is light whatever the report's scheme; otherwise the page margins print dark. */
+  html, html[data-scheme] { color-scheme: light; }
+
+  /* Paper is laid out as plain blocks. Browsers break a grid across pages
+     badly: a figure pushed to the next page is drawn over what follows it.
+     So the page grid is set aside: text keeps the reading measure, what is
+     wide on screen takes the width of the page, and side notes follow the
+     text they belong to. */
+  .bh-report, .bh-report > .bh-header, .bh-report > .bh-section, .bh-report > .bh-footer { display: block; }
+  .bh-report { padding-block: 0; }
+  .bh-header > *, .bh-section > *, .bh-footer > * { max-width: var(--bh-measure); }
+  .bh-header > .bh-masthead, .bh-header > .bh-figure, .bh-header > .bh-findings, .bh-header > .bh-keyfigures,
+  .bh-section > h2, .bh-section > .bh-figure, .bh-section > .bh-keyfigures, .bh-section > .bh-table-wrap, .bh-section > .bh-compare, .bh-section > .bh-findings, .bh-section > .bh-code,
+  .bh-report .bh-wide, .bh-report .bh-full, .bh-footer > * { max-width: none; }
+  .bh-report .bh-in-text { max-width: var(--bh-measure); }
+  .bh-report .bh-aside { padding-top: var(--bh-space-3); border-top: 1px solid var(--bh-rule); }
+  .bh-meta { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); padding-top: var(--bh-space-4); border-top: 1px solid var(--bh-rule); }
   .bh-section { padding-top: var(--bh-space-7); }
+  .bh-report > .bh-section.bh-band { padding-inline: var(--bh-space-5); }
+  .bh-step { border-left: 0; padding-left: 0; }
+
   .bh-nav, .bh-controls, .bh-data, .bh-button, [data-bh-pause] { display: none !important; }
-  h1, h2, h3, h4 { break-after: avoid; }
-  .bh-figure, .bh-keyfigures, .bh-callout, .bh-table-wrap, .bh-compare > *, .bh-timeline > li, .bh-multiple, tr { break-inside: avoid; }
+
+  /* Where a page may end. A heading stays with what it heads; a figure, a
+     table row and a small group of blocks are never cut in two. */
+  h1, h2, h3, h4, .bh-figure-title, .bh-figure-sub, .bh-callout-label { break-after: avoid; }
+  .bh-figure, .bh-keyfigures, .bh-callout, .bh-table-wrap, .bh-compare, .bh-findings, .bh-pair, .bh-timeline > li, .bh-multiple, .bh-step, .bh-statement, tr { break-inside: avoid; }
   .bh-table-wrap, .bh-data .bh-table-wrap { overflow: visible; max-height: none; }
   .bh-code { overflow: visible; white-space: pre-wrap; overflow-wrap: anywhere; break-inside: avoid; }
-  .bh-findings > li, .bh-statement { break-inside: avoid; }
-  .bh-report > .bh-section.bh-band { padding-inline: var(--bh-space-5); }
+  /* A diagram taller than a page is drawn smaller, so it is never cut by one. */
+  .bh-flow-stage { overflow: visible; }
+  .bh-flow-svg { max-height: 205mm; max-width: 100%; width: auto; height: auto; }
   p, li { orphans: 3; widows: 3; }
   a { color: inherit; text-decoration: none; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

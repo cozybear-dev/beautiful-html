@@ -31,7 +31,7 @@ On `<html>` in the content file:
 ```
 
 - `data-bh-direction` records the direction; the kit file you assemble with is what applies it.
-- `data-scheme` is `light` or `dark`. It never follows the reader's system setting, so they see what you checked. Print always uses light.
+- `data-scheme` is `light` or `dark`. It never follows the reader's system setting, so they see what you checked. Print always uses light, on upright pages; a `presentation` prints on landscape pages, one for each screen.
 - `lang` sets number and date formats: `en-GB` writes "5 Mar", `en` writes "Mar 5".
 - `data-bh-motion="off"` makes the report static.
 

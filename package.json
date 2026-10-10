@@ -19,7 +19,8 @@
     "site": "node scripts/build-site.mjs"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.25.0",
+    "pdfjs-dist": "^4.10.38"
   },
   "repository": {
     "type": "git",

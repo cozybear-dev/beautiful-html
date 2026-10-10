@@ -88,8 +88,10 @@ export function drawFlow(target, o, width, entry) {
     sized = sizeNodes(narrow ? 118 : 150);
     layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: narrow ? { node: 14, band: 20, rank: 54, labelPad: 18 } : { rank: 58, labelPad: 20 } });
     // If it is taller than most of the screen, close up the gaps so it can be seen whole.
-    // maxHeight is set when the diagram is pinned beside the text it illustrates.
-    if (!narrow && layout.height > (o.maxHeight || innerHeight * 0.72)) layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: { rank: 40, labelPad: 12, pad: 11, zoneLabel: 19, zoneGap: 6, band: 22 } });
+    // maxHeight is set when the diagram is pinned beside the text it illustrates. On
+    // paper the gaps are always closed up: a page holds less than a window seems to.
+    const paper = !!(entry && entry.scale) || matchMedia('print').matches;
+    if (paper || (!narrow && layout.height > (o.maxHeight || innerHeight * 0.72))) layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: { rank: 40, labelPad: 12, pad: 11, zoneLabel: 19, zoneGap: 6, band: 22 } });
   }
   const routes = routeEdges(layout);
   const routeById = new Map(routes.map(r => [r.id, r]));
