@@ -7,9 +7,10 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { checkReport } from '../skills/beautiful-html/tools/check.mjs';
-import { DIRECTIONS } from './build-kit.mjs';
 
 const skill = join(dirname(fileURLToPath(import.meta.url)), '..', 'skills', 'beautiful-html');
+// The directions are the kits that exist. Read from the folder, so this script needs nothing installed.
+const DIRECTIONS = readdirSync(join(skill, 'kit')).filter(f => f.endsWith('.kit.html')).map(f => f.replace('.kit.html', ''));
 
 // An example is a folder with a content.html. It is named for the kind of
 // report it is; the direction it is assembled with is the one its <html> names.

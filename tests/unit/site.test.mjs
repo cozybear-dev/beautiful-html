@@ -54,3 +54,17 @@ test('the Pages workflow builds the site with the script and publishes only when
   assert.match(yml, /path: dist\/site/);
   assert.match(yml, /if: vars\.PUBLISH_PAGES == 'true'/);
 });
+// The workflow installs nothing, so the site build may import only Node's own modules and files in this repository.
+test('the site build runs with nothing installed', () => {
+  const seen = new Set(), bare = [];
+  const walk = file => {
+    if (seen.has(file)) return;
+    seen.add(file);
+    for (const [, spec] of readFileSync(file, 'utf8').matchAll(/^\s*import\s[^'"]*['"]([^'"]+)['"]/gm)) {
+      if (spec.startsWith('node:')) continue;
+      if (spec.startsWith('.')) walk(join(dirname(file), spec)); else bare.push(`${spec} (in ${file.slice(root.length)})`);
+    }
+  };
+  walk(join(root, 'scripts', 'build-site.mjs'));
+  assert.deepEqual(bare, []);
+});
