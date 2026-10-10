@@ -266,9 +266,10 @@ node-link diagram from a plain description.
 - **Layout is automatic.** Ranks follow edge direction, so the flow reads one
   way. Order within a rank is chosen to minimise crossings, the factor shown
   to matter most for reading a graph. Members of a zone stay together. A node
-  may carry a `rank` or `order` hint when position has meaning. Rank and order
-  come from the dagre library (under 100 KB); coordinates, edge routing and
-  drawing are our own, so the look is ours.
+  may carry a `rank` or `order` hint when position has meaning. The layout is
+  our own. The dagre library was considered and dropped: it cannot keep a
+  zone's members together when they connect outside the zone, and at twenty
+  nodes we can afford to try many more orderings than it does.
 - **Edges are routed** as smooth curves that leave and enter nodes at separate
   points, never pass through a node, and carry labels on a ground-coloured
   halo.
