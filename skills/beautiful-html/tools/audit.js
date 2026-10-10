@@ -258,8 +258,12 @@
       const cs = getComputedStyle(el);
       const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.4;
       const lines = Math.round(el.getBoundingClientRect().height / lh);
-      const chars = (el.textContent || '').replace(/\s+/g, ' ').trim().length;
-      if (lines >= 2 && chars / (lines - 0.5) > 80) longLines.push({ el, per: Math.round(chars / (lines - 0.5)) });
+      const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (lines < 2 || !text) continue;
+      // Characters that fit on one line: the column width over this text's average character width.
+      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const per = Math.round(el.clientWidth / (ctx.measureText(text).width / text.length));
+      if (per > 80) longLines.push({ el, per });
     }
     if (longLines.length) {
       const worst = longLines.sort((a, b) => b.per - a.per)[0];
@@ -432,6 +436,8 @@
       }
     }
 
+    // Checking contrast scrolled things into view; put every scroller back at its start.
+    for (const el of document.querySelectorAll('*')) if (el.scrollLeft || el.scrollTop) { el.scrollLeft = 0; el.scrollTop = 0; }
     scrollTo(0, 0);
     return { findings, metrics };
   };

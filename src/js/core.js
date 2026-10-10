@@ -94,7 +94,7 @@ export function figure(kind, target, options, draw, { table, inline } = {}) {
   entry.render();
   if (!inline) { live.add(entry); resizeWatch.observe(el); }
   return {
-    el,
+    el, entry,
     update(next) { entry.options = { ...entry.options, ...next }; entry.render(); },
     destroy() { live.delete(entry); resizeWatch.unobserve(el); el.replaceChildren(); },
   };

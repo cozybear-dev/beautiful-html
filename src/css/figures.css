@@ -51,3 +51,53 @@
 .bh-controls-count { color: var(--bh-ink-2); font-variant-numeric: tabular-nums; min-width: 3.2em; }
 .bh-caption-live { flex: 1 1 16rem; color: var(--bh-ink); line-height: 1.4; }
 .bh-caption-live strong { font-weight: var(--bh-weight-strong); }
+
+/* ------------------------------------------------------------ flow diagrams
+   Quiet ground, one signal: zones are a tint, nodes are outlined shapes, edges
+   are thin ink, and only the path in question takes the accent. */
+.bh-flow-stage { outline-offset: 4px; }
+/* A diagram wider than its column scrolls sideways; the fading edge says there is more. */
+.bh-flow-stage.is-scroll { overflow-x: auto; padding-bottom: var(--bh-space-2); -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent); }
+.bh-flow-svg { display: block; max-width: none; overflow: visible; font-family: var(--bh-font-data); }
+.bh-zone rect { fill: var(--bh-surface); }
+.bh-zone-label { font-size: var(--bh-size-micro); font-weight: var(--bh-weight-strong); fill: var(--bh-ink-2); stroke: var(--bh-surface); stroke-width: 5px; paint-order: stroke; stroke-linejoin: round; }
+.bh-node { outline: none; cursor: default; }
+.bh-node-shape { fill: var(--bh-ground); stroke: var(--bh-rule-strong); stroke-width: 1.25; }
+.bh-node-external { stroke-dasharray: 4 3; }
+.bh-node-detail { fill: none; stroke: var(--bh-rule-strong); stroke-width: 1; }
+.bh-node-label { font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); fill: var(--bh-ink); }
+.bh-node-sub { font-size: var(--bh-size-micro); fill: var(--bh-ink-2); }
+.bh-node:focus-visible .bh-node-shape { stroke: var(--bh-accent); stroke-width: 2.5; }
+.bh-edge { stroke: var(--bh-ink-3); stroke-width: 1.25; stroke-linecap: round; }
+.bh-arrow { fill: var(--bh-ink-3); }
+.bh-edge-group.is-async .bh-edge { stroke-dasharray: 5 4; }
+.bh-edge-group.is-blocked .bh-edge, .bh-edge-group.is-risk .bh-edge { stroke: var(--bh-bad); stroke-width: 1.75; }
+.bh-edge-group.is-blocked .bh-arrow, .bh-edge-group.is-risk .bh-arrow { fill: var(--bh-bad); }
+.bh-edge-label-group.is-flagged .bh-edge-label { fill: var(--bh-bad); font-weight: var(--bh-weight-strong); }
+.bh-edge-block { fill: none; stroke: var(--bh-bad); stroke-width: 2; stroke-linecap: round; }
+.bh-edge-label-group rect { fill: var(--bh-ground); }
+.bh-edge-label { font-size: var(--bh-size-micro); fill: var(--bh-ink-2); }
+.bh-node.is-key .bh-node-shape, .bh-node.is-step .bh-node-shape { fill: var(--bh-accent-soft); stroke: var(--bh-accent); stroke-width: 2; }
+.bh-node.is-key .bh-node-detail, .bh-node.is-step .bh-node-detail { stroke: var(--bh-accent); }
+.bh-edge-group.is-key .bh-edge, .bh-edge-group.is-step .bh-edge { stroke: var(--bh-accent); stroke-width: 2.25; }
+.bh-edge-group.is-key .bh-arrow, .bh-edge-group.is-step .bh-arrow { fill: var(--bh-accent); }
+.bh-edge-label-group.is-key .bh-edge-label, .bh-edge-label-group.is-step .bh-edge-label { fill: var(--bh-ink); font-weight: var(--bh-weight-strong); }
+.bh-node, .bh-edge-group, .bh-edge-label-group, .bh-sankey-link { transition: opacity var(--bh-fast) var(--bh-ease); }
+.bh-flow .is-dim, .bh-sankey .is-dim { opacity: 0.2; }
+.bh-flow-dot { fill: var(--bh-ink-3); }
+.bh-flow-dot.is-key { fill: var(--bh-accent); }
+.bh-flow-key { margin-bottom: var(--bh-space-3); }
+.bh-legend-item i.bh-flow-swatch { width: 1.5em; height: 0; background: none; border-top: 1.5px solid var(--bh-ink-3); border-radius: 0; }
+.bh-legend-item i.bh-flow-swatch.is-key { border-top: 2.5px solid var(--bh-accent); }
+.bh-legend-item i.bh-flow-swatch.is-async { border-top-style: dashed; }
+.bh-legend-item i.bh-flow-swatch.is-blocked { border-top-color: var(--bh-bad); }
+
+/* Sankey: ribbons in soft neutral, the flow in question in the accent. */
+.bh-sankey-svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--bh-font-data); }
+.bh-sankey-link { fill: var(--bh-neutral-soft); fill-opacity: 0.55; }
+.bh-sankey-link.is-key { fill: var(--bh-accent); fill-opacity: 0.45; }
+.bh-sankey-node { fill: var(--bh-ink); }
+.bh-sankey-node.is-key { fill: var(--bh-accent); }
+.bh-sankey-label { font-size: var(--bh-size-micro); fill: var(--bh-ink); }
+.bh-sankey-name { font-weight: var(--bh-weight-strong); }
+.bh-sankey-value { fill: var(--bh-ink); }

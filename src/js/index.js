@@ -6,6 +6,8 @@ import { drawBar } from './charts/bar.js';
 import { drawDot } from './charts/dot.js';
 import { drawScatter } from './charts/scatter.js';
 import { drawPlot, drawSpark, drawWaffle } from './charts/small.js';
+import { drawFlow, flowTable } from './flow/render.js';
+import { drawSankey, sankeyTable } from './flow/sankey.js';
 import { buildNav } from './page.js';
 
 BH.line = (target, o = {}) => figure('line', target, o, drawLine, { table: opts => tableSpec(opts, ['x', 'series', 'y']) });
@@ -15,6 +17,13 @@ BH.scatter = (target, o = {}) => figure('scatter', target, o, drawScatter, { tab
 BH.spark = (target, o = {}) => figure('spark', target, o, drawSpark, { inline: 'bh-spark' });
 BH.waffle = (target, o = {}) => figure('waffle', target, o, drawWaffle, { inline: 'bh-waffle-wrap' });
 BH.plot = (target, spec = {}) => figure('plot', target, spec, drawPlot);
+BH.flow = (target, o = {}) => {
+  const f = figure('flow', target, o, drawFlow, { table: flowTable });
+  if (!f) return null;
+  const call = name => (...args) => (f.entry.api ? f.entry.api[name](...args) : undefined);
+  return { ...f, step: call('step'), play: call('play'), pause: call('pause') };
+};
+BH.sankey = (target, o = {}) => figure('sankey', target, o, drawSankey, { table: sankeyTable });
 
 window.BH = BH;
 buildNav();
