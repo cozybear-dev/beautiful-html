@@ -1,0 +1,5 @@
+/* Motion states. The starting state of an entrance is added by script, never
+   by these rules alone, so a page without scripts shows everything. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}

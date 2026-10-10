@@ -115,8 +115,12 @@
   }
   const textElements = scope => [...scope.querySelectorAll('*')].filter(el =>
     !['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'TITLE', 'DESC'].includes(el.tagName.toUpperCase()) && ownText(el) && visible(el));
+  // Running prose: a paragraph or list item long enough to be read as text,
+  // outside figures, tables, navigation and side matter. Short captions,
+  // labels and card text are not body text.
   const isBodyText = el => ['P', 'LI', 'DD', 'BLOCKQUOTE'].includes(el.tagName) &&
-    !el.closest('figure, figcaption, table, nav, footer, aside, header, details, [class*="note"], [class*="meta"], [class*="caption"], [class*="source"], [class*="label"], [class*="key"]');
+    (el.textContent || '').replace(/\s+/g, ' ').trim().length >= 140 &&
+    !el.closest('figure, figcaption, table, nav, footer, aside, details, [class*="note"], [class*="meta"], [class*="caption"], [class*="source"]');
 
   // ------------------------------------------------------------------ prepare
   window.__bhPrepare = async () => {
@@ -220,7 +224,9 @@
           if (c < need - 0.05) lowContrast.push({ el, c, need, fg: hex(over(fg, bg)), bg: hex(bg) });
         }
       }
-      if (svg ? size < 10.95 : size < 10.95 || (isBodyText(el) && size < 15.95)) small.push({ el, size, body: !svg && isBodyText(el) });
+      // Print sizes are physical (points), so the on-screen minimums do not apply there.
+      const minLabel = viewport === 'print' ? 7.9 : 10.95, minBody = viewport === 'print' ? 11.9 : 15.95;
+      if (size < minLabel || (!svg && isBodyText(el) && size < minBody)) small.push({ el, size, body: !svg && isBodyText(el) && size >= minLabel });
       if (!svg) {
         const hidesX = cs.overflowX !== 'visible';
         if (hidesX && el.scrollWidth > el.clientWidth + 1 && !el.hasAttribute('title') && !['auto', 'scroll'].includes(cs.overflowX)) clipped.push(el);
@@ -238,7 +244,7 @@
     }
     if (lowContrast.length > 12) findings.push(F('error', 'low-contrast', `${lowContrast.length - 12} more low-contrast text elements.`, 'Fix the tokens involved; the same colours usually cause all of them.'));
     for (const { el, size, body } of small.slice(0, 8)) {
-      findings.push(F('warning', 'small-text', `"${snippet(el)}" renders at ${size.toFixed(1)}px; ${body ? 'body text needs 16px' : 'labels need 11px'} or more.`,
+      findings.push(F('warning', 'small-text', `"${snippet(el)}" renders at ${size.toFixed(1)}px; ${body ? 'body text needs 16px' : 'text needs 11px'} or more.`,
         body ? 'Set body text with the kit\'s text size token; never shrink it to fit.' : 'Use the label size token, shorten the label, or give the figure more room.', el));
     }
     for (const el of clipped.slice(0, 8)) {

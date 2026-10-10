@@ -1,0 +1,17 @@
+/* Print and PDF: light scheme, real page breaks, no controls. */
+@page { size: A4; margin: 18mm 16mm 20mm; }
+@media print {
+  html { font-size: 9.5pt; }
+  body { background: #fff; }
+  .bh-report { padding-block: 0; grid-template-columns: [full-start wide-start text-start] minmax(0, var(--bh-measure)) [text-end] 2rem [side-start] minmax(0, 1fr) [side-end wide-end full-end]; }
+  .bh-report .bh-aside, .bh-header > .bh-meta { grid-column: side; padding: 0; border: 0; }
+  .bh-meta { grid-template-columns: none; }
+  .bh-section { padding-top: var(--bh-space-7); }
+  .bh-nav, .bh-controls, .bh-data, .bh-button, [data-bh-pause] { display: none !important; }
+  h1, h2, h3, h4 { break-after: avoid; }
+  .bh-figure, .bh-keyfigures, .bh-callout, .bh-table-wrap, .bh-compare > *, .bh-timeline > li, .bh-multiple, tr { break-inside: avoid; }
+  .bh-table-wrap, .bh-data .bh-table-wrap { overflow: visible; max-height: none; }
+  p, li { orphans: 3; widows: 3; }
+  a { color: inherit; text-decoration: none; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

@@ -1,0 +1,112 @@
+/* Reset, typography and the page grid. */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color-scheme: light;
+  scroll-padding-top: var(--bh-space-7);
+}
+html[data-scheme="dark"] { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background: var(--bh-ground);
+  color: var(--bh-ink);
+  font-family: var(--bh-font-text);
+  font-size: var(--bh-size-body);
+  font-weight: var(--bh-weight-text);
+  line-height: var(--bh-leading-body);
+  font-kerning: normal;
+  font-synthesis: none;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection { background: var(--bh-accent-soft); color: var(--bh-ink); }
+:focus-visible { outline: 2px solid var(--bh-accent); outline-offset: 2px; border-radius: var(--bh-radius-1); }
+
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote, table { margin: 0; }
+h1, h2, h3, h4 {
+  font-family: var(--bh-font-display);
+  font-weight: var(--bh-weight-display);
+  line-height: var(--bh-leading-tight);
+  text-wrap: balance;
+}
+h1 { font-size: var(--bh-size-h1); letter-spacing: var(--bh-tracking-display); }
+h2 { font-size: var(--bh-size-h2); letter-spacing: var(--bh-tracking-h2); line-height: 1.15; }
+h3 { font-size: var(--bh-size-h3); line-height: var(--bh-leading-snug); }
+h4 { font-size: var(--bh-size-body); line-height: var(--bh-leading-snug); }
+p, li, dd { text-wrap: pretty; }
+strong, b { font-weight: var(--bh-weight-strong); }
+small { font-size: var(--bh-size-small); }
+
+a { color: var(--bh-accent-ink); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+
+ul, ol { padding-left: 1.2em; }
+li + li { margin-top: var(--bh-space-2); }
+li::marker { color: var(--bh-ink-3); }
+
+code, kbd, samp { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 0.9em; }
+img, svg { max-width: 100%; }
+button { font: inherit; color: inherit; }
+hr { border: 0; border-top: 1px solid var(--bh-rule); margin: var(--bh-space-6) 0; }
+
+/* Numbers that line up: tables, key figures, anything in a figure. */
+.bh-num, .bh-table td, .bh-table th, .bh-keyfigure-value, .bh-plot, .bh-delta { font-variant-numeric: tabular-nums lining-nums; }
+
+/* ---------------------------------------------------------------- the grid
+   Named lines: full (edge to edge), wide (text plus side), text, side.
+   Everything sits in the text column unless a class says otherwise, so every
+   left edge lands on one axis. */
+.bh-report {
+  display: grid;
+  grid-template-columns:
+    [full-start] var(--bh-gutter)
+    [wide-start text-start] minmax(0, 1fr)
+    [text-end side-start side-end wide-end] var(--bh-gutter)
+    [full-end];
+  padding-block: var(--bh-space-6) var(--bh-space-9);
+}
+@media (min-width: 62rem) {
+  .bh-report {
+    grid-template-columns:
+      [full-start] minmax(var(--bh-gutter), 1fr)
+      [wide-start text-start] minmax(0, var(--bh-measure))
+      [text-end] var(--bh-column-gap)
+      [side-start] minmax(0, var(--bh-side))
+      [side-end wide-end] minmax(var(--bh-gutter), 1fr)
+      [full-end];
+  }
+}
+.bh-report > * { grid-column: text; min-width: 0; }
+.bh-report > .bh-header, .bh-report > .bh-section, .bh-report > .bh-footer {
+  grid-column: full;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+.bh-header > *, .bh-section > *, .bh-footer > * { grid-column: text; min-width: 0; }
+.bh-report .bh-wide, .bh-section > .bh-figure, .bh-section > .bh-keyfigures, .bh-section > .bh-table-wrap, .bh-section > .bh-compare { grid-column: wide; }
+.bh-report .bh-full { grid-column: full; }
+.bh-report .bh-in-text { grid-column: text; }
+.bh-report .bh-aside { grid-column: text; }
+@media (min-width: 62rem) {
+  .bh-report .bh-aside { grid-column: side; }
+}
+/* Browsers without subgrid get a plain centred column. */
+@supports not (grid-template-columns: subgrid) {
+  .bh-report > .bh-header, .bh-report > .bh-section, .bh-report > .bh-footer {
+    display: block;
+    grid-column: wide;
+  }
+}
+
+/* Vertical rhythm inside a section: related things sit closer. */
+.bh-section > * + * { margin-top: var(--bh-space-4); }
+.bh-section > h3 { margin-top: var(--bh-space-6); }
+.bh-section > h3 + * { margin-top: var(--bh-space-2); }
+.bh-section > .bh-aside { margin-top: var(--bh-space-4); }

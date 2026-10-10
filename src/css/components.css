@@ -1,0 +1,200 @@
+/* Page components. Structure carries information: a rule marks a new part, a
+   label names a thing. Nothing here is decoration. */
+
+/* ------------------------------------------------------------------ header */
+.bh-header { padding-bottom: var(--bh-space-6); }
+.bh-header > .bh-masthead { grid-column: wide; }
+.bh-masthead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--bh-space-2) var(--bh-space-5);
+  padding-bottom: var(--bh-space-3);
+  border-bottom: 1px solid var(--bh-ink);
+  font-size: var(--bh-size-small);
+  line-height: var(--bh-leading-snug);
+}
+.bh-org { font-weight: var(--bh-weight-strong); display: inline-flex; align-items: center; gap: var(--bh-space-2); }
+.bh-org svg, .bh-org img { height: 1.25rem; width: auto; display: block; }
+.bh-doc { color: var(--bh-ink-2); }
+.bh-header > h1 { grid-column: wide; margin-top: var(--bh-space-7); max-width: 22em; }
+.bh-standfirst {
+  margin-top: var(--bh-space-5);
+  font-size: var(--bh-size-lead);
+  line-height: 1.4;
+  color: var(--bh-ink-2);
+}
+.bh-standfirst strong { color: var(--bh-ink); }
+.bh-header > .bh-meta { margin-top: var(--bh-space-5); }
+.bh-meta { font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); display: grid; gap: var(--bh-space-3); align-content: start; }
+.bh-meta dt { color: var(--bh-ink-3); }
+.bh-meta dd { color: var(--bh-ink); }
+@media (min-width: 62rem) {
+  .bh-header > .bh-meta { grid-column: side; }
+}
+@media (max-width: 61.99rem) {
+  .bh-meta { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); padding-top: var(--bh-space-4); border-top: 1px solid var(--bh-rule); }
+}
+
+/* ----------------------------------------------------------------- section */
+.bh-section { padding-top: var(--bh-space-8); }
+.bh-section > h2 {
+  grid-column: wide;
+  padding-top: var(--bh-space-4);
+  border-top: 1px solid var(--bh-ink);
+}
+.bh-section > h2 + * { margin-top: var(--bh-space-5); }
+.bh-lead { font-size: var(--bh-size-lead); line-height: 1.4; }
+
+/* -------------------------------------------------------------- key figures
+   A ruled strip, not a row of cards. The number is the content. */
+.bh-keyfigures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+  gap: 0 var(--bh-space-6);
+  margin-top: var(--bh-space-6);
+  border-bottom: 1px solid var(--bh-rule);
+}
+.bh-header > .bh-keyfigures { grid-column: wide; }
+.bh-keyfigure { padding: var(--bh-space-3) 0 var(--bh-space-4); border-top: 1px solid var(--bh-rule); min-width: 0; }
+.bh-keyfigure-label { font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
+.bh-keyfigure-value {
+  margin-top: var(--bh-space-1);
+  font-family: var(--bh-font-display);
+  font-size: var(--bh-size-figure);
+  font-weight: var(--bh-weight-figure);
+  line-height: 1.1;
+  letter-spacing: var(--bh-tracking-display);
+  display: flex;
+  align-items: baseline;
+  gap: var(--bh-space-3);
+}
+.bh-keyfigure-value small { font-size: var(--bh-size-h3); letter-spacing: 0; color: var(--bh-ink-2); }
+.bh-keyfigure-value .bh-spark { margin-left: auto; align-self: center; }
+.bh-keyfigure-note { margin-top: var(--bh-space-1); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
+
+/* A change: direction is the arrow, good or bad is the tone. Never colour alone. */
+.bh-delta { font-weight: var(--bh-weight-strong); white-space: nowrap; color: var(--bh-ink); }
+.bh-delta[data-dir]::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 0.3em;
+  border-inline: 0.3em solid transparent;
+  vertical-align: 0.08em;
+}
+.bh-delta[data-dir="up"]::before { border-bottom: 0.5em solid currentColor; }
+.bh-delta[data-dir="down"]::before { border-top: 0.5em solid currentColor; }
+.bh-delta[data-tone="good"] { color: var(--bh-good); }
+.bh-delta[data-tone="bad"] { color: var(--bh-bad); }
+
+/* ----------------------------------------------------------------- callout
+   For the one thing the reader must take away or decide. */
+.bh-callout {
+  margin-top: var(--bh-space-6);
+  padding: var(--bh-space-4) var(--bh-space-5) var(--bh-space-5);
+  background: var(--bh-surface);
+  border-top: 2px solid var(--bh-accent);
+}
+.bh-callout > * + * { margin-top: var(--bh-space-3); }
+.bh-callout > h3, .bh-callout > h4 { font-size: var(--bh-size-h3); }
+.bh-callout-label { font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); color: var(--bh-accent-ink); }
+
+/* Status: a shape and a word, so it never depends on colour. */
+.bh-status { display: inline-flex; align-items: baseline; gap: 0.4em; font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); white-space: nowrap; color: var(--bh-ink); }
+.bh-status::before { content: ""; width: 0.6em; height: 0.6em; flex: none; background: currentColor; align-self: center; }
+.bh-status[data-status="good"] { color: var(--bh-good); }
+.bh-status[data-status="good"]::before { border-radius: 50%; }
+.bh-status[data-status="warn"] { color: var(--bh-warn); }
+.bh-status[data-status="warn"]::before { clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.bh-status[data-status="bad"] { color: var(--bh-bad); }
+.bh-status[data-status="bad"]::before { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+
+/* ------------------------------------------------------------------- table */
+.bh-table-wrap { overflow-x: auto; margin-top: var(--bh-space-5); }
+.bh-table { width: 100%; border-collapse: collapse; font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); }
+.bh-table caption { caption-side: top; text-align: left; font-size: var(--bh-size-h3); font-weight: var(--bh-weight-display); font-family: var(--bh-font-display); padding-bottom: var(--bh-space-3); color: var(--bh-ink); }
+.bh-table th, .bh-table td { padding: var(--bh-space-2) var(--bh-space-4) var(--bh-space-2) 0; text-align: left; vertical-align: baseline; }
+.bh-table th:last-child, .bh-table td:last-child { padding-right: 0; }
+.bh-table thead th { font-weight: var(--bh-weight-text); color: var(--bh-ink-2); border-bottom: 1px solid var(--bh-ink); vertical-align: bottom; }
+.bh-table tbody th { font-weight: var(--bh-weight-text); }
+.bh-table tbody tr + tr > * { border-top: 1px solid var(--bh-rule); }
+.bh-table tfoot > tr > * { border-top: 1px solid var(--bh-ink); font-weight: var(--bh-weight-strong); }
+.bh-table .bh-num { text-align: right; white-space: nowrap; }
+.bh-table tr[data-highlight] > * { font-weight: var(--bh-weight-strong); }
+/* A bar inside a cell: <td class="bh-num"><span class="bh-bar" style="--v:.62"></span>62%</td> */
+.bh-bar { display: inline-block; vertical-align: middle; width: 5rem; height: 0.5rem; margin-right: var(--bh-space-2); background: linear-gradient(to right, var(--bh-accent) calc(var(--v, 0) * 100%), var(--bh-rule) 0); }
+.bh-bar[data-tone="neutral"] { background: linear-gradient(to right, var(--bh-neutral) calc(var(--v, 0) * 100%), var(--bh-rule) 0); }
+
+/* -------------------------------------------------------------- comparison
+   Two or three options side by side, split by rules. */
+.bh-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--bh-space-5) var(--bh-space-6); margin-top: var(--bh-space-5); }
+.bh-compare > * { padding-top: var(--bh-space-3); border-top: 1px solid var(--bh-ink); min-width: 0; }
+.bh-compare > * > * + * { margin-top: var(--bh-space-2); }
+.bh-compare h3, .bh-compare h4 { font-size: var(--bh-size-h3); }
+.bh-compare p, .bh-compare li { font-size: var(--bh-size-small); line-height: 1.5; }
+
+/* ---------------------------------------------------------------- timeline */
+.bh-timeline { list-style: none; padding: 0; margin-top: var(--bh-space-5); }
+.bh-timeline > li { display: grid; grid-template-columns: 5.5rem 1fr; gap: var(--bh-space-4); padding: var(--bh-space-3) 0; border-top: 1px solid var(--bh-rule); margin: 0; }
+.bh-timeline > li:last-child { border-bottom: 1px solid var(--bh-rule); }
+.bh-timeline time, .bh-timeline .bh-when { font-variant-numeric: tabular-nums; color: var(--bh-ink-2); font-size: var(--bh-size-small); padding-top: 0.15em; }
+.bh-timeline > li[data-key] time, .bh-timeline > li[data-key] .bh-when { color: var(--bh-ink); font-weight: var(--bh-weight-strong); }
+.bh-timeline p + p { margin-top: var(--bh-space-1); color: var(--bh-ink-2); font-size: var(--bh-size-small); }
+
+/* --------------------------------------------------- side notes and quotes */
+.bh-aside { font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.bh-aside > * + * { margin-top: var(--bh-space-2); }
+.bh-aside h3, .bh-aside h4 { font-size: var(--bh-size-small); color: var(--bh-ink); font-family: var(--bh-font-text); font-weight: var(--bh-weight-strong); }
+@media (max-width: 61.99rem) {
+  .bh-aside { padding: var(--bh-space-3) 0; border-block: 1px solid var(--bh-rule); }
+}
+.bh-quote { font-family: var(--bh-font-display); font-size: var(--bh-size-lead); line-height: 1.35; }
+.bh-quote footer { margin-top: var(--bh-space-2); font-family: var(--bh-font-text); font-size: var(--bh-size-small); color: var(--bh-ink-2); }
+
+/* ---------------------------------------------------- notes, sources, footer */
+.bh-notes { font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.bh-notes > * + * { margin-top: var(--bh-space-2); }
+.bh-notes h3, .bh-notes h4 { font-family: var(--bh-font-text); font-size: var(--bh-size-small); color: var(--bh-ink); }
+.bh-footer { margin-top: var(--bh-space-8); }
+.bh-footer > * { grid-column: wide; }
+.bh-footer > :first-child { padding-top: var(--bh-space-4); border-top: 1px solid var(--bh-ink); }
+.bh-footer { font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.bh-footer > * + * { margin-top: var(--bh-space-2); }
+
+/* ------------------------------------------------------- section navigator
+   Built by the kit when a report has four or more sections. */
+.bh-nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  grid-column: full;
+  display: grid;
+  grid-template-columns: subgrid;
+  background: var(--bh-ground);
+  border-bottom: 1px solid var(--bh-rule);
+}
+.bh-nav > ol { grid-column: wide; list-style: none; margin: 0; padding: 0; display: flex; gap: var(--bh-space-5); overflow-x: auto; scrollbar-width: none; }
+.bh-nav > ol::-webkit-scrollbar { display: none; }
+.bh-nav li { margin: 0; flex: none; }
+.bh-nav a { display: block; padding: var(--bh-space-3) 0; font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.bh-nav a:hover { color: var(--bh-ink); }
+.bh-nav a[aria-current="true"] { color: var(--bh-ink); border-bottom-color: var(--bh-ink); }
+
+/* Buttons used by figure controls. */
+.bh-button {
+  appearance: none;
+  background: var(--bh-ground);
+  border: 1px solid var(--bh-rule-strong);
+  border-radius: var(--bh-radius-1);
+  padding: var(--bh-space-1) var(--bh-space-3);
+  font-size: var(--bh-size-small);
+  line-height: var(--bh-leading-snug);
+  color: var(--bh-ink);
+  cursor: pointer;
+}
+.bh-button:hover { border-color: var(--bh-ink); }
+.bh-button[aria-pressed="true"] { background: var(--bh-ink); border-color: var(--bh-ink); color: var(--bh-ground); }
+.bh-button:disabled { color: var(--bh-ink-3); border-color: var(--bh-rule); cursor: default; }

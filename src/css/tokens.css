@@ -1,3 +1,56 @@
+/* Scales shared by every direction. A direction sets colours and fonts and may
+   retune these; a report never invents values outside them. */
 :root {
-  --bh-measure: 68ch;
+  /* Type scale: few sizes, a clear jump to display. */
+  --bh-size-micro: 0.75rem;
+  --bh-size-small: 0.875rem;
+  --bh-size-body: 1.0625rem;
+  --bh-size-h3: 1.25rem;
+  --bh-size-lead: 1.375rem;
+  --bh-size-h2: 1.75rem;
+  --bh-size-figure: 2.625rem;
+  --bh-size-h1: clamp(2.125rem, 1.3rem + 3.2vw, 3.375rem);
+  --bh-size-display: clamp(2.75rem, 1.4rem + 6vw, 5.5rem);
+
+  --bh-leading-body: 1.55;
+  --bh-leading-snug: 1.3;
+  --bh-leading-tight: 1.1;
+  --bh-tracking-display: -0.021em;
+  --bh-tracking-h2: -0.012em;
+
+  --bh-weight-text: 400;
+  --bh-weight-strong: 600;
+  --bh-weight-display: 600;
+  --bh-weight-figure: 300;
+
+  /* Spacing: a bigger gap means less related. */
+  --bh-space-1: 0.25rem;
+  --bh-space-2: 0.5rem;
+  --bh-space-3: 0.75rem;
+  --bh-space-4: 1rem;
+  --bh-space-5: 1.5rem;
+  --bh-space-6: 2rem;
+  --bh-space-7: 3rem;
+  --bh-space-8: 4.5rem;
+  --bh-space-9: 7rem;
+
+  /* Layout: a reading column, a side column, and a wide span across both. */
+  --bh-measure: 64ch;
+  --bh-side: 19rem;
+  --bh-column-gap: 3rem;
+  --bh-gutter: clamp(1.25rem, 5vw, 4rem);
+
+  --bh-radius-1: 2px;
+  --bh-radius-2: 6px;
+
+  /* Marks in figures. */
+  --bh-stroke-context: 1.25;
+  --bh-stroke-data: 2;
+  --bh-stroke-signal: 2.75;
+
+  /* Motion: durations and easing for the three permitted kinds. */
+  --bh-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --bh-fast: 160ms;
+  --bh-medium: 420ms;
+  --bh-slow: 900ms;
 }

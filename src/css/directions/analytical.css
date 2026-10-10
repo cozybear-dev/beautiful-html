@@ -1,5 +1,82 @@
+/* analytical: metrics, performance reviews, operational reports.
+   Reference: the financial review pages of a well-set annual report. Sans
+   throughout, light figures for big numbers, generous white, thin ink rules,
+   one spot colour. */
 @font-face { font-family: "Source Sans 3"; src: url(font:sourcesans3/roman.woff2) format("woff2"); font-weight: 200 900; font-style: normal; font-display: block; }
 @font-face { font-family: "Source Sans 3"; src: url(font:sourcesans3/italic.woff2) format("woff2"); font-weight: 200 900; font-style: italic; font-display: block; }
+
 :root {
-  --bh-font-text: "Source Sans 3", system-ui, sans-serif;
+  --bh-font-text: "Source Sans 3", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --bh-font-display: var(--bh-font-text);
+  --bh-font-data: var(--bh-font-text);
+}
+
+:root, :root[data-scheme="light"] {
+  --bh-ground: #ffffff;
+  --bh-surface: #f2f4f7;
+  --bh-ink: #11151b;
+  --bh-ink-2: #47505d;
+  --bh-ink-3: #636c7a;
+  --bh-rule: #dde1e7;
+  --bh-rule-strong: #8791a0;
+  --bh-neutral: #8791a0;
+  --bh-neutral-soft: #c6ccd5;
+  --bh-accent: #2347d9;
+  --bh-accent-ink: #1d3cc0;
+  --bh-accent-soft: #e6ebfd;
+  --bh-on-accent: #ffffff;
+  --bh-good: #14733f;
+  --bh-warn: #8f5600;
+  --bh-bad: #bd2f25;
+  --bh-cat-1: #2347d9;
+  --bh-cat-2: #e2600d;
+  --bh-cat-3: #0b8f8a;
+  --bh-cat-4: #a3238f;
+  --bh-cat-5: #6b4a1f;
+  --bh-cat-6: #8f76ee;
+  --bh-seq-1: #e6ebfd;
+  --bh-seq-2: #c3cffa;
+  --bh-seq-3: #9aaef5;
+  --bh-seq-4: #6f8bee;
+  --bh-seq-5: #4668e4;
+  --bh-seq-6: #2347d9;
+  --bh-seq-7: #152c8f;
+  --bh-div-neg: #c9550b;
+  --bh-div-mid: #c9ced6;
+  --bh-div-pos: #2347d9;
+}
+
+:root[data-scheme="dark"] {
+  --bh-ground: #0e1217;
+  --bh-surface: #171c23;
+  --bh-ink: #eef1f5;
+  --bh-ink-2: #b3bcc9;
+  --bh-ink-3: #8e98a7;
+  --bh-rule: #29303a;
+  --bh-rule-strong: #6e7888;
+  --bh-neutral: #77818f;
+  --bh-neutral-soft: #414a57;
+  --bh-accent: #8aa4ff;
+  --bh-accent-ink: #a3b8ff;
+  --bh-accent-soft: #1b2650;
+  --bh-on-accent: #0e1217;
+  --bh-good: #5cc98d;
+  --bh-warn: #e2ad4a;
+  --bh-bad: #ff8a7a;
+  --bh-cat-1: #8aa4ff;
+  --bh-cat-2: #f07a2c;
+  --bh-cat-3: #35c2b8;
+  --bh-cat-4: #e06ccd;
+  --bh-cat-5: #c9a25a;
+  --bh-cat-6: #b7e04a;
+  --bh-seq-1: #1b2650;
+  --bh-seq-2: #263978;
+  --bh-seq-3: #334fa3;
+  --bh-seq-4: #4668cf;
+  --bh-seq-5: #6585ee;
+  --bh-seq-6: #8aa4ff;
+  --bh-seq-7: #c2d0ff;
+  --bh-div-neg: #f07a2c;
+  --bh-div-mid: #4a5361;
+  --bh-div-pos: #8aa4ff;
 }

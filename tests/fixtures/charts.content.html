@@ -1,0 +1,275 @@
+<!doctype html>
+<!-- EDITING GUIDE: test fixture for the page components and chart functions. -->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active use rose 38% after onboarding, but two teams are not yet on board</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides"></style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead">
+    <span class="bh-org">Routewise</span>
+    <span class="bh-doc">Quarterly business review, Q3 2026</span>
+  </div>
+  <h1>Active use rose 38% after onboarding, but two teams are not yet on board</h1>
+  <p class="bh-standfirst">Northwind now has <strong>536 people using Routewise every month</strong>, up from 389 in June. Warehouse Ops and Finance hold a third of the seats and account for most of the 114 that go unused.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Northwind Logistics</dd></div>
+    <div><dt>Period</dt><dd>July to September 2026</dd></div>
+    <div><dt>Prepared by</dt><dd>Dana Whitfield, Customer Success</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Monthly active users</p>
+      <p class="bh-keyfigure-value">536 <span id="spark-users"></span></p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="up" data-tone="good">38%</span> since June</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Seats in use</p>
+      <p class="bh-keyfigure-value">82<small>%</small></p>
+      <p class="bh-keyfigure-note">536 of 650 licensed seats</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">First response, median</p>
+      <p class="bh-keyfigure-value">2.6<small>hours</small></p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="good">6.5 hours</span> faster than in Q1</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Customer satisfaction</p>
+      <p class="bh-keyfigure-value">95<small>%</small></p>
+      <p class="bh-keyfigure-note">from 84% a year ago</p>
+    </div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="Usage">
+  <h2>Usage grew fastest in the three months after onboarding</h2>
+  <p>Monthly active users were flat at around 320 through the winter. The onboarding programme ran in May 2026, and active use has risen every month since. Sessions per user rose too, from 17 to 21 a month, so people are not only signing in but coming back.</p>
+  <aside class="bh-aside">
+    <h3>How we count</h3>
+    <p>An active user signed in and completed at least one action in the calendar month. Service accounts are excluded.</p>
+  </aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Active users have risen every month since the May onboarding programme</h3>
+    <p class="bh-figure-sub">Monthly active users, October 2025 to September 2026</p>
+    <div class="bh-plot" id="fig-users"></div>
+    <figcaption class="bh-figure-note">Source: Routewise product analytics. Licensed seats: 650 throughout.</figcaption>
+  </figure>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Enterprise churn halved after the April pricing change; other segments did not move</h3>
+    <p class="bh-figure-sub">Monthly logo churn by segment, %</p>
+    <div class="bh-plot" id="fig-churn"></div>
+    <figcaption class="bh-figure-note">Source: billing system, January to September 2026.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Teams">
+  <h2>Warehouse Ops and Finance account for most unused seats</h2>
+  <p>Five of the seven teams have more than 70% of their seats in weekly use. Warehouse Ops and Finance are the exception. Together they hold 214 seats and use 86.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Two teams use fewer than half of their seats each week</h3>
+    <p class="bh-figure-sub">Seats in weekly use, % of the team's seats</p>
+    <div class="bh-plot" id="fig-teams"></div>
+    <figcaption class="bh-figure-note">Source: Routewise product analytics, September 2026.</figcaption>
+  </figure>
+  <div class="bh-pair bh-wide">
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">Route Planner adoption rose in every team that took the training</h3>
+      <p class="bh-figure-sub">Share of each team using Route Planner weekly, March and September, %</p>
+      <div class="bh-plot" id="fig-dumbbell"></div>
+      <figcaption class="bh-figure-note">Source: Routewise product analytics.</figcaption>
+    </figure>
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">Tickets rose with usage, and we still resolved more than were opened</h3>
+      <p class="bh-figure-sub">Support tickets by quarter</p>
+      <div class="bh-plot" id="fig-tickets"></div>
+      <figcaption class="bh-figure-note">Source: support desk.</figcaption>
+    </figure>
+  </div>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Recommendation</p>
+    <h3>Run the onboarding programme for Warehouse Ops and Finance in November</h3>
+    <p>The same two-week programme lifted weekly use in Dispatch from 61% to 91%. If it does half as well here, about 60 more seats come into use before the December renewal.</p>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Support">
+  <h2>Support is faster, and satisfaction followed</h2>
+  <p>Median first response fell from 9.2 hours to 2.6 after we assigned Northwind a named support engineer in April. Satisfaction rose from 84% to 95% over the same months.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Faster first responses go with higher satisfaction, month by month</h3>
+    <p class="bh-figure-sub">Each dot is one month, October 2025 to September 2026</p>
+    <div class="bh-plot" id="fig-scatter"></div>
+    <figcaption class="bh-figure-note">Source: support desk; satisfaction is the share of rated tickets scored 4 or 5.</figcaption>
+  </figure>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Every team's weekly use is up since March, on the same scale</h3>
+    <p class="bh-figure-sub">Weekly active users by team</p>
+    <div class="bh-plot" id="fig-multiples"></div>
+    <figcaption class="bh-figure-note">Source: Routewise product analytics.</figcaption>
+  </figure>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Seats and weekly use by team, September 2026</caption>
+      <thead><tr><th scope="col">Team</th><th scope="col" class="bh-num">Seats</th><th scope="col" class="bh-num">Weekly active</th><th scope="col" class="bh-num">Share in use</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Dispatch</th><td class="bh-num">140</td><td class="bh-num">127</td><td class="bh-num"><span class="bh-bar" style="--v:.91"></span>91%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr><th scope="row">Fleet Planning</th><td class="bh-num">96</td><td class="bh-num">81</td><td class="bh-num"><span class="bh-bar" style="--v:.84"></span>84%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr><th scope="row">Customer Service</th><td class="bh-num">120</td><td class="bh-num">95</td><td class="bh-num"><span class="bh-bar" style="--v:.79"></span>79%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr><th scope="row">Warehouse Ops</th><td class="bh-num">150</td><td class="bh-num">62</td><td class="bh-num"><span class="bh-bar" style="--v:.41"></span>41%</td><td><span class="bh-status" data-status="warn">Needs onboarding</span></td></tr>
+        <tr><th scope="row">Finance</th><td class="bh-num">64</td><td class="bh-num">24</td><td class="bh-num"><span class="bh-bar" style="--v:.38"></span>38%</td><td><span class="bh-status" data-status="bad">At risk</span></td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">All teams</th><td class="bh-num">650</td><td class="bh-num">476</td><td class="bh-num">73%</td><td></td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Next steps">
+  <h2>What we propose for the next quarter</h2>
+  <div class="bh-compare">
+    <div><h3>Onboard two teams</h3><p>Two-week programme for Warehouse Ops and Finance, starting 3 November.</p></div>
+    <div><h3>Review seat allocation</h3><p>Move 40 unused seats to Dispatch, which has a waiting list.</p></div>
+    <div><h3>Keep the named engineer</h3><p>Same support arrangement through the renewal period.</p></div>
+  </div>
+  <ol class="bh-timeline">
+    <li><span class="bh-when">3 Nov</span><div><p>Onboarding starts for Warehouse Ops</p><p>Two shifts, on site in Rotterdam.</p></div></li>
+    <li><span class="bh-when">17 Nov</span><div><p>Onboarding starts for Finance</p></div></li>
+    <li data-key><span class="bh-when">1 Dec</span><div><p>Renewal decision</p><p>Contract for 650 seats ends 31 December.</p></div></li>
+  </ol>
+</section>
+
+<footer class="bh-footer">
+  <p>Prepared by Routewise Customer Success for Northwind Logistics. Figures are from Routewise product analytics and the support desk, extracted 6 October 2026.</p>
+</footer>
+
+</main>
+
+<script type="text/csv" id="d-usage">
+month,active_users
+2025-10,304
+2025-11,310
+2025-12,309
+2026-01,318
+2026-02,327
+2026-03,331
+2026-04,333
+2026-05,412
+2026-06,389
+2026-07,470
+2026-08,503
+2026-09,536
+</script>
+<script type="text/csv" id="d-churn">
+month,segment,churn
+2026-01,Enterprise,2.1
+2026-02,Enterprise,2.0
+2026-03,Enterprise,2.2
+2026-04,Enterprise,1.9
+2026-05,Enterprise,1.3
+2026-06,Enterprise,1.1
+2026-07,Enterprise,1.0
+2026-08,Enterprise,1.1
+2026-09,Enterprise,0.9
+2026-01,Mid-market,2.8
+2026-02,Mid-market,2.9
+2026-03,Mid-market,2.7
+2026-04,Mid-market,2.6
+2026-05,Mid-market,2.7
+2026-06,Mid-market,2.5
+2026-07,Mid-market,2.6
+2026-08,Mid-market,2.4
+2026-09,Mid-market,2.5
+2026-01,Small business,4.1
+2026-02,Small business,4.3
+2026-03,Small business,4.0
+2026-04,Small business,4.2
+2026-05,Small business,4.4
+2026-06,Small business,4.1
+2026-07,Small business,4.3
+2026-08,Small business,4.0
+2026-09,Small business,4.2
+</script>
+<script type="text/csv" id="d-teams">
+team,seats,weekly_active,share,planner_march,planner_september
+Dispatch,140,127,91,52,78
+Fleet Planning,96,81,84,48,71
+Customer Service,120,95,79,31,52
+Procurement,48,35,73,30,44
+Management,32,28,88,22,35
+Warehouse Ops,150,62,41,15,18
+Finance,64,24,38,9,11
+</script>
+<script type="text/csv" id="d-tickets">
+quarter,kind,tickets
+Q4 2025,Opened,139
+Q4 2025,Resolved,131
+Q1 2026,Opened,147
+Q1 2026,Resolved,140
+Q2 2026,Opened,168
+Q2 2026,Resolved,171
+Q3 2026,Opened,193
+Q3 2026,Resolved,199
+</script>
+<script type="text/csv" id="d-support">
+month,first_response_hours,csat
+Oct 2025,9.4,84
+Nov 2025,9.0,85
+Dec 2025,9.6,83
+Jan 2026,8.9,84
+Feb 2026,9.3,85
+Mar 2026,9.1,84
+Apr 2026,7.7,87
+May 2026,6.4,88
+Jun 2026,5.1,90
+Jul 2026,3.8,92
+Aug 2026,2.9,94
+Sep 2026,2.6,95
+</script>
+<script type="text/csv" id="d-weekly">
+month,team,weekly_active
+2026-03,Dispatch,86
+2026-05,Dispatch,104
+2026-07,Dispatch,119
+2026-09,Dispatch,127
+2026-03,Fleet Planning,58
+2026-05,Fleet Planning,66
+2026-07,Fleet Planning,75
+2026-09,Fleet Planning,81
+2026-03,Customer Service,61
+2026-05,Customer Service,74
+2026-07,Customer Service,88
+2026-09,Customer Service,95
+2026-03,Warehouse Ops,55
+2026-05,Warehouse Ops,57
+2026-07,Warehouse Ops,60
+2026-09,Warehouse Ops,62
+2026-03,Finance,21
+2026-05,Finance,22
+2026-07,Finance,23
+2026-09,Finance,24
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  const usage = BH.data('#d-usage');
+  BH.spark('#spark-users', { data: usage, y: 'active_users' });
+  BH.line('#fig-users', { data: usage, x: 'month', y: 'active_users',
+    annotations: [{ x: '2026-05', text: 'Onboarding programme', event: true }] });
+  BH.line('#fig-churn', { data: BH.data('#d-churn'), x: 'month', y: 'churn', series: 'segment', unit: '%',
+    highlight: 'Enterprise', contextLabel: 'Other segments',
+    annotations: [{ x: '2026-04', series: 'Enterprise', text: 'Pricing change, April' }] });
+  const teams = BH.data('#d-teams');
+  BH.bar('#fig-teams', { data: teams, x: 'team', y: 'share', unit: '%', highlight: ['Warehouse Ops', 'Finance'] });
+  BH.dot('#fig-dumbbell', { data: teams, x: 'team', y: 'planner_march', y2: 'planner_september', unit: '%',
+    names: { y: 'March', y2: 'September' } });
+  BH.bar('#fig-tickets', { data: BH.data('#d-tickets'), x: 'quarter', y: 'tickets', series: 'kind', layout: 'vertical' });
+  BH.scatter('#fig-scatter', { data: BH.data('#d-support'), x: 'first_response_hours', y: 'csat', label: 'month',
+    xLabel: 'Median first response', xUnit: 'h', yLabel: 'Satisfaction', unit: '%', trend: true,
+    highlight: ['Sep 2026', 'Oct 2025'] });
+  BH.line('#fig-multiples', { data: BH.data('#d-weekly'), x: 'month', y: 'weekly_active', facet: 'team' });
+});</script>
