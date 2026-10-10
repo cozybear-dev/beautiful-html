@@ -126,7 +126,7 @@ For the one thing the reader must decide or remember. At most one or two in a re
 </ol>
 ```
 
-`bh-compare` sets two to four options side by side under rules. In a timeline, `data-key` marks the moments that matter.
+`bh-compare` sets two to four options side by side under rules. Keep each to a heading and a sentence or two; the text is set small, so anything longer belongs in the section body. In a timeline, `data-key` marks the moments that matter.
 
 ## Notes and footer
 

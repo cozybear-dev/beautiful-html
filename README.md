@@ -104,7 +104,16 @@ npm run examples         # check the examples and refresh their previews
 
 ## Does it work?
 
-Six briefs, each run twice through Claude Code: once with nothing installed, once with the skill. See `evals/` for the briefs, the runner and the results, and run it yourself with `node evals/run.mjs --arm baseline` and `--arm skill`.
+Six briefs were each run twice through Claude Code (Opus 5.5): once with nothing installed, once with the skill.
+
+| | Without the skill | With the skill |
+|---|---|---|
+| Checker errors, six reports | 21 | 0 |
+| Checker warnings, six reports | 98 | 3 |
+| Time, six reports | 35 minutes | 24 minutes |
+| Cost, six reports | 7.79 US dollars | 7.76 US dollars |
+
+Only findings that apply to any HTML report are counted. Two of the six briefs share their subject with a shipped example; on the other four the result was 20 errors and 59 warnings against 0 and 3. This is one run per brief with one model, so it shows the direction of the effect, not its variance. [evals/README.md](evals/README.md) has the method, the per-brief table and a blind side-by-side page, and `node evals/run.mjs` reproduces it.
 
 ## Limits
 

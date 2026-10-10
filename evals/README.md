@@ -33,7 +33,7 @@ Claude Code 2.1 with Opus 5.5, six briefs.
 
 Cost was the same for both arms: 7.79 and 7.76 US dollars.
 
-What the baseline got wrong was consistent: labels under 11 px in every report (83 findings), low-contrast text in three, body lines over 80 characters in all six, sideways overflow on a phone in one, and none of the six rendered its own output to look at it. The three remaining warnings with the skill are long paragraphs placed in a comparison block, which the kit sets small.
+What the baseline got wrong was consistent: text below the minimum size in every report (83 findings), low-contrast text in three, body lines over 80 characters in all six, sideways overflow on a phone in one, and none of the six rendered its own output to look at it. The three remaining warnings with the skill are long paragraphs placed in a comparison block, which the kit sets small.
 
 ## What this does and does not show
 
