@@ -1,0 +1,116 @@
+[
+  {
+    "brief": "01-customer-quarterly-review",
+    "arm": "skill",
+    "exitCode": 0,
+    "minutes": 3.2,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 34,
+    "costUsd": 1.1359466,
+    "isError": false,
+    "files": [
+      "content.html",
+      "report.check",
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 687729,
+    "errors": 0,
+    "warnings": 0,
+    "codes": {}
+  },
+  {
+    "brief": "02-incident-review",
+    "arm": "skill",
+    "exitCode": 0,
+    "minutes": 3.8,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 36,
+    "costUsd": 1.2999414,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 773353,
+    "errors": 0,
+    "warnings": 0,
+    "codes": {}
+  },
+  {
+    "brief": "03-survey-results",
+    "arm": "skill",
+    "exitCode": 0,
+    "minutes": 3.9,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 37,
+    "costUsd": 1.3301553000000002,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 696858,
+    "errors": 0,
+    "warnings": 0,
+    "codes": {}
+  },
+  {
+    "brief": "04-experiment-readout",
+    "arm": "skill",
+    "exitCode": 0,
+    "minutes": 4.4,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 39,
+    "costUsd": 1.3439776,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 691747,
+    "errors": 0,
+    "warnings": 0,
+    "codes": {}
+  },
+  {
+    "brief": "05-sales-pipeline",
+    "arm": "skill",
+    "exitCode": 0,
+    "minutes": 3.8,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 33,
+    "costUsd": 1.2867914,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 692919,
+    "errors": 0,
+    "warnings": 3,
+    "codes": {
+      "small-text": 3
+    }
+  },
+  {
+    "brief": "06-security-data-flows",
+    "arm": "skill",
+    "exitCode": 0,
+    "minutes": 4.5,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 31,
+    "costUsd": 1.3670173,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 776783,
+    "errors": 0,
+    "warnings": 1,
+    "codes": {
+      "edge-crossings": 1
+    }
+  }
+]

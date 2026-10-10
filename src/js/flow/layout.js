@@ -79,20 +79,18 @@ export function layoutFlow(g, opts = {}) {
   const indeg = new Map([...N.keys()].map(id => [id, preds.get(id).length]));
   const queue = [...N.keys()].filter(id => !indeg.get(id)), topo = [];
   while (queue.length) { const u = queue.shift(); topo.push(u); for (const w of succs.get(u)) { indeg.set(w, indeg.get(w) - 1); if (!indeg.get(w)) queue.push(w); } }
+  // A rank hint is the earliest rank a node may take. Whatever feeds a node is
+  // always at least one rank before it, so no edge is ever level or backward.
   for (const id of topo) {
     const n = N.get(id);
-    const floor = Math.max(0, ...preds.get(id).map(p => N.get(p).rank + 1));
-    // A hint is honoured unless it would put the node level with something that feeds it.
-    n.rank = n.hintRank !== null ? Math.max(n.hintRank, preds.get(id).some(p => N.get(p).rank === n.hintRank) ? n.hintRank + 1 : -Infinity) : floor;
+    n.rank = Math.max(n.hintRank ?? 0, ...preds.get(id).map(p => N.get(p).rank + 1));
   }
-  for (const e of E) if (N.get(tail(e)).rank > N.get(head(e)).rank) e.reversed = !e.reversed;         // a hint placed the target earlier
   for (const id of N.keys()) {
     const n = N.get(id);
-    const before = E.filter(e => head(e) === id), after = E.filter(e => tail(e) === id);
-    if (n.hintRank === null && !before.length && after.length) n.rank = Math.min(...after.map(e => N.get(head(e)).rank)) - 1;
+    const after = succs.get(id);
+    if (n.hintRank === null && !preds.get(id).length && after.length) n.rank = Math.min(...after.map(x => N.get(x).rank)) - 1;
   }
   if (![...N.values()].some(n => n.hintRank !== null)) { const lo = Math.min(...[...N.values()].map(n => n.rank)); N.forEach(n => { n.rank -= lo; }); }
-  else { const lo = Math.min(0, ...[...N.values()].map(n => n.rank)); N.forEach(n => { n.rank -= lo; }); }
   const lastRank = Math.max(...[...N.values()].map(n => n.rank));
 
   // ---- virtual nodes: one on every rank an edge skips -----------------------
@@ -166,26 +164,42 @@ export function layoutFlow(g, opts = {}) {
     return c;
   };
   const total = cells => { const pos = positions(cells); let c = 0; for (let r = 0; r < lastRank; r++) c += crossingsAt(pos, r); return c; };
+  // Try orders for one cell at a time. Only that cell's positions change, so the
+  // cost of an order is the crossings in the two gaps beside its rank.
   const improve = cells => {
-    for (let pass = 0; pass < 8; pass++) {
+    const pos = positions(cells);
+    for (let pass = 0; pass < 6; pass++) {
       let changed = false;
       const ranks = Array.from({ length: lastRank + 1 }, (_, r) => r);
       for (const r of pass % 2 ? ranks.reverse() : ranks) for (let b = 0; b < bands; b++) {
         const key = `${r}|${b}`, ids = cells.get(key);
         if (!ids || ids.length < 2 || locked.has(key)) continue;
-        const cost = order => { cells.set(key, order); const pos = positions(cells); return (r > 0 ? crossingsAt(pos, r - 1) : 0) + crossingsAt(pos, r); };
+        const first = Math.min(...ids.map(id => pos.get(id)));
+        const put = order => order.forEach((id, i) => pos.set(id, first + i));
+        const cost = order => { put(order); return (r > 0 ? crossingsAt(pos, r - 1) : 0) + crossingsAt(pos, r); };
         let best = ids, bestCost = cost(ids);
-        if (ids.length <= 6) {
-          for (const p of permutations(ids)) { const c = cost(p); if (c < bestCost) { best = p; bestCost = c; } }
-        } else {
-          const pos = positions(cells);
-          const centre = id => { const ns = neighbours(id).filter(x => N.get(x).rank === (pass % 2 ? r + 1 : r - 1)).map(x => pos.get(x)); return ns.length ? ns.reduce((s, x) => s + x, 0) / ns.length : pos.get(id); };
-          const sorted = [...ids].sort((x, y) => centre(x) - centre(y));
-          const c = cost(sorted);
-          if (c < bestCost) { best = sorted; bestCost = c; }
+        if (bestCost > 0) {
+          if (ids.length <= 5) {
+            for (const p of permutations(ids)) { const c = cost(p); if (c < bestCost) { best = p; bestCost = c; if (!c) break; } }
+          } else {
+            // Too many to try every order: sort by where the neighbours sit, then swap neighbours while it helps.
+            const side = pass % 2 ? r + 1 : r - 1;
+            const centre = id => { const ns = neighbours(id).filter(x => N.get(x).rank === side).map(x => pos.get(x)); return ns.length ? ns.reduce((sum, x) => sum + x, 0) / ns.length : pos.get(id) - first; };
+            let order = [...ids].sort((x, y) => centre(x) - centre(y));
+            let c = cost(order);
+            for (let again = true, guard = 0; again && guard < 4; guard++) {
+              again = false;
+              for (let i = 0; i + 1 < order.length; i++) {
+                const swapped = [...order]; [swapped[i], swapped[i + 1]] = [swapped[i + 1], swapped[i]];
+                const c2 = cost(swapped);
+                if (c2 < c) { order = swapped; c = c2; again = true; }
+              }
+            }
+            if (c < bestCost) { best = order; bestCost = c; }
+          }
         }
-        cells.set(key, best);
-        if (best !== ids) changed = true;
+        put(best);
+        if (best !== ids) { cells.set(key, best); changed = true; }
       }
       if (!changed) break;
     }
@@ -193,7 +207,7 @@ export function layoutFlow(g, opts = {}) {
   };
   const rand = random(7);
   let bestCells = null, bestScore = Infinity;
-  for (let start = 0; start < 5; start++) {
+  for (let start = 0; start < 4; start++) {
     const cells = new Map([...initial].map(([key, ids]) => {
       const order = [...ids];
       if (start && !locked.has(key)) for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }

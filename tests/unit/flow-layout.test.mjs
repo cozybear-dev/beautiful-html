@@ -111,3 +111,44 @@ test('every routed edge has a path, sampled points and an arrow at its real targ
     assert.ok(near(e.arrow, target), `${e.id}: the arrow is not at ${target.id}`);
   }
 });
+
+// Found by stress-testing: a rank hint that put a node level with something feeding it.
+test('connected nodes never share a rank, whatever the hints', () => {
+  const g = { zones: [{ id: 'z0', label: 'Z0' }, { id: 'z2', label: 'Z2' }],
+    nodes: [{ id: 'n0', label: 'N0', zone: 'z0' }, { id: 'n1', label: 'N1' }, { id: 'n2', label: 'N2' }, { id: 'n3', label: 'N3' }, { id: 'n4', label: 'N4', zone: 'z2' }, { id: 'n5', label: 'N5', zone: 'z0' }, { id: 'n6', label: 'N6', zone: 'z0', rank: 0 }],
+    edges: ['n6>n1', 'n4>n6', 'n5>n4', 'n2>n3', 'n1>n6', 'n5>n6', 'n3>n6'].map(s => ({ from: s.split('>')[0], to: s.split('>')[1] })) };
+  const L = layoutFlow(g, { direction: 'right', measure });
+  const rank = Object.fromEntries(L.nodes.map(n => [n.id, n.rank]));
+  for (const e of L.edges) assert.notEqual(rank[e.from], rank[e.to], `${e.id} joins two nodes in rank ${rank[e.from]}`);
+});
+
+test('300 random graphs: every invariant holds and each lays out quickly', () => {
+  let seed = 42;
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+  const m2 = n => ({ w: 60 + 6 * n.label.length, h: 40 });
+  let slowest = 0;
+  for (let t = 0; t < 300; t++) {
+    const n = 3 + Math.floor(rnd() * 18), zc = Math.floor(rnd() * 4);
+    const zones = Array.from({ length: zc }, (_, i) => ({ id: 'z' + i, label: 'Zone ' + i }));
+    const nodes = Array.from({ length: n }, (_, i) => ({ id: 'n' + i, label: 'Node ' + 'x'.repeat(Math.floor(rnd() * 14)), ...(zc && rnd() < 0.7 ? { zone: 'z' + Math.floor(rnd() * zc) } : {}), ...(rnd() < 0.08 ? { rank: Math.floor(rnd() * 4) } : {}) }));
+    const edges = [];
+    for (let k = 0, m = n - 1 + Math.floor(rnd() * n); k < m; k++) { const a = Math.floor(rnd() * n), b = Math.floor(rnd() * n); if (a !== b) edges.push({ from: 'n' + a, to: 'n' + b, ...(rnd() < 0.5 ? { label: 'label ' + k } : {}) }); }
+    for (const direction of ['right', 'down']) {
+      const t0 = performance.now();
+      const L = layoutFlow({ nodes, edges, zones }, { direction, measure: m2 });
+      const R = routeEdges(L);
+      slowest = Math.max(slowest, performance.now() - t0);
+      const real = L.nodes.filter(x => !x.virtual), where = `graph ${t} ${direction}`;
+      for (const nd of real) assert.ok(Number.isFinite(nd.x + nd.y) && nd.x >= 0 && nd.y >= 0 && nd.x + nd.w <= L.width && nd.y + nd.h <= L.height, `${where}: ${nd.id} is outside the canvas`);
+      for (let i = 0; i < real.length; i++) for (let j = i + 1; j < real.length; j++) assert.ok(!overlap(real[i], real[j], 4), `${where}: ${real[i].id} and ${real[j].id} overlap`);
+      for (const e of R) { const ends = new Set(e.id.replace(/#\d+$/, '').split('>')); for (const nd of real) if (!ends.has(nd.id)) for (let k = 1; k < e.points.length; k++) assert.ok(!segmentHitsBox(e.points[k - 1], e.points[k], nd, 2), `${where}: ${e.id} crosses ${nd.id}`); }
+      const zoneOf = id => nodes.find(x => x.id === id).zone || null;
+      for (const z of L.zones) for (const nd of real) {
+        const inside = nd.x >= z.x && nd.x + nd.w <= z.x + z.w && nd.y >= z.y && nd.y + nd.h <= z.y + z.h;
+        assert.ok(zoneOf(nd.id) === z.id ? inside : !overlap(nd, z), `${where}: ${nd.id} against zone ${z.id}`);
+      }
+      for (let i = 0; i < L.zones.length; i++) for (let j = i + 1; j < L.zones.length; j++) assert.ok(!overlap(L.zones[i], L.zones[j]), `${where}: zones overlap`);
+    }
+  }
+  assert.ok(slowest < 150, `the slowest layout took ${slowest.toFixed(0)} ms`);
+});

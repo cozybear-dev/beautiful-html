@@ -1,0 +1,18 @@
+{
+  "brief": "04-experiment-readout",
+  "arm": "skill",
+  "exitCode": 0,
+  "minutes": 4.4,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 39,
+  "costUsd": 1.3439776,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 691747,
+  "errors": 0,
+  "warnings": 0,
+  "codes": {}
+}

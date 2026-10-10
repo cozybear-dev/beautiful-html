@@ -1,0 +1,20 @@
+{
+  "brief": "06-security-data-flows",
+  "arm": "skill",
+  "exitCode": 0,
+  "minutes": 4.5,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 31,
+  "costUsd": 1.3670173,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 776783,
+  "errors": 0,
+  "warnings": 1,
+  "codes": {
+    "edge-crossings": 1
+  }
+}

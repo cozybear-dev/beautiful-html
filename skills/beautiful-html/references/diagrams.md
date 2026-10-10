@@ -38,7 +38,7 @@ BH.flow('#fig-path', {
 | `sub` | A second, smaller line: a role, a region, a limit |
 | `kind` | Sets the shape, so shape says what a thing is (below). Default `service` |
 | `zone` | The id of the zone it belongs to |
-| `rank`, `order` | Hints, only when position has meaning: `rank` is the step along the flow (0 first); `order` sorts nodes that share a rank |
+| `rank`, `order` | Hints, only when position has meaning: `rank` is the earliest step along the flow the node may take (0 is the first); `order` sorts nodes that share a step |
 
 | `kind` | Shape | Use for |
 |---|---|---|
@@ -98,7 +98,7 @@ A zone is a named group drawn as a tinted frame: a network segment, a trust boun
 - Two zones that cover the same step of the flow sit side by side, across the flow. If that makes the diagram too wide, give the zones separate steps or split the figure.
 - On a phone, a diagram wider than the screen scrolls sideways inside its figure.
 - A long chain (six or more steps) is drawn top to bottom even on a wide screen. In a `presentation`, put it in a `bh-split` section so it fits one screen beside its text.
-- Edges between two nodes in the same rank are not drawn level; one of the nodes moves a rank on.
+- Two connected nodes never share a step: whatever feeds a node sits at least one step before it, even if a `rank` hint asked otherwise.
 
 ## `BH.sankey`: volumes between stages
 

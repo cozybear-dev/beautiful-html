@@ -1,0 +1,20 @@
+{
+  "brief": "05-sales-pipeline",
+  "arm": "skill",
+  "exitCode": 0,
+  "minutes": 3.8,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 33,
+  "costUsd": 1.2867914,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 692919,
+  "errors": 0,
+  "warnings": 3,
+  "codes": {
+    "small-text": 3
+  }
+}
