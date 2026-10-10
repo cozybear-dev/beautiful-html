@@ -1,0 +1,171 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two routes reach the warehouse controls unchecked</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<!-- Opened without a kit, this file says so instead of showing a blank page. -->
+<script>addEventListener('DOMContentLoaded',()=>{const d=document.documentElement;if(document.getElementById('bh-kit-css'))return;d.style.visibility='visible';
+document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-space:pre-wrap;max-width:36em;margin:18vh auto;padding:0 1.5rem">This is the content of a report without its kit, so there is nothing to see yet.\nTo read it, join it to a kit from the beautiful-html skill:\n\ncat content.html kit/'+d.dataset.bhDirection+'.kit.html > report.html</pre>'})</script>
+<style id="bh-overrides">
+/* Leave empty: the Hunt & Hackett look is built into the kit. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<!-- Front page: the diagram. The review is about which system can reach which, so the picture of that comes straight after the headline, with no standfirst between. -->
+<header class="bh-header">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Network review, October 2026</span></div>
+  <h1>Two routes reach the warehouse controls unchecked</h1>
+  <figure class="bh-figure">
+    <h2 class="bh-figure-title">Three connections, drawn in red, skip the controls that the others pass</h2>
+    <p class="bh-figure-sub">Who can reach what, from outside to the warehouse floor. Point at a system to trace what feeds it and what it feeds</p>
+    <div class="bh-plot" id="fig-net"></div>
+    <figcaption class="bh-figure-note">Source: firewall rules and flow records, 1 to 30 September 2026. Dots show direction; more dots, more sessions.</figcaption>
+  </figure>
+  <p class="bh-byline">Prepared by Hunt &amp; Hackett for the head of infrastructure, Meridian Freight. 14 October 2026.</p>
+</header>
+
+<section class="bh-section" data-nav="Flows">
+  <h2>Nine of twelve flows pass a control; three do not</h2>
+  <p class="bh-lead">Every managed route into the warehouse network goes through one recorded door, the jump host. The legacy VPN and one engineering workstation go around it, and the VPN also opens the file servers.</p>
+  <p>We listed every flow that crosses a zone boundary and asked one question of each: what checks who is connecting? For nine, the answer is the access broker, the jump host or a fixed service account. For three, it is a shared password or nothing.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Flows across zone boundaries, September 2026</caption>
+      <thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">What checks it</th><th scope="col" class="bh-num">Sessions a day</th><th scope="col">Finding</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Staff laptops</th><td>Access broker</td><td>Sign-in, device check</td><td class="bh-num">2,400</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+        <tr><th scope="row">Access broker</th><td>ERP</td><td>Per application</td><td class="bh-num">1,900</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+        <tr><th scope="row">Access broker</th><td>File servers</td><td>Per application</td><td class="bh-num">420</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+        <tr><th scope="row">Access broker</th><td>Jump host</td><td>Administrators only</td><td class="bh-num">80</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+        <tr><th scope="row">Jump host</th><td>Warehouse control</td><td>Recorded session</td><td class="bh-num">80</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+        <tr><th scope="row">ERP</th><td>Warehouse control</td><td>Service account, one port</td><td class="bh-num">3,100</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+        <tr data-highlight><th scope="row">Supplier laptops</th><td>Legacy VPN</td><td>Shared password</td><td class="bh-num">46</td><td><span class="bh-status" data-status="bad">Close</span></td></tr>
+        <tr data-highlight><th scope="row">Legacy VPN</th><td>Warehouse control</td><td>Nothing: whole network</td><td class="bh-num">15</td><td><span class="bh-status" data-status="bad">Close</span></td></tr>
+        <tr data-highlight><th scope="row">Legacy VPN</th><td>File servers</td><td>Nothing: whole network</td><td class="bh-num">31</td><td><span class="bh-status" data-status="bad">Close</span></td></tr>
+        <tr data-highlight><th scope="row">Engineering workstation</th><td>Conveyor controllers</td><td>Nothing: direct</td><td class="bh-num">12</td><td><span class="bh-status" data-status="bad">Move to jump host</span></td></tr>
+        <tr><th scope="row">Warehouse control</th><td>Conveyor controllers</td><td>Fixed addresses</td><td class="bh-num">8,600</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+        <tr><th scope="row">Warehouse control</th><td>Historian</td><td>Fixed addresses</td><td class="bh-num">1,440</td><td><span class="bh-status" data-status="good">Managed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Rules">
+  <h2>The firewall allows far more than the flows need</h2>
+  <p>The three red routes exist because the rules permit them. Between office and operations, <span id="waffle-any"></span> 61 of every 100 rules allow any port. Rewriting the rules around the nine managed flows closes most of what is open and breaks nothing we observed in September.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The proposed rules close 35 of the 41 open paths from office to operations</h3>
+    <p class="bh-figure-sub">Pairs of systems that can connect across each boundary, today and under the proposed rules</p>
+    <div class="bh-plot" id="fig-rules"></div>
+    <figcaption class="bh-figure-note">Source: firewall configuration of 30 September 2026, and the rule set proposed in annex B.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Changes">
+  <h2>Three changes, in the order we would make them</h2>
+  <ol class="bh-findings">
+    <li><h3>Move both suppliers to the access broker</h3><p>Then switch the legacy VPN off. Removes three of the three red routes' starting point. Six weeks.</p></li>
+    <li><h3>Put the engineering tool on the jump host</h3><p>The vendor supports it. Sessions to the controllers are then recorded like every other. Two weeks.</p></li>
+    <li><h3>Replace the "any" rules with the nine flows</h3><p>Run the new rules in log-only mode for a month first, so nothing breaks unseen.</p></li>
+  </ol>
+  <div class="bh-notes"><h3>Method</h3><p>Flows are from firewall and switch records for 1 to 30 September 2026, grouped by source and destination system. A "session" is one connection from start to end. Open paths were counted from the rule set, not from traffic, so they include paths nobody used.</p></div>
+</section>
+
+<footer class="bh-footer"><p>Hunt &amp; Hackett, 14 October 2026. An example review: Meridian Freight, its network and every figure in it are invented.</p></footer>
+</main>
+
+<script type="text/csv" id="d-rules">
+boundary,today,proposed
+Office to operations,41,6
+Edge to office,12,9
+Operations to office,9,2
+Edge to operations,7,0
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.flow('#fig-net', {
+    flow: true,
+    zones: [{ id: 'out', label: 'Outside' }, { id: 'edge', label: 'Edge' }, { id: 'office', label: 'Office network' }, { id: 'ops', label: 'Warehouse network' }],
+    nodes: [
+      { id: 'staff', label: 'Staff laptops', kind: 'person', zone: 'out' },
+      { id: 'supplier', label: 'Supplier laptops', kind: 'external', zone: 'out' },
+      { id: 'broker', label: 'Access broker', kind: 'gateway', zone: 'edge' },
+      { id: 'vpn', label: 'Legacy VPN', sub: 'shared password', kind: 'gateway', zone: 'edge' },
+      { id: 'erp', label: 'ERP', zone: 'office' },
+      { id: 'jump', label: 'Jump host', sub: 'sessions recorded', kind: 'gateway', zone: 'office' },
+      { id: 'files', label: 'File servers', kind: 'store', zone: 'office' },
+      { id: 'eng', label: 'Engineering workstation', zone: 'office', rank: 2 },
+      { id: 'wcs', label: 'Warehouse control', zone: 'ops' },
+      { id: 'hist', label: 'Historian', kind: 'store', zone: 'ops' },
+      { id: 'plc', label: 'Conveyor controllers', kind: 'queue', zone: 'ops' },
+    ],
+    edges: [
+      { from: 'staff', to: 'broker', label: 'signs in', volume: 2400 },
+      { from: 'broker', to: 'erp', volume: 1900 },
+      { from: 'broker', to: 'jump', label: 'admins only', volume: 80 },
+      { from: 'broker', to: 'files', volume: 420 },
+      { from: 'supplier', to: 'vpn', label: 'password', kind: 'risk', volume: 46 },
+      { from: 'vpn', to: 'files', kind: 'risk', volume: 31 },
+      { from: 'vpn', to: 'wcs', label: 'whole network', kind: 'risk', volume: 15 },
+      { from: 'erp', to: 'wcs', label: 'orders', volume: 3100 },
+      { from: 'jump', to: 'wcs', label: 'recorded', volume: 80 },
+      { from: 'eng', to: 'plc', label: 'direct', kind: 'risk', volume: 12 },
+      { from: 'wcs', to: 'plc', label: 'commands', volume: 8600 },
+      { from: 'wcs', to: 'hist', label: 'telemetry', volume: 1440 },
+    ],
+    riskLabel: 'Skips the controls',
+  });
+  BH.waffle('#waffle-any', { value: 61 });
+  BH.dot('#fig-rules', { data: BH.data('#d-rules'), x: 'boundary', y: 'today', y2: 'proposed', sort: 'none', zero: true,
+    names: { y: 'Today', y2: 'Proposed' } });
+});</script>

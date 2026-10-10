@@ -37,6 +37,18 @@ export function textWidth(text, size, weight = 400) {
   return canvas.measureText(String(text)).width;
 }
 
+// Break a label into lines no wider than `max` pixels.
+export function wrap(text, max, size, weight) {
+  const words = String(text).split(/\s+/).filter(Boolean), lines = [];
+  let line = '';
+  for (const w of words) {
+    const next = line ? `${line} ${w}` : w;
+    if (line && textWidth(next, size, weight) > max) { lines.push(line); line = w; } else line = next;
+  }
+  if (line) lines.push(line);
+  return lines.length ? lines : [''];
+}
+
 // --------------------------------------------------------------- figure calls
 
 const live = new Set();       // every drawn figure, for re-rendering
@@ -115,6 +127,8 @@ const resizeWatch = new ResizeObserver(entries => {
   resizeTimer = setTimeout(() => changed.forEach(e => e.render()), 120);
 });
 export const rerenderAll = () => live.forEach(e => e.render());
+// The entry of the figure drawn in `el`, for page furniture that drives a figure.
+export const entryFor = el => [...live].find(e => e.el === el) || null;
 // Paper shows the final state: finish all motion, then redraw every figure at
 // the width it will have on the page. A4 with the kit's margins holds 178 mm.
 const PAPER_WIDTH = 178 / 25.4 * 96;

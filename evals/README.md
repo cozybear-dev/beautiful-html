@@ -38,7 +38,7 @@ What the baseline got wrong was consistent: text below the minimum size in every
 ## What this does and does not show
 
 - It is one run per brief per arm, with one model. It shows the direction and size of the effect, not its variance.
-- **Two of the six briefs share their subject with a shipped example**: the customer review with the example now named `quarterly-review`, the incident review with `incident-review`. An agent with the skill had a worked report on the same subject to read. The skill had three examples when these runs were made; it has seven now, and the runs have not been repeated. The other four briefs (survey, experiment, pipeline, data flows) have no such example and are the cleaner test; they went from 20 errors and 59 warnings to 0 and 3.
+- **Two of the six briefs share their subject with a shipped example**: a customer review and an incident review. An agent with the skill had a worked report on the same subject to read. Those two examples have since been replaced: the skill had three examples when these runs were made and has eight different ones now, and the runs have not been repeated. The other four briefs (survey, experiment, pipeline, data flows) have no such example and are the cleaner test; they went from 20 errors and 59 warnings to 0 and 3.
 - The checker measures what can be measured. Whether a report is better designed is a judgement, which is what the blind page is for.
 - Reports made with the skill are about 0.7 MB against about 0.04 MB for the baseline, because they embed their fonts and chart code.
 

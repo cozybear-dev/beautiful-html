@@ -10,6 +10,7 @@
 | How do the parts add up? | `BH.bar` with `mode: 'stacked'` | A pie; more than 5 parts |
 | Do these two things move together? | `BH.scatter` | Two lines on two axes |
 | How does the same pattern differ by group? | `facet` (small multiples) | Seven lines on one chart |
+| Where is it concentrated, across two groupings? | `BH.heatmap` | A table of numbers; a 3D chart |
 | What share is it? | `BH.waffle`, or just the number | A gauge |
 | Where does volume go between stages? | `BH.sankey` (see `diagrams.md`) | Stacked bars |
 | One number? | A key figure, perhaps with `BH.spark` | A chart |
@@ -87,6 +88,19 @@ BH.scatter('#fig-support', { data, x: 'first_response_hours', y: 'csat', label: 
 
 `label` names the points; with `highlight` only those are labelled. `trend: true` adds a fitted line. `size` takes a column for bubble area. Always give `xLabel` and `yLabel` in words.
 
+## `BH.heatmap`
+
+```js
+BH.heatmap('#fig-tactics', { data, x: 'tactic', y: 'sector', value: 'share', unit: '%' });
+```
+
+A value for every pair of two categories: `x` names the columns, `y` the rows, `value` the number that colours the cell. Use it for a matrix the reader scans for the dark corner: tactic by sector, hour by weekday, control by team.
+
+- Rows and columns keep the order of the data, because that order usually means something (weekdays, stages). `sort: 'value'` puts the rows with the highest totals first.
+- The value is written in each cell when it fits; on a phone, or with many columns, the cells carry colour only and the data table has the numbers.
+- The scale starts at zero when the data is near it. `domain: [lo, hi]` sets it.
+- At most 40 rows and 31 columns. Aggregate first: a heatmap of raw events is noise.
+
 ## `BH.spark` and `BH.waffle`
 
 ```js
@@ -104,7 +118,7 @@ BH.plot('#fig-hist', { height: 260, marks: [
   Plot.ruleY([0], { stroke: 'var(--bh-ink)' }) ] });
 ```
 
-Takes an Observable Plot specification and applies the kit's type and palette. Use tokens for colour (`var(--bh-accent)`, `var(--bh-neutral)`, `var(--bh-cat-1)` to `var(--bh-cat-6)`, `var(--bh-seq-1)` to `var(--bh-seq-7)`). Use it for histograms, heatmaps and box plots; for the forms above, the dedicated function is better.
+Takes an Observable Plot specification and applies the kit's type and palette. Use tokens for colour (`var(--bh-accent)`, `var(--bh-neutral)`, `var(--bh-cat-1)` to `var(--bh-cat-6)`, `var(--bh-seq-1)` to `var(--bh-seq-7)`). Use it for a form the kit has no function for: a histogram, a box plot, a timeline of intervals by lane. For the forms above, the dedicated function is better. The kit adds no title text, table or labels to it, so check it on a phone.
 
 ## Rules the kit enforces, and why
 

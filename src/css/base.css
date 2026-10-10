@@ -116,6 +116,27 @@ hr { border: 0; border-top: 1px solid var(--bh-rule); margin: var(--bh-space-6) 
   .bh-section.bh-split > .bh-figure { grid-column: side; grid-row: 1 / span 12; margin-top: 0; align-self: center; }
 }
 
+/* Reading steps: blocks in a split section that stand for the steps of its
+   diagram. A rule down their left edge is the track; the kit marks the one
+   being read and pins the diagram beside them while they pass. */
+.bh-step { padding: 0 0 var(--bh-space-5) var(--bh-space-4); border-left: 2px solid var(--bh-rule); }
+.bh-section > .bh-step + .bh-step { margin-top: 0; }
+.bh-step > * + * { margin-top: var(--bh-space-2); }
+.bh-step > :is(h3, h4) { font-size: var(--bh-size-h3); }
+@media screen and (min-width: 62rem) {
+  .bh-section.bh-split > .bh-figure.is-pinned { position: sticky; align-self: start; }
+  .bh-figure.is-pinned .bh-controls > :not([data-bh-pause]) { display: none; }
+  /* A diagram taller than the window is seen through a frame that follows the step. */
+  .bh-flow-stage.is-framed { overflow: hidden; }
+  .bh-flow-stage.is-framed.more-below { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(to bottom, #000 calc(100% - 2.5rem), transparent); }
+  .bh-flow-stage.is-framed.more-above { -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(to top, #000 calc(100% - 2.5rem), transparent); }
+  .bh-flow-stage.is-framed.more-above.more-below { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent); mask-image: linear-gradient(to bottom, transparent, #000 2.5rem, #000 calc(100% - 2.5rem), transparent); }
+  .bh-split.has-steps > .bh-step { min-height: 52vh; color: var(--bh-ink-2); transition: color var(--bh-fast) var(--bh-ease), border-color var(--bh-fast) var(--bh-ease); }
+  /* The last block is tall enough for the diagram to stay whole while it is read. */
+  .bh-split.has-steps > .bh-step.is-last { min-height: 72vh; }
+  .bh-split.has-steps > .bh-step.is-current { color: var(--bh-ink); border-left-color: var(--bh-accent); }
+}
+
 /* Browsers without subgrid get a plain centred column. */
 @supports not (grid-template-columns: subgrid) {
   .bh-report > .bh-header, .bh-report > .bh-section, .bh-report > .bh-footer {

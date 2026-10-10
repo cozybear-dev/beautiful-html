@@ -358,6 +358,8 @@ export async function checkReport(file, { out, pdf = false, paper = null, render
             const slices = sliceHeights(metrics.height, mode.slice, mode.maxSlices);
             for (const [i, s] of slices.entries()) {
               const name = `${mode.name}-${String(i + 1).padStart(2, '0')}.png`;
+              // Scroll there first, so that whatever is pinned sits where a reader would see it.
+              if (mode.media !== 'print') await page.evaluate(`(async () => { scrollTo(0, ${s.y}); await new Promise(r => setTimeout(r, 260)); })()`);
               writeFileSync(join(outDir, name), await page.screenshot({ y: s.y, height: s.height, width: mode.width }));
               report.screenshots.push(join(outDir, name));
             }

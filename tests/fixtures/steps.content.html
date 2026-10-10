@@ -1,0 +1,77 @@
+<!doctype html>
+<!-- EDITING GUIDE: fixture for reading steps: blocks in a split section that drive its diagram as they are read. -->
+<html lang="en-GB" data-bh-direction="narrative" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One phished mailbox became domain admin in 41 hours</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides"></style>
+</head>
+<body>
+<main class="bh-report">
+<header class="bh-header">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Incident report</span></div>
+  <h1>One phished mailbox became domain admin in 41 hours</h1>
+  <p class="bh-standfirst">Nothing in the path was an exploit. <strong>Every step used something that was already allowed.</strong></p>
+  <p class="bh-byline">A test fixture. Names and timings are invented.</p>
+</header>
+
+<section class="bh-section" data-nav="Summary">
+  <h2>The intruder never broke in twice</h2>
+  <p>A stolen session opened a mailbox, the mailbox delivered a document, and each machine handed over the credential for the next. The sections below follow the path one hop at a time, with the evidence for each.</p>
+</section>
+
+<section class="bh-section bh-split" data-nav="The path">
+  <h2>Five hops from a mailbox to the domain controller</h2>
+  <p>Read on: the diagram follows the step you are reading.</p>
+  <figure class="bh-figure" data-bh-table="off">
+    <h3 class="bh-figure-title">Each hop used access the last one had earned</h3>
+    <p class="bh-figure-sub">Path of the intrusion, by network zone</p>
+    <div class="bh-plot" id="fig-path"></div>
+    <figcaption class="bh-figure-note">Source: mail, endpoint and directory logs.</figcaption>
+  </figure>
+  <div class="bh-step" data-bh-step="1"><h3>Hour 0. A session is stolen</h3><p>A fake sign-in page relays the login and keeps the session cookie. The finance clerk sees nothing unusual.</p></div>
+  <div class="bh-step" data-bh-step="2"><h3>Hour 2. A colleague opens a document</h3><p>It arrives from a real mailbox, so nobody doubts it. The macro starts a remote-access tool.</p></div>
+  <div class="bh-step" data-bh-step="3"><h3>Hour 32. An administrator signs in</h3><p>The intruder has waited on the workstation for this credential, and takes it from memory.</p></div>
+  <div class="bh-step" data-bh-step="4"><h3>Hour 38. A password is found in a script</h3><p>The backup account has not changed it in years.</p></div>
+  <div class="bh-step" data-bh-step="5"><h3>Hour 41. The directory is theirs</h3><p>The account can request a ticket for any service.</p></div>
+</section>
+
+<section class="bh-section" data-nav="After">
+  <h2>Any one of three controls would have ended it</h2>
+  <p>Binding sessions to the device, keeping administrators off workstations, or alerting on new service tickets for old accounts would each have stopped the path at a different hop.</p>
+</section>
+</main>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.flow('#fig-path', {
+    flow: true,
+    zones: [{ id: 'out', label: 'Internet' }, { id: 'work', label: 'Workplace' }, { id: 'srv', label: 'Servers' }, { id: 'id', label: 'Identity' }],
+    nodes: [
+      { id: 'mail', label: 'Phishing page', kind: 'external', zone: 'out' },
+      { id: 'box', label: 'Finance mailbox', kind: 'person', zone: 'work' },
+      { id: 'ws', label: 'Workstation', sub: 'finance team', zone: 'work' },
+      { id: 'fs', label: 'File server', kind: 'store', zone: 'srv' },
+      { id: 'svc', label: 'Backup account', sub: 'password never rotated', kind: 'person', zone: 'id' },
+      { id: 'dc', label: 'Domain controller', kind: 'gateway', zone: 'id' },
+    ],
+    edges: [
+      { from: 'mail', to: 'box', label: 'steals session' },
+      { from: 'box', to: 'ws', label: 'sends document' },
+      { from: 'ws', to: 'fs', label: 'reuses admin sign-in' },
+      { from: 'fs', to: 'svc', label: 'reads stored password' },
+      { from: 'svc', to: 'dc', label: 'requests ticket' },
+    ],
+    highlight: ['mail', 'box', 'ws', 'fs', 'svc', 'dc'],
+    highlightLabel: 'The path taken',
+    steps: [
+      { title: 'Hour 0. A session is stolen.', nodes: ['mail', 'box'], edges: ['mail>box'] },
+      { title: 'Hour 2. A colleague opens a document.', nodes: ['box', 'ws'], edges: ['box>ws'] },
+      { title: 'Hour 32. An administrator signs in.', nodes: ['ws', 'fs'], edges: ['ws>fs'] },
+      { title: 'Hour 38. A password is found in a script.', nodes: ['fs', 'svc'], edges: ['fs>svc'] },
+      { title: 'Hour 41. The directory is theirs.', nodes: ['svc', 'dc'], edges: ['svc>dc'] },
+    ],
+  });
+});</script>

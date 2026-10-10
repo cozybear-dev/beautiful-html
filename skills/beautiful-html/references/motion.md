@@ -6,7 +6,7 @@ The kit moves things for three reasons only. You get all of it by using the kit;
 |---|---|---|
 | Entrance | The header settles in. Each figure animates once as it scrolls into view: lines draw, bars grow from the baseline, key figures count up, diagram edges draw in the order of the flow | Once |
 | Flow | Dots travel along a diagram's edges, showing direction; more dots where more flows | While the diagram is on screen, with a Pause button |
-| Response | Pointing at a diagram node lights what feeds it and what it feeds; a walkthrough moves step by step | When the reader acts |
+| Response | Pointing at a diagram node lights what feeds it and what it feeds; a walkthrough moves step by step; a pinned diagram shows the step of the text being read | When the reader acts |
 
 ## What you control
 
@@ -14,6 +14,7 @@ The kit moves things for three reasons only. You get all of it by using the kit;
 |---|---|
 | Show direction of flow on a diagram | `flow: true` in `BH.flow`; give edges a `volume` to show relative amounts |
 | Walk the reader through a diagram | `steps: [{ title, text, nodes, edges }]` in `BH.flow` |
+| Have a diagram follow the text beside it | `bh-step` blocks in a `bh-split` section: see `diagrams.md` |
 | Make one figure static | `motion: false` in that figure's options |
 | Make the whole report static | `data-bh-motion="off"` on `<html>` |
 | Present a walkthrough yourself | The returned object has `step(n)`, `play()` and `pause()` |

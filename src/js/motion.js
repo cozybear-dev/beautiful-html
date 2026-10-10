@@ -85,6 +85,8 @@ export function enterFigure(el) {
     }
     for (const g of el.querySelectorAll('.bh-edge-label-group, .bh-zone')) out.push(fade(g, 200, med));
     for (const g of el.querySelectorAll('.bh-dots')) out.push(fade(g, slow, med));
+    // Heatmap cells arrive column by column.
+    for (const g of el.querySelectorAll('.bh-heat g')) out.push(fade(g, Math.min(Number(g.dataset.col || 0) * 30 + Number(g.dataset.row || 0) * 12, 600), med));
     // Sankey ribbons wipe in along the flow.
     for (const g of el.querySelectorAll('.bh-sankey-links')) out.push(anim(g, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: slow }));
     for (const g of el.querySelectorAll('.bh-sankey-label')) out.push(fade(g, slow * 0.6, med));
@@ -220,7 +222,7 @@ export function flowDots(el) {
       c.setAttribute('r', e.key ? 3 : 2.5);
       c.setAttribute('class', `bh-flow-dot${e.key ? ' is-key' : ''}`);
       layer.appendChild(c);
-      dots.push({ c, pts, cum, length, at: length * k / count });
+      dots.push({ c, pts, cum, length, at: length * k / count, edge: el.querySelector(`.bh-edge-group[data-id="${e.id}"]`), dim: false });
     }
   }
   const place = d => {
@@ -229,6 +231,9 @@ export function flowDots(el) {
     const t = (d.at - d.cum[i - 1]) / Math.max(1e-6, d.cum[i] - d.cum[i - 1]);
     d.c.setAttribute('cx', (d.pts[i - 1][0] + (d.pts[i][0] - d.pts[i - 1][0]) * t).toFixed(1));
     d.c.setAttribute('cy', (d.pts[i - 1][1] + (d.pts[i][1] - d.pts[i - 1][1]) * t).toFixed(1));
+    // A dot is as quiet as its edge: dimmed while a step or a hover is about something else.
+    const dim = !!d.edge && d.edge.classList.contains('is-dim');
+    if (dim !== d.dim) { d.dim = dim; d.c.classList.toggle('is-dim', dim); }
   };
   dots.forEach(place);
   const l = loop(el, dt => { for (const d of dots) { d.at = (d.at + 64 * dt) % d.length; place(d); } }, { label: 'flow' });

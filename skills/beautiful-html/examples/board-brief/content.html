@@ -30,6 +30,7 @@ FIGURES
     BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
     BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
     BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
     BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
     BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
   x is the category or date, y is the value. data comes from BH.data('#d-x').
@@ -47,7 +48,7 @@ are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Remote access is now the weakest edge of the estate</title>
+<title>Remote access is now the weakest edge of the network</title>
 <style>html{visibility:hidden}</style>
 <script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
 <!-- Opened without a kit, this file says so instead of showing a blank page. -->
@@ -63,8 +64,8 @@ document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-sp
 <!-- Front page: findings in words. A board wants the verdicts first, and the brief is not about measures. -->
 <header class="bh-header">
   <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Board brief, October 2026</span></div>
-  <h1>Remote access is now the weakest edge of the estate</h1>
-  <p class="bh-standfirst">The perimeter review found the office network in good order and the routes around it neglected. <strong>We recommend retiring the legacy VPN before year end.</strong></p>
+  <h1>Remote access is now the weakest edge of the network</h1>
+  <p class="bh-standfirst">The perimeter review found the office network in good order and the routes around it neglected. <strong>We recommend retiring the legacy VPN before the end of the year.</strong></p>
   <ol class="bh-findings">
     <li><h2>The legacy VPN still accepts passwords alone</h2><p>It predates single sign-on and was left running for two suppliers.</p></li>
     <li><h2>Patching is fast wherever it is automated</h2><p>The servers that lag are the ones still patched by hand.</p></li>
@@ -79,25 +80,25 @@ document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-sp
     <h3 class="bh-figure-title">Remote access is the only category that grew</h3>
     <p class="bh-figure-sub">Services reachable from the internet, April and October 2026</p>
     <div class="bh-plot" id="fig-exposure"></div>
-    <figcaption class="bh-figure-note">Source: external scans of 4 April and 3 October 2026. Illustrative figures.</figcaption>
+    <figcaption class="bh-figure-note">Source: external scans of 4 April and 3 October 2026.</figcaption>
   </figure>
 </section>
 
 <section class="bh-section" data-nav="Decision">
   <h2>Three ways to close it</h2>
   <div class="bh-compare">
-    <div><h3>Retire the VPN</h3><p>Move both suppliers to the access broker. Six weeks, no new licences. Closes the finding.</p></div>
-    <div><h3>Add a second factor</h3><p>Two weeks. Keeps an unpatched gateway on the internet.</p></div>
+    <div><h3>Retire the VPN</h3><p>Move both suppliers to the access broker. Six weeks, 18,000 euros, no new licences. Closes the finding.</p></div>
+    <div><h3>Add a second factor</h3><p>Two weeks, 6,000 euros. Keeps an unpatched gateway on the internet.</p></div>
     <div><h3>Accept the risk</h3><p>No cost now. The gateway leaves vendor support in March.</p></div>
   </div>
   <div class="bh-callout">
     <p class="bh-callout-label">Recommendation</p>
     <h3>Retire the legacy VPN by 15 December</h3>
-    <p>It is the only option that removes the gateway. The suppliers have both confirmed they can move.</p>
+    <p>It is the only option that removes the gateway. Both suppliers have confirmed they can move.</p>
   </div>
 </section>
 
-<footer class="bh-footer"><p>Prepared for the board by Hunt &amp; Hackett, 10 October 2026. An illustrative brief: the organisation and its figures are invented.</p></footer>
+<footer class="bh-footer"><p>Prepared for the board of Meridian Freight by Hunt &amp; Hackett, 10 October 2026. An example brief: the organisation and its figures are invented.</p></footer>
 </main>
 
 <script type="text/csv" id="d-exposure">
@@ -108,6 +109,7 @@ Remote access,6,9
 Administrative interfaces,8,2
 File transfer,5,1
 </script>
+
 <script id="bh-figures">BH.ready(() => {
   BH.dot('#fig-exposure', { data: BH.data('#d-exposure'), x: 'category', y: 'april', y2: 'october', sort: 'none', zero: true,
     names: { y: 'April', y2: 'October' } });

@@ -30,6 +30,7 @@ FIGURES
     BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
     BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
     BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
     BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
     BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
   x is the category or date, y is the value. data comes from BH.data('#d-x').
@@ -47,7 +48,7 @@ are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One phished mailbox became domain admin in 41 hours</title>
+<title>One stolen session became domain administrator in 41 hours</title>
 <style>html{visibility:hidden}</style>
 <script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
 <!-- Opened without a kit, this file says so instead of showing a blank page. -->
@@ -60,82 +61,106 @@ document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-sp
 <body>
 <main class="bh-report">
 
-<!-- Front page: a title screen. The room should hear the claim before it sees any evidence. -->
+<!-- Front page: a title screen. The room should hear the claim before it sees any evidence; the numbers get the next screen to themselves. -->
 <header class="bh-header">
-  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Incident debrief</span></div>
-  <h1>One phished mailbox became domain admin in 41 hours</h1>
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Incident debrief IR-2026-031</span></div>
+  <h1>One stolen session became domain administrator in 41 hours</h1>
   <p class="bh-standfirst">Nothing in the path was an exploit. <strong>Every step used something that was already allowed.</strong></p>
-  <p class="bh-byline">Illustrative scenario for a tabletop exercise. Names and timings are invented.</p>
+  <p class="bh-byline">For the management team of Meridian Freight, 6 October 2026. The written report is IR-2026-031.</p>
 </header>
+
+<section class="bh-section" data-nav="Impact">
+  <h2>It was stopped before any data left</h2>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">First access to domain administrator</p><p class="bh-keyfigure-value">41<small>hours</small></p><p class="bh-keyfigure-note">14 to 16 September</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">First alert to containment</p><p class="bh-keyfigure-value">5.5<small>hours</small></p><p class="bh-keyfigure-note">overnight, by the on-call team</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Systems the intruder used</p><p class="bh-keyfigure-value">5</p><p class="bh-keyfigure-note">of 1,840 in the domain</p></div>
+  </div>
+</section>
 
 <section class="bh-section bh-split" data-nav="The path">
   <h2>Each step used access the last one had earned</h2>
-  <p>The intruder never broke in twice. A stolen session opened a mailbox, the mailbox delivered a document, and each machine handed over the credential for the next.</p>
+  <p>A stolen session opened a mailbox, the mailbox delivered a document, and each machine handed over the credential for the next.</p>
   <p>Step through the path, or press Play.</p>
   <figure class="bh-figure" data-bh-table="off">
     <h3 class="bh-figure-title">Five hops from a mailbox to the domain controller</h3>
     <p class="bh-figure-sub">Path of the intrusion, by network zone</p>
     <div class="bh-plot" id="fig-path"></div>
-    <figcaption class="bh-figure-note">Source: reconstructed from mail, endpoint and directory logs.</figcaption>
+    <figcaption class="bh-figure-note">Source: mail, endpoint and directory logs.</figcaption>
   </figure>
 </section>
 
-<section class="bh-section" data-nav="The gap">
+<section class="bh-section" data-nav="The wait">
   <h2>Thirty of the 41 hours passed between two machines</h2>
-  <p>The intruder waited on the first workstation until a file-server administrator signed in. Nothing was watching for it.</p>
+  <p>The intruder waited on one workstation until a file-server administrator signed in. Nothing was watching for it.</p>
   <figure class="bh-figure bh-in-text">
     <h3 class="bh-figure-title">The longest wait was the best chance to catch it</h3>
     <p class="bh-figure-sub">Hours between each step and the next</p>
     <div class="bh-plot" id="fig-gap"></div>
-    <figcaption class="bh-figure-note">Source: timestamps of first activity on each system.</figcaption>
+    <figcaption class="bh-figure-note">Source: first activity on each system.</figcaption>
   </figure>
+</section>
+
+<section class="bh-section">
+  <p class="bh-statement">Nothing was broken into. Each step was allowed.</p>
 </section>
 
 <section class="bh-section" data-nav="What stops it">
   <h2>Any one of three controls would have ended it</h2>
   <ol class="bh-findings bh-wide">
-    <li><h3>Bind sessions to the device</h3><p>The stolen mail session would not have worked from the intruder's machine.</p></li>
-    <li><h3>Keep administrators off workstations</h3><p>There would have been no file-server credential to wait for.</p></li>
-    <li><h3>Alert on new service tickets for old accounts</h3><p>The last hop would have paged someone within minutes.</p></li>
+    <li><h3>Bind sessions to the device</h3><p>The stolen session would not have worked from the intruder's machine.</p></li>
+    <li><h3>Keep administrators off workstations</h3><p>There would have been no better credential to wait for.</p></li>
+    <li><h3>Rotate and vault service passwords</h3><p>The script on the file server would have held nothing of use.</p></li>
   </ol>
 </section>
+
+<section class="bh-section" data-nav="Decision">
+  <h2>One decision for today</h2>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Decision needed</p>
+    <h3>Extend device-bound sessions from 240 people to all 2,400 by March</h3>
+    <p>Finance and administrators are covered by 31 October. Every other mailbox can still be used the way this one was.</p>
+  </div>
+</section>
 </main>
+
+<script type="text/csv" id="d-gap">
+step,hours
+Mailbox to workstation,2
+Workstation to file server,30
+File server to backup account,6
+Backup account to domain controller,3
+</script>
 
 <script id="bh-figures">BH.ready(() => {
   BH.flow('#fig-path', {
     flow: true,
     zones: [{ id: 'out', label: 'Internet' }, { id: 'work', label: 'Workplace' }, { id: 'srv', label: 'Servers' }, { id: 'id', label: 'Identity' }],
     nodes: [
-      { id: 'mail', label: 'Phishing page', kind: 'external', zone: 'out' },
+      { id: 'page', label: 'Phishing page', kind: 'external', zone: 'out' },
       { id: 'box', label: 'Finance mailbox', kind: 'person', zone: 'work' },
       { id: 'ws', label: 'Workstation', sub: 'finance team', zone: 'work' },
       { id: 'fs', label: 'File server', kind: 'store', zone: 'srv' },
-      { id: 'svc', label: 'Backup account', sub: 'password never rotated', kind: 'person', zone: 'id' },
+      { id: 'svc', label: 'Backup account', sub: 'password from 2019', kind: 'person', zone: 'id' },
       { id: 'dc', label: 'Domain controller', kind: 'gateway', zone: 'id' },
     ],
     edges: [
-      { from: 'mail', to: 'box', label: 'steals session' },
+      { from: 'page', to: 'box', label: 'steals session' },
       { from: 'box', to: 'ws', label: 'sends document' },
       { from: 'ws', to: 'fs', label: 'reuses admin sign-in' },
-      { from: 'fs', to: 'svc', label: 'reads stored password' },
-      { from: 'svc', to: 'dc', label: 'requests ticket' },
+      { from: 'fs', to: 'svc', label: 'reads password' },
+      { from: 'svc', to: 'dc', label: 'replicates directory' },
     ],
-    highlight: ['mail', 'box', 'ws', 'fs', 'svc', 'dc'],
+    highlight: ['page', 'box', 'ws', 'fs', 'svc', 'dc'],
     highlightLabel: 'The path taken',
     overview: 'The whole path. Step through it, or press Play.',
     steps: [
-      { title: 'Hour 0. A session is stolen.', text: 'A fake sign-in page relays the login and keeps the session cookie.', nodes: ['mail', 'box'], edges: ['mail>box'] },
+      { title: 'Hour 0. A session is stolen.', text: 'A fake sign-in page relays the login and keeps the session.', nodes: ['page', 'box'], edges: ['page>box'] },
       { title: 'Hour 2. A colleague opens a document.', text: 'It arrives from a real mailbox, so nobody doubts it.', nodes: ['box', 'ws'], edges: ['box>ws'] },
-      { title: 'Hour 32. An administrator signs in.', text: 'The intruder has waited on the workstation for this credential.', nodes: ['ws', 'fs'], edges: ['ws>fs'] },
-      { title: 'Hour 38. A password is found in a script.', text: 'The backup account has not changed it in years.', nodes: ['fs', 'svc'], edges: ['fs>svc'] },
-      { title: 'Hour 41. The directory is theirs.', text: 'The account can request a ticket for any service.', nodes: ['svc', 'dc'], edges: ['svc>dc'] },
+      { title: 'Hour 32. An administrator signs in.', text: 'The intruder has waited on the workstation for this.', nodes: ['ws', 'fs'], edges: ['ws>fs'] },
+      { title: 'Hour 38. A password is found in a script.', text: 'It was set in 2019.', nodes: ['fs', 'svc'], edges: ['fs>svc'] },
+      { title: 'Hour 41. The directory is theirs.', text: 'The first alert follows half an hour later.', nodes: ['svc', 'dc'], edges: ['svc>dc'] },
     ],
   });
-  BH.bar('#fig-gap', { unit: 'h', sort: 'none', highlight: 'Workstation to file server',
-    data: [
-      { step: 'Mailbox to workstation', hours: 2 },
-      { step: 'Workstation to file server', hours: 30 },
-      { step: 'File server to backup account', hours: 6 },
-      { step: 'Backup account to domain controller', hours: 3 },
-    ], x: 'step', y: 'hours' });
+  BH.bar('#fig-gap', { data: BH.data('#d-gap'), x: 'step', y: 'hours', unit: 'h', sort: 'none', highlight: 'Workstation to file server' });
 });</script>

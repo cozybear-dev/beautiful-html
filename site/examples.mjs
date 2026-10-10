@@ -1,0 +1,28 @@
+// What the gallery says about each example, in the order it shows them.
+// `shot` is the desktop screen used as the card's picture: 1 is the front page.
+export const GALLERY = [
+  { name: 'incident-report', kind: 'Incident report', reader: 'For a customer\'s CISO, after an intrusion', shot: 3, lead: true,
+    look: 'Scroll through "The path". The diagram stays beside the text and shows the hop you are reading. Further down, a timeline drawn for this report alone, and the three log lines that carry the case.',
+    ask: 'Here are the responder\'s notes and three log extracts for IR-2026-031. Write the incident report for the customer\'s CISO, and take the reader through the path one hop at a time.' },
+  { name: 'threat-landscape', kind: 'Published data story', reader: 'For customers and the press, read on a screen', shot: 1, lead: true,
+    look: 'It opens on the chart that is the finding. Below it: the same decline in four sectors on one scale, a heatmap of tactics by sector, and a thousand alerts narrowed to nine.',
+    ask: 'From cases.csv, write this quarter\'s threat landscape. The story is how fast intruders now act. Dark scheme; it will be read online.' },
+  { name: 'incident-debrief', kind: 'Debrief for a meeting', reader: 'The same incident, for the management team', shot: 3,
+    look: 'Press Play on the path, or use the arrow keys to move between screens. One statement gets a screen to itself.',
+    ask: 'Turn IR-2026-031 into a deck for Tuesday\'s management meeting. One idea per screen, and end on the decision we need.' },
+  { name: 'service-review', kind: 'Quarterly service review', reader: 'For a customer who tracks the same measures every quarter', shot: 1,
+    look: 'The one report that opens on numbers, because it is about them. Find the heatmap of alerts by hour and weekday.',
+    ask: 'Here are the Q3 exports from the detection platform. Write Meridian Freight\'s quarterly service review. Be straight about the warehouse network.' },
+  { name: 'network-review', kind: 'Network and data-flow review', reader: 'For the head of infrastructure', shot: 1,
+    look: 'The diagram is the front page. Point at a system to trace what feeds it and what it feeds; the three red routes are the finding.',
+    ask: 'From firewall-rules.csv and flows-september.csv, show which systems can reach the warehouse network and which routes skip the jump host.' },
+  { name: 'board-brief', kind: 'Decision brief', reader: 'For a board with five minutes', shot: 1,
+    look: 'Three findings in words where a strip of numbers would have been filler. Short on purpose.',
+    ask: 'Summarise the perimeter review for the board in one page. They need the three findings and a recommendation, not the method.' },
+  { name: 'investment-proposal', kind: 'Budget proposal', reader: 'For an executive committee, in a bright room', shot: 5,
+    look: 'A light deck behind a navy title screen. The scatter names only the three measures being proposed.',
+    ask: 'Make the case for the three security investments for 2027 to the executive committee. Light scheme: the boardroom has windows.' },
+  { name: 'research-note', kind: 'Research note', reader: 'For engineers who will check the claims', shot: 2,
+    look: 'A call path with a three-step walkthrough, the calls and their results in a code block, and a table of what held and what did not.',
+    ask: 'Write up part 1 of the lpacCom post as a research note for reviewers. Separate what the authors observed from what they only state.' },
+];

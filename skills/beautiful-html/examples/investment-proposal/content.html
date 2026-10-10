@@ -1,0 +1,181 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
+-->
+<html lang="en-GB" data-bh-direction="presentation" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three investments close the gaps the September intrusion used</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<!-- Opened without a kit, this file says so instead of showing a blank page. -->
+<script>addEventListener('DOMContentLoaded',()=>{const d=document.documentElement;if(document.getElementById('bh-kit-css'))return;d.style.visibility='visible';
+document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-space:pre-wrap;max-width:36em;margin:18vh auto;padding:0 1.5rem">This is the content of a report without its kit, so there is nothing to see yet.\nTo read it, join it to a kit from the beautiful-html skill:\n\ncat content.html kit/'+d.dataset.bhDirection+'.kit.html > report.html</pre>'})</script>
+<style id="bh-overrides">
+/* Leave empty: the Hunt & Hackett look is built into the kit. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<!-- Front page: a cover as the title screen. A proposal put to an executive committee in a bright room: light screens, one decision at the end. -->
+<header class="bh-header bh-cover">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Security investment proposal, 2027</span></div>
+  <h1>Three investments close the gaps the September intrusion used</h1>
+  <p class="bh-standfirst">Together they cost 610,000 euros over three years. <strong>Each one removes a step the intruder needed.</strong></p>
+  <p class="bh-byline">For the executive committee of Meridian Freight, 20 October 2026.</p>
+</header>
+
+<section class="bh-section">
+  <p class="bh-statement">In September nothing was broken into. Each step the intruder took was allowed.</p>
+</section>
+
+<section class="bh-section" data-nav="Where we stand">
+  <h2>Detection is strong; identity and recovery are not</h2>
+  <p>We scored five capabilities against what an organisation of this size needs. Two are where they should be. Three fall short, and the intrusion went through all three.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Identity, remote access and recovery are furthest from target</h3>
+    <p class="bh-figure-sub">Capability today and the target for end of 2027, on a scale of 1 to 5</p>
+    <div class="bh-plot" id="fig-maturity"></div>
+    <figcaption class="bh-figure-note">Source: Hunt &amp; Hackett assessment, October 2026.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="The three">
+  <h2>Three investments, one for each gap</h2>
+  <ol class="bh-findings bh-wide">
+    <li><h3>Device-bound sign-in for everyone</h3><p>A stolen session stops working on any other machine. 2,400 people, by March. 190,000 euros.</p></li>
+    <li><h3>Separate administration workstations</h3><p>Administrator credentials never touch an ordinary workstation again. 38 administrators. 150,000 euros.</p></li>
+    <li><h3>Tested recovery of the directory</h3><p>A rehearsed rebuild in under eight hours, twice a year. 270,000 euros over three years.</p></li>
+  </ol>
+</section>
+
+<section class="bh-section" data-nav="Value">
+  <h2>These three remove the most risk for each euro</h2>
+  <p>We costed seven candidate measures and estimated how much of the modelled yearly loss each removes.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The three chosen measures sit furthest above the line</h3>
+    <p class="bh-figure-sub">Cost over three years against expected yearly loss removed, k€</p>
+    <div class="bh-plot" id="fig-value"></div>
+    <figcaption class="bh-figure-note">Source: loss model in annex A. Estimates, with wide margins.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Cost">
+  <h2>Most of the money is spent in the first year</h2>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">360,000 euros in 2027, then 125,000 a year to run</h3>
+    <p class="bh-figure-sub">Cost by year and investment, k€</p>
+    <div class="bh-plot" id="fig-cost"></div>
+    <figcaption class="bh-figure-note">Source: supplier quotes of October 2026 and internal staffing estimates.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="When">
+  <h2>All three are in place before the next peak season</h2>
+  <ol class="bh-timeline">
+    <li><span class="bh-when">Jan 2027</span><div><p>Administration workstations ordered and built</p></div></li>
+    <li data-key><span class="bh-when">Mar 2027</span><div><p>Device-bound sign-in for all 2,400 people</p></div></li>
+    <li><span class="bh-when">May 2027</span><div><p>Administrators work only from the new workstations</p></div></li>
+    <li data-key><span class="bh-when">Jun 2027</span><div><p>First full recovery rehearsal</p></div></li>
+    <li><span class="bh-when">Sep 2027</span><div><p>Peak season begins</p></div></li>
+  </ol>
+</section>
+
+<section class="bh-section bh-band" data-nav="Decision">
+  <h2>The decision today</h2>
+  <div class="bh-compare">
+    <div><h3>Fund all three</h3><p>610,000 euros over three years. Closes every step of the September path.</p></div>
+    <div><h3>Fund sign-in only</h3><p>190,000 euros. Stops the first step; leaves the other two for the next intruder who gets in another way.</p></div>
+    <div><h3>Defer to 2028</h3><p>No cost this year. The gaps stay as they were in September.</p></div>
+  </div>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Decision requested</p>
+    <h3>Approve 360,000 euros for 2027 and the plan for all three</h3>
+    <p>The running cost of 125,000 euros a year returns to this committee with the 2028 budget.</p>
+  </div>
+</section>
+</main>
+
+<script type="text/csv" id="d-maturity">
+capability,today,target
+Detection and response,4.2,4.5
+Network segmentation,3.4,4
+Remote access,2.6,4
+Identity and sign-in,2.1,4
+Recovery,1.8,3.5
+</script>
+<script type="text/csv" id="d-value">
+measure,cost,loss_removed
+Device-bound sign-in,190,410
+Administration workstations,150,330
+Tested recovery,270,380
+Awareness training,60,45
+Second data centre,900,360
+Network redesign,520,240
+More detection rules,110,70
+</script>
+<script type="text/csv" id="d-cost">
+year,investment,cost
+2027,Device-bound sign-in,150
+2027,Administration workstations,110
+2027,Tested recovery,100
+2028,Device-bound sign-in,20
+2028,Administration workstations,20
+2028,Tested recovery,85
+2029,Device-bound sign-in,20
+2029,Administration workstations,20
+2029,Tested recovery,85
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.dot('#fig-maturity', { data: BH.data('#d-maturity'), x: 'capability', y: 'today', y2: 'target', sort: 'none', yDomain: [1, 5],
+    names: { y: 'Today', y2: 'Target, end of 2027' } });
+  BH.scatter('#fig-value', { data: BH.data('#d-value'), x: 'cost', y: 'loss_removed', label: 'measure', trend: true,
+    highlight: ['Device-bound sign-in', 'Administration workstations', 'Tested recovery'],
+    xLabel: 'Cost over three years', xUnit: 'k€', yLabel: 'Yearly loss removed', unit: 'k€' });
+  BH.bar('#fig-cost', { data: BH.data('#d-cost'), x: 'year', y: 'cost', series: 'investment', mode: 'stacked', layout: 'vertical', unit: 'k€' });
+});</script>

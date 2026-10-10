@@ -145,3 +145,63 @@ test('printing from a browser redraws charts at the paper width, then restores t
     assert.equal(await w(), screen);
   });
 });
+
+// ------------------------------------------------------------------ heatmap
+const MATRIX = `const sectors = ['Manufacturing', 'Healthcare', 'Logistics', 'Finance'], tactics = ['Initial access', 'Credential access', 'Lateral movement', 'Exfiltration', 'Impact'];
+const cells = sectors.flatMap((sector, i) => tactics.map((tactic, j) => ({ sector, tactic, share: (i * 7 + j * 11) % 43 + 2 })));`;
+test('BH.heatmap draws one cell for every pair, with a key, readable values and a data table', { skip }, async () => {
+  const html = page(fig('f'), `${MATRIX} BH.heatmap('#f', { data: cells, x: 'tactic', y: 'sector', value: 'share', unit: '%' });`);
+  for (const mode of [DESKTOP, PHONE]) assert.deepEqual((await audit(html, mode)).findings.map(f => `${f.code}: ${f.message}`), [], mode.name);
+  await withPage(html, { ...DESKTOP, reducedMotion: true }, async p => {
+    const r = await p.evaluate(`(() => { const el = document.querySelector('#f'), fig = el.closest('figure');
+      const lum = c => { const [r, g, b] = c.match(/[\\d.]+/g).slice(0, 3).map(x => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+      const ratio = (a, b) => { const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x); return (hi + 0.05) / (lo + 0.05); };
+      const cells = [...el.querySelectorAll('.bh-heat-cell')];
+      const worst = Math.min(...cells.map(c => { const t = c.parentNode.querySelector('.bh-heat-value'); return ratio(getComputedStyle(c).fill, getComputedStyle(t).fill); }));
+      return { cells: cells.length, fills: new Set(cells.map(c => getComputedStyle(c).fill)).size, values: el.querySelectorAll('.bh-heat-value').length, worst,
+        rows: [...el.querySelectorAll('.bh-heat-row')].map(t => t.textContent), cols: [...el.querySelectorAll('.bh-heat-col')].map(t => t.textContent.replace(/\\s+/g, ' ').trim()).length,
+        key: el.querySelector('.bh-heat-key').textContent.replace(/\\s+/g, ' ').trim(), role: el.getAttribute('role'), title: cells[0].querySelector('title').textContent,
+        table: fig.querySelectorAll('details.bh-data tbody tr').length, error: !!el.querySelector('.bh-error') }; })()`);
+    assert.equal(r.error, false);
+    assert.equal(r.cells, 20);
+    assert.ok(r.fills >= 4, `only ${r.fills} different fills`);
+    assert.equal(r.values, 20);
+    assert.ok(r.worst >= 4.5, `a value has ${r.worst.toFixed(2)}:1 on its cell`);
+    assert.deepEqual(r.rows, ['Manufacturing', 'Healthcare', 'Logistics', 'Finance'], 'rows keep the order of the data');
+    assert.equal(r.cols, 5);
+    assert.match(r.key, /^0%.*42%$/);
+    assert.equal(r.role, 'img');
+    assert.equal(r.title, 'Manufacturing, Initial access: 2%');
+    assert.equal(r.table, 20);
+  });
+});
+test('a wide heatmap on a phone drops the values it cannot fit and thins the column labels', { skip }, async () => {
+  const html = page(fig('f'), `const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']; const d = days.flatMap((day, i) => Array.from({ length: 24 }, (_, hour) => ({ day, hour, alerts: Math.round(40 + 30 * Math.sin((hour - 3) / 3.8) + (i > 4 ? -25 : 0) + (hour * 7 + i * 3) % 9) })));
+    BH.heatmap('#f', { data: d, x: 'hour', y: 'day', value: 'alerts' });`);
+  assert.deepEqual((await audit(html, PHONE)).findings.map(f => `${f.code}: ${f.message}`), []);
+  await withPage(html, { ...PHONE, reducedMotion: true }, async p => {
+    const r = await p.evaluate(`(() => { const el = document.querySelector('#f'); return { cells: el.querySelectorAll('.bh-heat-cell').length, values: el.querySelectorAll('.bh-heat-value').length, cols: el.querySelectorAll('.bh-heat-col').length, wide: el.scrollWidth > el.clientWidth + 1 }; })()`);
+    assert.equal(r.cells, 168);
+    assert.equal(r.values, 0);
+    assert.ok(r.cols < 24 && r.cols >= 4, `${r.cols} column labels`);
+    assert.equal(r.wide, false);
+  });
+});
+test('a heatmap with a missing value or column says so, or leaves the cell empty', { skip }, async () => {
+  const html = page(fig('a') + fig('b'), `BH.heatmap('#a', { data: [{ r: 'A', c: 'X', n: 1 }, { r: 'A', c: 'Y', n: 5 }, { r: 'B', c: 'X', n: 3 }], x: 'c', y: 'r', value: 'n' }); BH.heatmap('#b', { data: [{ r: 'A', c: 'X', n: 1 }], x: 'c', y: 'r' });`);
+  await withPage(html, { ...DESKTOP, reducedMotion: true }, async p => {
+    const r = await p.evaluate(`[document.querySelectorAll('#a .bh-heat-cell').length, document.querySelectorAll('#a .bh-heat-empty').length, document.querySelector('#b .bh-error').textContent]`);
+    assert.deepEqual(r.slice(0, 2), [3, 1]);
+    assert.match(r[2], /needs the value option/);
+  });
+});
+
+test('a dumbbell that ends at zero keeps its value label clear of the category names', { skip }, async () => {
+  const html = page(fig('f'), `BH.dot('#f', { data: [{ b: 'Office to operations', t: 41, p: 6 }, { b: 'Edge to office', t: 12, p: 9 }, { b: 'Edge to operations', t: 7, p: 0 }, { b: 'Operations to office', t: 0, p: 4 }], x: 'b', y: 't', y2: 'p', sort: 'none', zero: true });`);
+  for (const mode of [DESKTOP, PHONE]) assert.deepEqual((await audit(html, mode)).findings.map(f => `${f.code}: ${f.message}`), [], mode.name);
+});
+
+test('a hairline that runs under a label is not taken for its background', { skip }, async () => {
+  const html = page('<svg width="300" height="40" role="img" aria-label="A label on a grid line" style="font-family: var(--bh-font-data)"><line x1="150" y1="0" x2="150" y2="40" stroke="var(--bh-rule)"></line><text x="150" y="24" text-anchor="middle" fill="var(--bh-ink)" font-size="14">Workstations</text></svg>', '');
+  assert.deepEqual((await audit(html)).findings.filter(f => f.code === 'low-contrast').map(f => f.message), []);
+});

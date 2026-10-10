@@ -30,6 +30,7 @@ FIGURES
     BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
     BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
     BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
     BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
     BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
   x is the category or date, y is the value. data comes from BH.data('#d-x').
@@ -43,7 +44,7 @@ LOOK
 Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
 are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
 -->
-<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -60,7 +61,7 @@ document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-sp
 <body>
 <main class="bh-report">
 
-<!-- Front page: the figure. One chart is the finding, so it takes the place of a standfirst. -->
+<!-- Front page: the figure. One chart is the finding, so it takes the place of a standfirst. Dark, because it is published to be read on a screen. -->
 <header class="bh-header">
   <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Threat landscape, third quarter 2026</span></div>
   <h1>Intruders now act within days, not weeks</h1>
@@ -68,37 +69,73 @@ document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-sp
     <h2 class="bh-figure-title">The time between break-in and impact has fallen from three weeks to four days</h2>
     <p class="bh-figure-sub">Median days from first access to encryption or theft, by quarter</p>
     <div class="bh-plot" id="fig-dwell"></div>
-    <figcaption class="bh-figure-note">Source: incident response cases. Illustrative figures.</figcaption>
+    <figcaption class="bh-figure-note">Source: Hunt &amp; Hackett incident response cases, 2023 to September 2026.</figcaption>
   </figure>
+  <p class="bh-byline">Hunt &amp; Hackett Threat Intelligence, 10 October 2026. Based on 214 intrusions investigated since January 2023.</p>
 </header>
 
-<section class="bh-section" data-nav="By sector">
+<section class="bh-section" data-nav="Sectors">
   <h2>Every sector shortened, and logistics is still the slowest to be hit</h2>
-  <p>The fall is not one group changing tactics. It shows in every sector we respond in, on the same scale.</p>
+  <p>The fall is not one group changing tactics. It shows in every sector we respond in, on the same scale. Logistics firms still get the most warning, because their networks are large and flat and take longer to map.</p>
   <figure class="bh-figure">
     <h3 class="bh-figure-title">The same decline in four sectors</h3>
-    <p class="bh-figure-sub">Median days from first access to impact, half-years</p>
+    <p class="bh-figure-sub">Median days from first access to impact, by half-year</p>
     <div class="bh-plot" id="fig-sectors"></div>
-    <figcaption class="bh-figure-note">Source: incident response cases. Illustrative figures.</figcaption>
+    <figcaption class="bh-figure-note">Source: incident response cases. Sectors with at least 20 cases.</figcaption>
   </figure>
 </section>
 
-<section class="bh-section" data-nav="Triage">
+<section class="bh-section" data-nav="Entry">
+  <h2>Four in ten intrusions began with a password that worked</h2>
+  <p>No exploit, no malware: the intruder signed in. Most of those passwords came from an earlier breach somewhere else, or from a session stolen through a relay page.</p>
+  <aside class="bh-aside"><h3>What counts as valid credentials</h3><p>A password, token or session that the system accepted as genuine. A password guessed against an exposed service is counted under that service.</p></aside>
+  <figure class="bh-figure bh-in-text">
+    <h3 class="bh-figure-title">Valid credentials are the most common way in</h3>
+    <p class="bh-figure-sub">How the intruder first got access, % of cases in 2026</p>
+    <div class="bh-plot" id="fig-entry"></div>
+    <figcaption class="bh-figure-note">Source: 61 cases, January to September 2026.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Tactics">
+  <h2>Once inside, they go for credentials before anything else</h2>
+  <p>Read across a row to see what an intrusion in that sector usually involves. Credential access stands out in every row: it is how one foothold becomes many. Exfiltration is what separates the sectors, and impact is rarest where data is worth more than downtime.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Credential access shows up in at least four of five cases, in every sector</h3>
+    <p class="bh-figure-sub">Share of cases in which each tactic was seen, %, 2023 to 2026</p>
+    <div class="bh-plot" id="fig-tactics"></div>
+    <figcaption class="bh-figure-note">Source: incident response cases, tactics as named in MITRE ATT&amp;CK.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Speed">
+  <h2>Cases where the first alert was read within a day stayed small</h2>
+  <p>In all but one of the cases an alert had fired before the damage. What differed was how long it sat unread. Each dot is a case from the last twelve months.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The longer the first alert waited, the more systems were lost</h3>
+    <p class="bh-figure-sub">Hours until the first alert was read, against systems affected</p>
+    <div class="bh-plot" id="fig-speed"></div>
+    <figcaption class="bh-figure-note">Source: 28 cases, October 2025 to September 2026. Case 06 was read in under three hours and dismissed.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section bh-band" data-nav="Triage">
   <h2>Four days is shorter than most alert queues</h2>
   <p>A detection only helps if someone reads it in time. Most alerts close without a person looking; the ones that matter are a thin stream.</p>
   <figure class="bh-figure">
     <h3 class="bh-figure-title">Of a thousand alerts, nine become incidents</h3>
-    <p class="bh-figure-sub">Where 1,000 alerts go in a typical month</p>
+    <p class="bh-figure-sub">Where 1,000 alerts go in a typical month at a mid-sized organisation</p>
     <div class="bh-plot" id="fig-triage"></div>
-    <figcaption class="bh-figure-note">Source: illustrative figures.</figcaption>
+    <figcaption class="bh-figure-note">Source: median of 14 organisations before they joined our detection service.</figcaption>
   </figure>
 </section>
 
-<section class="bh-section bh-band">
+<section class="bh-section">
   <p class="bh-statement">If the queue takes longer than four days to reach an alert, the alert arrives after the damage.</p>
+  <div class="bh-notes"><h3>Method</h3><p>Figures come from intrusions Hunt &amp; Hackett investigated between January 2023 and September 2026. "Impact" is the first encryption, destruction or confirmed theft of data. Cases stopped before impact are left out of the time to impact, and included everywhere else.</p></div>
 </section>
 
-<footer class="bh-footer"><p>Hunt &amp; Hackett, 10 October 2026. An example: every figure in it is invented.</p></footer>
+<footer class="bh-footer"><p>Hunt &amp; Hackett, 10 October 2026. An example publication: every figure in it is invented.</p></footer>
 </main>
 
 <script type="text/csv" id="d-dwell">
@@ -139,17 +176,105 @@ half,sector,days
 2025-01,Logistics,15
 2025-07,Logistics,11
 2026-01,Logistics,8
-2023-07,Finance,12
-2024-01,Finance,10
-2024-07,Finance,8
-2025-01,Finance,6
-2025-07,Finance,4
-2026-01,Finance,3
+2023-07,Financial services,12
+2024-01,Financial services,10
+2024-07,Financial services,8
+2025-01,Financial services,6
+2025-07,Financial services,4
+2026-01,Financial services,3
 </script>
+<script type="text/csv" id="d-entry">
+vector,share
+Valid credentials,39
+Exposed remote service,23
+Phishing with a payload,16
+Vulnerable edge device,13
+Supplier or software update,5
+Other or unknown,4
+</script>
+<script type="text/csv" id="d-tactics">
+sector,tactic,share
+Manufacturing,Initial access,100
+Manufacturing,Execution,71
+Manufacturing,Persistence,58
+Manufacturing,Credential access,88
+Manufacturing,Lateral movement,74
+Manufacturing,Collection,41
+Manufacturing,Exfiltration,33
+Manufacturing,Impact,62
+Healthcare,Initial access,100
+Healthcare,Execution,64
+Healthcare,Persistence,49
+Healthcare,Credential access,84
+Healthcare,Lateral movement,61
+Healthcare,Collection,57
+Healthcare,Exfiltration,52
+Healthcare,Impact,38
+Logistics,Initial access,100
+Logistics,Execution,69
+Logistics,Persistence,61
+Logistics,Credential access,91
+Logistics,Lateral movement,79
+Logistics,Collection,36
+Logistics,Exfiltration,29
+Logistics,Impact,57
+Financial services,Initial access,100
+Financial services,Execution,58
+Financial services,Persistence,66
+Financial services,Credential access,79
+Financial services,Lateral movement,48
+Financial services,Collection,63
+Financial services,Exfiltration,55
+Financial services,Impact,21
+Public sector,Initial access,100
+Public sector,Execution,61
+Public sector,Persistence,54
+Public sector,Credential access,82
+Public sector,Lateral movement,57
+Public sector,Collection,49
+Public sector,Exfiltration,44
+Public sector,Impact,26
+</script>
+<script type="text/csv" id="d-cases">
+case,hours,systems
+Case 01,9.8,4
+Case 02,0.8,2
+Case 03,8.5,10
+Case 04,3.3,2
+Case 05,1.8,3
+Case 06,2.5,31
+Case 07,4.3,4
+Case 08,1.1,1
+Case 09,3.3,7
+Case 10,5.9,4
+Case 11,24.4,15
+Case 12,2.5,3
+Case 13,3.9,3
+Case 14,2.1,4
+Case 15,17.7,8
+Case 16,8.1,10
+Case 17,7.5,8
+Case 18,55.2,19
+Case 19,6.2,8
+Case 20,48.1,23
+Case 21,1.7,1
+Case 22,57.2,30
+Case 23,9.8,7
+Case 24,63.1,31
+Case 25,67.8,32
+Case 26,26.6,16
+Case 27,2.4,8
+Case 28,17.8,3
+</script>
+
 <script id="bh-figures">BH.ready(() => {
-  BH.line('#fig-dwell', { data: BH.data('#d-dwell'), x: 'quarter', y: 'days', unit: 'days', zero: true,
+  BH.line('#fig-dwell', { data: BH.data('#d-dwell'), x: 'quarter', y: 'days', unit: 'days', zero: true, height: 380,
     annotations: [{ x: '2024-07', text: 'Access brokers start selling ready-made footholds', event: true }] });
   BH.line('#fig-sectors', { data: BH.data('#d-sectors'), x: 'half', y: 'days', facet: 'sector', zero: true });
+  BH.bar('#fig-entry', { data: BH.data('#d-entry'), x: 'vector', y: 'share', unit: '%', sort: 'none', highlight: 'Valid credentials' });
+  BH.heatmap('#fig-tactics', { data: BH.data('#d-tactics').filter(d => d.tactic !== 'Initial access'), x: 'tactic', y: 'sector', value: 'share', unit: '%' });
+  BH.scatter('#fig-speed', { data: BH.data('#d-cases'), x: 'hours', y: 'systems', label: 'case', trend: true, highlight: ['Case 06'],
+    xLabel: 'Hours until the first alert was read', xUnit: 'h', yLabel: 'Systems affected' });
   BH.sankey('#fig-triage', { unit: 'alerts', highlight: ['Investigated>Incident'],
     links: [
       { source: 'Alerts', target: 'Closed automatically', value: 780 },

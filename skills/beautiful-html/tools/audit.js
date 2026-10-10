@@ -82,6 +82,7 @@
       if (isSvg(n) && n.tagName.toLowerCase() !== 'svg') {
         if (n === el || n.tagName.toLowerCase() === 'text' || n.tagName.toLowerCase() === 'tspan') continue;
         if (n.tagName.toLowerCase() === 'g') continue;
+        if (n.tagName.toLowerCase() === 'line') continue;        // a line has no area to be a background
         paint = parseColor(cs.fill);
         if (paint) paint = [paint[0], paint[1], paint[2], paint[3] * parseFloat(cs.fillOpacity || '1') * parseFloat(cs.opacity || '1')];
       } else {
@@ -382,7 +383,8 @@
         if (el.closest('.bh-error, [data-bh-free]')) continue;
         const cs = getComputedStyle(el);
         const fs = parseFloat(cs.fontSize);
-        if (sizes.length && !sizes.some(s => Math.abs(s - fs) <= 0.6)) offSize.push({ el, fs });
+        // Inline code is set a little smaller than the text it sits in, whatever that text's size.
+        if (sizes.length && !el.matches('code, kbd, samp') && !sizes.some(s => Math.abs(s - fs) <= 0.6)) offSize.push({ el, fs });
         const col = isSvg(el) ? cs.fill : cs.color;
         if (col && col !== 'none' && !colors.has(col)) offColor.push({ el, col });
       }

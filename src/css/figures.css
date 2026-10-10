@@ -20,6 +20,12 @@
 .bh-legend-item i[data-shape="dot"] { border-radius: 50%; }
 .bh-legend-item i[data-shape="ring"] { border-radius: 50%; background: var(--bh-ground); box-shadow: inset 0 0 0 2px var(--c); }
 
+/* Heatmap: the key is the ramp between the two ends of the scale. */
+.bh-heat-key { align-items: center; gap: var(--bh-space-2); }
+.bh-heat-ramp { display: inline-flex; gap: 1px; }
+.bh-heat-ramp i { width: 1.4em; height: 0.7em; background: var(--c); }
+.bh-heat text { font-variant-numeric: tabular-nums lining-nums; }
+
 /* Small multiples: the same chart once per case, on one scale. */
 .bh-multiples { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr)); gap: var(--bh-space-5) var(--bh-space-5); }
 .bh-multiple { min-width: 0; }

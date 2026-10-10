@@ -73,9 +73,22 @@ export function routeEdges(layout, { direction = layout.direction, arrow = 7 } =
     return { e, pts, d, labelCurve, xyPts: pts.map(toXY) };
   });
 
+  // A zone is named in its top left corner, unless an edge runs through it:
+  // then in the top right corner, or wherever along the top is clear. The
+  // choice is recorded on the zone as labelX, where the name starts.
+  for (const z of layout.zones || []) {
+    const w = z.labelSize ? z.labelSize.w - 12 : 0;
+    const left = z.x + 12, right = Math.max(left, z.x + z.w - 12 - w);
+    const spots = [left, right];
+    for (let x = left + 10; x < right; x += 10) spots.push(x);
+    const hits = x => { const box = { x: x - 5, y: z.y + 1, w: w + 10, h: 20 }; return drawn.filter(o => o.xyPts.some((p, i) => i && segmentHitsBox(o.xyPts[i - 1], p, box))).length; };
+    const counts = spots.map(hits);
+    z.labelX = r1(spots[counts.indexOf(Math.min(...counts))]);
+  }
+
   // Pass 2: labels and arrowheads. A label goes where it covers no node, no
   // other label, no zone's name and, if possible, no other edge.
-  const placed = (layout.zones || []).filter(z => z.labelSize).map(z => ({ x: z.x + 8, y: z.y + 2, w: z.labelSize.w, h: 20 }));
+  const placed = (layout.zones || []).filter(z => z.labelSize).map(z => ({ x: z.labelX - 4, y: z.y + 2, w: z.labelSize.w, h: 20 }));
   return drawn.map(({ e, pts, d, labelCurve, xyPts }) => {
     // The arrowhead sits at the real target. A reversed edge was laid out
     // backwards, so its target is where the drawn path starts.

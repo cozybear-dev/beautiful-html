@@ -117,6 +117,21 @@ test('an edge label does not sit on the name of a zone', () => {
   }
 });
 
+test('a zone is named at the corner that no edge runs through', () => {
+  const g = {
+    zones: [{ id: 'out', label: 'Outside' }, { id: 'edge', label: 'Edge' }, { id: 'office', label: 'Office network' }, { id: 'ops', label: 'Warehouse network' }],
+    nodes: [{ id: 'staff', label: 'Staff laptops', zone: 'out' }, { id: 'supplier', label: 'Supplier laptops', zone: 'out' }, { id: 'broker', label: 'Access broker', zone: 'edge' }, { id: 'vpn', label: 'Legacy VPN', zone: 'edge' },
+      { id: 'erp', label: 'ERP', zone: 'office' }, { id: 'jump', label: 'Jump host', zone: 'office' }, { id: 'files', label: 'File servers', zone: 'office' }, { id: 'eng', label: 'Engineering workstation', zone: 'office', rank: 2 },
+      { id: 'wcs', label: 'Warehouse control', zone: 'ops' }, { id: 'hist', label: 'Historian', zone: 'ops' }, { id: 'plc', label: 'Conveyor controllers', zone: 'ops' }],
+    edges: [['staff', 'broker'], ['broker', 'erp'], ['broker', 'jump'], ['broker', 'files'], ['supplier', 'vpn'], ['vpn', 'files'], ['vpn', 'wcs'], ['erp', 'wcs'], ['jump', 'wcs'], ['eng', 'plc'], ['wcs', 'plc'], ['wcs', 'hist']].map(([from, to]) => ({ from, to })),
+  };
+  const layout = layoutFlow(g, { direction: 'down', measure });
+  const routes = routeEdges(layout);
+  const crossed = z => { const box = { x: z.labelX, y: z.y + 2, w: z.labelSize.w - 8, h: 18 }; return routes.filter(r => r.points.some((p, i) => i && segmentHitsBox(r.points[i - 1], p, box))).length; };
+  for (const z of layout.zones) assert.ok(Number.isFinite(z.labelX), `zone ${z.id} has no label position`);
+  assert.deepEqual(layout.zones.map(z => [z.id, crossed(z)]).filter(([, n]) => n > 0), [], 'zones whose name an edge runs through');
+});
+
 test('every routed edge has a path, sampled points and an arrow at its real target', () => {
   const L = layoutFlow(graphs.cycle, { direction: 'right', measure });
   const at = id => L.nodes.find(n => n.id === id);

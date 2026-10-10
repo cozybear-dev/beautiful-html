@@ -1,0 +1,108 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This is the gallery of example reports, published with GitHub Pages. It is made with the kit it shows:
+this file is the content, and scripts/build-site.mjs fills in the {{…}} parts and joins it to the analytical kit.
+Edit the text here, and what is said about each example in site/examples.mjs. Then run: node scripts/build-site.mjs
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eight reports, each written by an agent from a short content file</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* The gallery needs a wider page and a grid of cards; everything else is the kit's. Tokens only. */
+:root { --bh-side: 34rem; }
+.ex-grid { grid-column: wide; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--bh-space-8) var(--bh-space-6); margin-top: var(--bh-space-7); }
+.ex-card { min-width: 0; }
+.ex-shot { display: block; position: relative; margin-bottom: var(--bh-space-6); border: 1px solid var(--bh-rule); background: var(--bh-surface); }
+.ex-shot img { display: block; width: 100%; height: auto; }
+.ex-shot .ex-phone { position: absolute; right: 5%; bottom: calc(-1 * var(--bh-space-5)); width: 17%; aspect-ratio: 390 / 720; object-fit: cover; object-position: top; border: 1px solid var(--bh-rule-strong); background: var(--bh-ground); }
+.ex-kind { font-family: var(--bh-font-data); font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); line-height: var(--bh-leading-snug); color: var(--bh-accent-ink); }
+.ex-card h3 { margin-top: var(--bh-space-1); font-size: var(--bh-size-lead); line-height: 1.2; }
+.ex-card h3 a { color: inherit; text-decoration: none; }
+.ex-card h3 a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+.ex-card p { margin-top: var(--bh-space-2); font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.ex-card p.ex-kind { margin-top: 0; color: var(--bh-accent-ink); }
+.ex-card p.ex-look { font-family: var(--bh-font-text); font-size: var(--bh-size-body); line-height: 1.5; color: var(--bh-ink); }
+.ex-card p.ex-links { margin-top: var(--bh-space-3); }
+.ex-links a + a { margin-left: var(--bh-space-4); }
+@media (min-width: 62rem) {
+  .ex-card.is-lead { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 0 var(--bh-space-7); align-items: center; }
+  .ex-card.is-lead:nth-of-type(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr); }
+  .ex-card.is-lead:nth-of-type(even) .ex-shot { order: 2; }
+  .ex-card.is-lead .ex-shot { margin-bottom: var(--bh-space-5); }
+  .ex-card.is-lead h3 { font-size: var(--bh-size-h2); line-height: 1.15; }
+}
+.ex-ask { grid-column: wide; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--bh-space-5) var(--bh-space-6); margin-top: var(--bh-space-5); }
+.ex-ask > div { border-top: 1px solid var(--bh-ink); padding-top: var(--bh-space-3); min-width: 0; }
+.ex-ask p { font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.ex-ask p + p { margin-top: var(--bh-space-2); font-family: var(--bh-font-text); font-size: var(--bh-size-body); line-height: 1.5; color: var(--bh-ink); }
+</style>
+</head>
+<body>
+<main class="bh-report" data-bh-nav="off">
+
+<header class="bh-header bh-cover">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">beautiful-html: example reports</span></div>
+  <h1>Eight reports, each written by an agent from a short content file</h1>
+  <p class="bh-standfirst">Every page linked below is one self-contained HTML file. An agent wrote a few hundred lines of content and joined them to Hunt &amp; Hackett's report kit. <strong>Open them, read their source, and ask your own agent for the next one.</strong></p>
+  <p class="bh-byline">This page is made the same way. All organisations, people and figures in the examples are invented, except where a report says otherwise.</p>
+</header>
+
+<section class="bh-section">
+  <h2>Each one is built for its reader</h2>
+  <p class="bh-lead">Six of the eight tell one story: an intrusion at a freight company, and what followed. The same facts become a written report, a deck, a service review, a network review, a board brief and a budget proposal, because each reader needs something different from them.</p>
+  <div class="ex-grid">
+{{CARDS}}
+  </div>
+</section>
+
+<section class="bh-section bh-band">
+  <h2>What every one of them does</h2>
+  <ul class="bh-findings">
+    <li><h3>It is one file</h3><p>Fonts, charts and data are inside it. It opens offline, makes no network requests, and can be emailed as it is.</p></li>
+    <li><h3>It reads on a phone and prints on paper</h3><p>Narrow the window, or open the PDF beside any example: the same file, laid out again.</p></li>
+    <li><h3>It moves for a reason, and stops when asked</h3><p>Figures draw in once; dots show direction; a reader who asks for reduced motion gets the final state.</p></li>
+    <li><h3>It can be edited by whoever receives it</h3><p>The content sits at the top of the file with a short guide. "Source" under each example is that content.</p></li>
+  </ul>
+</section>
+
+<section class="bh-section">
+  <h2>Where to see each kind of figure and page part</h2>
+  <p>Every link goes to the place in an example where the part is used.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Figures</caption>
+      <thead><tr><th scope="col">To show</th><th scope="col">The kit draws</th><th scope="col">See it in</th></tr></thead>
+      <tbody>
+{{FIGURES}}
+      </tbody>
+    </table>
+  </div>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Page parts</caption>
+      <thead><tr><th scope="col">Part</th><th scope="col">What it is for</th><th scope="col">See it in</th></tr></thead>
+      <tbody>
+{{PARTS}}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section">
+  <h2>Ask for one in a sentence or two</h2>
+  <p>With the skill installed, a request like these is enough. The agent states the reader and the takeaway, writes the content, joins it to the kit, runs the checker, looks at the screenshots, and hands over one file.</p>
+  <div class="ex-ask">
+{{ASKS}}
+  </div>
+  <pre class="bh-code"><code><i># Install the skill for any agent that reads Agent Skills</i>
+npx skills add cozybear-dev/beautiful-html</code></pre>
+</section>
+
+<footer class="bh-footer"><p>Built from the examples in the skill at {{BUILT}}. The Hunt &amp; Hackett name and logo belong to Hunt &amp; Hackett.</p></footer>
+</main>
+
+<script id="bh-figures">BH.ready(() => {});</script>

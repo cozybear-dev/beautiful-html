@@ -32,6 +32,8 @@ export function drawDot(el, o, width) {
   const marginTop = 26, height = marginTop + cats.length * band + 6;
   const fmt = x => fmtY(x, o.unit);
   const valueW = Math.ceil(Math.max(...rows.map(d => textWidth(fmt(end(d)), size, 600)))) + 14;
+  // In a dumbbell the lower end is labelled on its left; leave room for that label before the scale starts.
+  const leftW = o.y2 ? Math.ceil(Math.max(0, ...rows.filter(d => present(d[o.y2])).map(d => textWidth(fmt(Math.min(d[o.y], d[o.y2])), size, 600)))) + 12 : 0;
   const single = !o.y2 && !names.length;
   const lit = o.highlight === undefined || names.length ? () => true
     : (set => c => set.has(String(c)))(new Set([].concat(o.highlight).map(String)));
@@ -68,7 +70,7 @@ export function drawDot(el, o, width) {
   const svg = P().plot({
     width, height, marginTop, marginBottom: 4, marginLeft: above ? 1 : labelCol + 8, marginRight: single || o.y2 ? valueW + 6 : 14,
     style: plotStyle(),
-    x: { domain: dom.domain, axis: null, insetLeft: above ? 6 : 0 },
+    x: { domain: dom.domain, axis: null, insetLeft: (above ? 6 : 0) + leftW },
     y: { type: 'band', domain: cats, axis: null, padding: 0 },
     marks,
   });

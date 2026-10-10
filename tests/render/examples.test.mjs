@@ -58,13 +58,18 @@ test('between them the examples open in every way, and each says why', () => {
   assert.ok(numbers.length <= all.length / 3, `${numbers.join(', ')} open with key figures; that should be the exception`);
   for (const e of all) assert.match(read(e), /<!-- Front page: [^\n]{20,} -->\n<header class="bh-header/, `${e.name} does not say why it opens the way it does`);
 });
-test('the incident review is built around a flow diagram with a walkthrough', () => {
-  const content = readFileSync(join(skill, 'examples', 'incident-review', 'content.html'), 'utf8');
-  assert.match(content, /BH\.flow\(/);
-  assert.match(content, /steps:\s*\[/);
-  assert.match(content, /data-scheme="dark"/);
+test('the incident is told twice: as a report whose diagram follows the text, and as a deck with a walkthrough', () => {
+  const report = readFileSync(join(skill, 'examples', 'incident-report', 'content.html'), 'utf8');
+  const deck = readFileSync(join(skill, 'examples', 'incident-debrief', 'content.html'), 'utf8');
+  for (const content of [report, deck]) { assert.match(content, /BH\.flow\(/); assert.match(content, /steps:\s*\[/); }
+  assert.match(report, /class="bh-step" data-bh-step="1"/);
+  assert.match(deck, /data-bh-direction="presentation" data-scheme="dark"/);
+});
+test('between them the examples use both schemes in more than one direction', () => {
+  const pairs = new Set(all.map(e => `${e.direction} ${read(e).match(/<html[^>]*data-scheme="(\w+)"/)[1]}`));
+  for (const pair of ['analytical light', 'analytical dark', 'narrative light', 'presentation light', 'presentation dark']) assert.ok(pairs.has(pair), `no example is ${pair}`);
 });
 test('between them the examples use every figure function', () => {
   const text = all.map(read).join('\n');
-  for (const fn of ['line', 'bar', 'dot', 'scatter', 'spark', 'flow', 'sankey', 'data']) assert.match(text, new RegExp(`BH\\.${fn}\\(`), `no example uses BH.${fn}`);
+  for (const fn of ['line', 'bar', 'dot', 'scatter', 'heatmap', 'spark', 'waffle', 'plot', 'flow', 'sankey', 'data']) assert.match(text, new RegExp(`BH\\.${fn}\\(`), `no example uses BH.${fn}`);
 });

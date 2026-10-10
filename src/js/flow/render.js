@@ -1,6 +1,6 @@
 // BH.flow: draws a directed flow diagram from a plain description of nodes,
 // edges and zones, with hover highlighting and an optional walkthrough.
-import { BHError, textWidth, tokenPx, v } from '../core.js';
+import { BHError, textWidth, tokenPx, v, wrap } from '../core.js';
 import { layoutFlow, validateGraph } from './layout.js';
 import { routeEdges } from './route.js';
 
@@ -17,18 +17,6 @@ const html = (name, attrs = {}, text) => {
   if (text !== undefined) n.textContent = text;
   return n;
 };
-
-// Break a label into lines no wider than `max` pixels.
-function wrap(text, max, size, weight) {
-  const words = String(text).split(/\s+/).filter(Boolean), lines = [];
-  let line = '';
-  for (const w of words) {
-    const next = line ? `${line} ${w}` : w;
-    if (line && textWidth(next, size, weight) > max) { lines.push(line); line = w; } else line = next;
-  }
-  if (line) lines.push(line);
-  return lines.length ? lines : [''];
-}
 
 // The outline for each kind of node, in a box of w by h. Shape says what a thing is.
 function shape(kind, w, h) {
@@ -100,7 +88,8 @@ export function drawFlow(target, o, width, entry) {
     sized = sizeNodes(narrow ? 118 : 150);
     layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: narrow ? { node: 14, band: 20, rank: 54, labelPad: 18 } : { rank: 58, labelPad: 20 } });
     // If it is taller than most of the screen, close up the gaps so it can be seen whole.
-    if (!narrow && layout.height > innerHeight * 0.72) layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: { rank: 40, labelPad: 12, pad: 11, zoneLabel: 19, zoneGap: 6, band: 22 } });
+    // maxHeight is set when the diagram is pinned beside the text it illustrates.
+    if (!narrow && layout.height > (o.maxHeight || innerHeight * 0.72)) layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: { rank: 40, labelPad: 12, pad: 11, zoneLabel: 19, zoneGap: 6, band: 22 } });
   }
   const routes = routeEdges(layout);
   const routeById = new Map(routes.map(r => [r.id, r]));
@@ -120,7 +109,7 @@ export function drawFlow(target, o, width, entry) {
   const gZones = el('g', { class: 'bh-zones' }), gEdges = el('g', { class: 'bh-edges' }), gDots = el('g', { class: 'bh-dots', 'aria-hidden': 'true' }), gLabels = el('g', { class: 'bh-edge-labels' }), gNodes = el('g', { class: 'bh-nodes' });
   for (const z of layout.zones) {
     const g = el('g', { class: 'bh-zone', 'data-id': z.id });
-    g.append(el('rect', { x: z.x, y: z.y, width: z.w, height: z.h, rx: 6 }), el('text', { x: z.x + 12, y: z.y + 16, class: 'bh-zone-label' }, z.label));
+    g.append(el('rect', { x: z.x, y: z.y, width: z.w, height: z.h, rx: 6 }), el('text', { x: z.labelX ?? z.x + 12, y: z.y + 16, class: 'bh-zone-label' }, z.label));
     gZones.appendChild(g);
   }
   const edgeEls = new Map(), nodeEls = new Map();

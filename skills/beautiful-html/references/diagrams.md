@@ -75,6 +75,22 @@ A zone is a named group drawn as a tinted frame: a network segment, a trust boun
 
 `BH.flow` returns `{ step(n), play(), pause() }`.
 
+### Reading steps: the diagram follows the text
+
+For a path the reader should follow hop by hop, such as an intrusion or a request, put the diagram in a `bh-split` section and write one block per step:
+
+```html
+<section class="bh-section bh-split" data-nav="The path">
+  <h2>Five hops from a mailbox to the domain controller</h2>
+  <p>What the path is, in a sentence.</p>
+  <figure class="bh-figure" data-bh-table="off"> … <div class="bh-plot" id="fig-path"></div> … </figure>
+  <div class="bh-step" data-bh-step="1"><h3>Hour 0. A session is stolen</h3><p>What happened, and the evidence for it.</p></div>
+  <div class="bh-step" data-bh-step="2"><h3>Hour 2. A colleague opens a document</h3><p>…</p></div>
+</section>
+```
+
+`data-bh-step="n"` is the step of the diagram's `steps` that the block describes. On a wide screen the kit pins the diagram beside the blocks and shows the step of the one being read; scrolling is the control, and a diagram taller than the window moves inside its frame to keep that step in view. On a phone and on paper the blocks are ordinary text and the diagram keeps its Previous, Play and Next. Put the figure before the blocks, so it comes first where they stack. Give each block two or three sentences: the step's title in the diagram can be short, because the block says the rest. Not in `presentation`: there, use the walkthrough's Play.
+
 ## Making a diagram that reads
 
 - **One direction.** The layout makes every edge run with the flow. If you find yourself wanting arrows back, you probably have two diagrams.

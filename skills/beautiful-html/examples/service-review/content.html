@@ -1,0 +1,400 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Critical alerts are read within 11 minutes; the warehouse network is still unwatched</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<!-- Opened without a kit, this file says so instead of showing a blank page. -->
+<script>addEventListener('DOMContentLoaded',()=>{const d=document.documentElement;if(document.getElementById('bh-kit-css'))return;d.style.visibility='visible';
+document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-space:pre-wrap;max-width:36em;margin:18vh auto;padding:0 1.5rem">This is the content of a report without its kit, so there is nothing to see yet.\nTo read it, join it to a kit from the beautiful-html skill:\n\ncat content.html kit/'+d.dataset.bhDirection+'.kit.html > report.html</pre>'})</script>
+<style id="bh-overrides">
+/* Leave empty: the Hunt & Hackett look is built into the kit. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<!-- Front page: key figures and a list of facts. The customer reads this review every quarter for the same four measures, and files it. -->
+<header class="bh-header">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Service review, third quarter 2026</span></div>
+  <h1>Critical alerts are read within 11 minutes; the warehouse network is still unwatched</h1>
+  <p class="bh-standfirst">Since the night shift started in May, the time to read a critical alert has fallen from <strong>46 minutes to 11</strong>. Coverage reached 96% of servers. The warehouse control network, where an outage costs most, has sensors on 16 of its 38 systems.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Meridian Freight</dd></div>
+    <div><dt>Service</dt><dd>Managed detection and response</dd></div>
+    <div><dt>Period</dt><dd>July to September 2026</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Time to read a critical alert</p><p class="bh-keyfigure-value">11<small>min</small> <span id="spark-triage"></span></p><p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="good">35 min</span> since January</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Servers with a sensor</p><p class="bh-keyfigure-value">96<small>%</small></p><p class="bh-keyfigure-note"><span class="bh-delta" data-dir="up" data-tone="good">15 points</span> since June</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Alerts read by an analyst</p><p class="bh-keyfigure-value">1,293</p><p class="bh-keyfigure-note">9 escalated to you</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Incidents</p><p class="bh-keyfigure-value">2</p><p class="bh-keyfigure-note">both contained within six hours</p></div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="Speed">
+  <h2>The night shift cut the wait for a critical alert by three quarters</h2>
+  <p>Until May, an alert that fired after 18:00 waited for the morning. Since then an analyst is on shift around the clock, and the median wait has fallen every month. High-severity alerts followed the same curve at a slower pace, because critical ones are read first.</p>
+  <aside class="bh-aside"><h3>How we count</h3><p>From the moment an alert is raised to the moment an analyst opens it. Median of all alerts of that severity in the month.</p></aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Critical alerts are read within 11 minutes, down from 46</h3>
+    <p class="bh-figure-sub">Median minutes from alert to first read, by severity, 2026</p>
+    <div class="bh-plot" id="fig-triage"></div>
+    <figcaption class="bh-figure-note">Source: detection platform, January to September 2026. Target for critical alerts: 15 minutes.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Volume">
+  <h2>Nine in ten alerts close without a person, and four in ten of the rest arrive after hours</h2>
+  <p>The platform raised 10,643 alerts in the quarter. Automation closed 9,350 of them. Analysts read the other 1,293 and escalated nine to your team.</p>
+  <div class="bh-pair bh-wide">
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">The share that needs a person is steady at about 12%</h3>
+      <p class="bh-figure-sub">Alerts by month and outcome</p>
+      <div class="bh-plot" id="fig-volume"></div>
+      <figcaption class="bh-figure-note">Source: detection platform.</figcaption>
+    </figure>
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">Identity is the largest source of alerts an analyst reads</h3>
+      <p class="bh-figure-sub">Alerts read by an analyst, by source, %</p>
+      <div class="bh-plot" id="fig-source"></div>
+      <figcaption class="bh-figure-note">Source: 1,293 alerts, July to September 2026.</figcaption>
+    </figure>
+  </div>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Weekday afternoons are busiest, and nights are never empty</h3>
+    <p class="bh-figure-sub">Alerts read by an analyst, by weekday and hour of the day (UTC), July to September 2026</p>
+    <div class="bh-plot" id="fig-hours"></div>
+    <figcaption class="bh-figure-note">Source: detection platform. 40% arrived outside 08:00 to 18:00 on weekdays. The cluster on Wednesday night is a weekly maintenance job.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Coverage">
+  <h2>Coverage rose everywhere except the warehouse control network</h2>
+  <p>A system without a sensor cannot raise an alert. Cloud workloads gained most this quarter, after the deployment was added to the build pipeline. The warehouse control network did not move: 22 of its 38 systems run software the sensor does not support.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Warehouse control is the only group below 85%</h3>
+    <p class="bh-figure-sub">Systems with a working sensor, % of the group, June and September 2026</p>
+    <div class="bh-plot" id="fig-coverage"></div>
+    <figcaption class="bh-figure-note">Source: asset inventory and sensor check-ins, 30 June and 30 September 2026.</figcaption>
+  </figure>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Coverage by group, 30 September 2026</caption>
+      <thead><tr><th scope="col">Group</th><th scope="col" class="bh-num">Systems</th><th scope="col" class="bh-num">With a sensor</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Workstations</th><td class="bh-num">2,310</td><td class="bh-num"><span class="bh-bar" style="--v:.99"></span>99%</td><td><span class="bh-status" data-status="good">On target</span></td></tr>
+        <tr><th scope="row">Servers</th><td class="bh-num">412</td><td class="bh-num"><span class="bh-bar" style="--v:.96"></span>96%</td><td><span class="bh-status" data-status="good">On target</span></td></tr>
+        <tr><th scope="row">Cloud workloads</th><td class="bh-num">184</td><td class="bh-num"><span class="bh-bar" style="--v:.91"></span>91%</td><td><span class="bh-status" data-status="good">On target</span></td></tr>
+        <tr><th scope="row">Network devices</th><td class="bh-num">126</td><td class="bh-num"><span class="bh-bar" style="--v:.88"></span>88%</td><td><span class="bh-status" data-status="warn">Logs only</span></td></tr>
+        <tr data-highlight><th scope="row">Warehouse control</th><td class="bh-num">38</td><td class="bh-num"><span class="bh-bar" style="--v:.42"></span>42%</td><td><span class="bh-status" data-status="bad">At risk</span></td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">All systems</th><td class="bh-num">3,070</td><td class="bh-num">97%</td><td></td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Incidents">
+  <h2>Two incidents, both contained the same night</h2>
+  <p>Nine alerts were escalated. Seven were confirmed as harmless within the hour. Two were incidents.</p>
+  <ol class="bh-timeline">
+    <li><span class="bh-when">3 Aug</span><div><p>Commodity malware on a contractor laptop</p><p>Blocked on execution and isolated 40 minutes after the alert. No other system involved.</p></div></li>
+    <li data-key><span class="bh-when">16 Sep</span><div><p>An intruder reached the domain controller</p><p>First alert at 01:50, read in four minutes; accounts disabled by 07:20. See incident report IR-2026-031.</p></div></li>
+  </ol>
+</section>
+
+<section class="bh-section" data-nav="Next quarter">
+  <h2>Three ways to watch the warehouse network</h2>
+  <div class="bh-compare">
+    <div><h3>Passive network sensor</h3><p>Listens at the two switches that carry all control traffic. Covers all 38 systems, changes none of them. Four weeks.</p></div>
+    <div><h3>Upgrade the 22 systems</h3><p>Makes them fit for the standard sensor. Needs two maintenance windows per warehouse; realistic by June.</p></div>
+    <div><h3>Logs from the jump host only</h3><p>A week of work. Shows who connected, not what they did.</p></div>
+  </div>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Recommendation</p>
+    <h3>Install the passive sensor in November, then upgrade at the pace the warehouses allow</h3>
+    <p>It is the only option that covers every control system this year without touching one.</p>
+  </div>
+  <div class="bh-notes"><h3>Method</h3><p>An alert counts as read when an analyst opens it. Coverage is the share of systems in the asset inventory whose sensor checked in during the last seven days of the quarter. Times are UTC.</p></div>
+</section>
+
+<footer class="bh-footer"><p>Hunt &amp; Hackett, 8 October 2026. An example review: Meridian Freight and every figure in it are invented.</p></footer>
+</main>
+
+<script type="text/csv" id="d-triage">
+month,severity,minutes
+2026-01,Critical,46
+2026-02,Critical,44
+2026-03,Critical,41
+2026-04,Critical,38
+2026-05,Critical,22
+2026-06,Critical,16
+2026-07,Critical,13
+2026-08,Critical,12
+2026-09,Critical,11
+2026-01,High,95
+2026-02,High,92
+2026-03,High,88
+2026-04,High,84
+2026-05,High,61
+2026-06,High,48
+2026-07,High,41
+2026-08,High,36
+2026-09,High,33
+</script>
+<script type="text/csv" id="d-volume">
+month,outcome,alerts
+July,Closed automatically,3120
+July,Read by an analyst,416
+August,Closed automatically,2890
+August,Read by an analyst,390
+September,Closed automatically,3340
+September,Read by an analyst,487
+</script>
+<script type="text/csv" id="d-source">
+source,share
+Identity,34
+Endpoint,29
+Email,18
+Network,11
+Cloud,8
+</script>
+<script type="text/csv" id="d-hours">
+day,hour,alerts
+Mon,00,4
+Mon,01,6
+Mon,02,6
+Mon,03,5
+Mon,04,5
+Mon,05,4
+Mon,06,4
+Mon,07,5
+Mon,08,9
+Mon,09,13
+Mon,10,15
+Mon,11,18
+Mon,12,20
+Mon,13,23
+Mon,14,23
+Mon,15,20
+Mon,16,16
+Mon,17,10
+Mon,18,4
+Mon,19,5
+Mon,20,5
+Mon,21,5
+Mon,22,5
+Mon,23,5
+Tue,00,4
+Tue,01,4
+Tue,02,6
+Tue,03,5
+Tue,04,5
+Tue,05,4
+Tue,06,4
+Tue,07,3
+Tue,08,9
+Tue,09,12
+Tue,10,14
+Tue,11,17
+Tue,12,19
+Tue,13,20
+Tue,14,21
+Tue,15,19
+Tue,16,14
+Tue,17,9
+Tue,18,4
+Tue,19,3
+Tue,20,5
+Tue,21,4
+Tue,22,5
+Tue,23,5
+Wed,00,5
+Wed,01,5
+Wed,02,10
+Wed,03,12
+Wed,04,5
+Wed,05,4
+Wed,06,4
+Wed,07,4
+Wed,08,7
+Wed,09,12
+Wed,10,16
+Wed,11,19
+Wed,12,21
+Wed,13,22
+Wed,14,21
+Wed,15,20
+Wed,16,15
+Wed,17,9
+Wed,18,4
+Wed,19,4
+Wed,20,3
+Wed,21,5
+Wed,22,5
+Wed,23,5
+Thu,00,5
+Thu,01,5
+Thu,02,4
+Thu,03,4
+Thu,04,6
+Thu,05,4
+Thu,06,4
+Thu,07,4
+Thu,08,7
+Thu,09,10
+Thu,10,15
+Thu,11,18
+Thu,12,21
+Thu,13,21
+Thu,14,20
+Thu,15,17
+Thu,16,14
+Thu,17,9
+Thu,18,4
+Thu,19,4
+Thu,20,3
+Thu,21,3
+Thu,22,6
+Thu,23,5
+Fri,00,5
+Fri,01,5
+Fri,02,4
+Fri,03,4
+Fri,04,4
+Fri,05,4
+Fri,06,4
+Fri,07,4
+Fri,08,7
+Fri,09,10
+Fri,10,13
+Fri,11,18
+Fri,12,20
+Fri,13,20
+Fri,14,18
+Fri,15,15
+Fri,16,11
+Fri,17,8
+Fri,18,4
+Fri,19,4
+Fri,20,4
+Fri,21,3
+Fri,22,4
+Fri,23,5
+Sat,00,4
+Sat,01,4
+Sat,02,3
+Sat,03,3
+Sat,04,3
+Sat,05,2
+Sat,06,3
+Sat,07,3
+Sat,08,4
+Sat,09,5
+Sat,10,6
+Sat,11,6
+Sat,12,9
+Sat,13,8
+Sat,14,8
+Sat,15,6
+Sat,16,5
+Sat,17,3
+Sat,18,3
+Sat,19,3
+Sat,20,3
+Sat,21,2
+Sat,22,3
+Sat,23,2
+Sun,00,2
+Sun,01,4
+Sun,02,4
+Sun,03,3
+Sun,04,3
+Sun,05,2
+Sun,06,2
+Sun,07,3
+Sun,08,4
+Sun,09,5
+Sun,10,6
+Sun,11,6
+Sun,12,6
+Sun,13,8
+Sun,14,7
+Sun,15,6
+Sun,16,4
+Sun,17,3
+Sun,18,2
+Sun,19,3
+Sun,20,3
+Sun,21,2
+Sun,22,3
+Sun,23,3
+</script>
+<script type="text/csv" id="d-coverage">
+group,june,september
+Workstations,97,99
+Servers,81,96
+Cloud workloads,74,91
+Network devices,85,88
+Warehouse control,40,42
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  const triage = BH.data('#d-triage');
+  BH.spark('#spark-triage', { values: triage.filter(d => d.severity === 'Critical').map(d => d.minutes) });
+  BH.line('#fig-triage', { data: triage, x: 'month', y: 'minutes', series: 'severity', highlight: 'Critical', unit: 'min', zero: true,
+    annotations: [{ x: '2026-05', text: 'Night shift starts', event: true }] });
+  BH.bar('#fig-volume', { data: BH.data('#d-volume'), x: 'month', y: 'alerts', series: 'outcome', mode: 'stacked', layout: 'vertical',
+    highlight: 'Read by an analyst', contextLabel: 'Closed automatically' });
+  BH.bar('#fig-source', { data: BH.data('#d-source'), x: 'source', y: 'share', unit: '%', highlight: 'Identity' });
+  BH.heatmap('#fig-hours', { data: BH.data('#d-hours'), x: 'hour', y: 'day', value: 'alerts' });
+  BH.dot('#fig-coverage', { data: BH.data('#d-coverage'), x: 'group', y: 'june', y2: 'september', unit: '%', sort: 'none', zero: true,
+    names: { y: 'June', y2: 'September' }, highlight: ['Warehouse control'] });
+});</script>

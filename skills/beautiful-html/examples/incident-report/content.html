@@ -1,0 +1,253 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
+-->
+<html lang="en-GB" data-bh-direction="narrative" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A stolen session became domain administrator in 41 hours</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<!-- Opened without a kit, this file says so instead of showing a blank page. -->
+<script>addEventListener('DOMContentLoaded',()=>{const d=document.documentElement;if(document.getElementById('bh-kit-css'))return;d.style.visibility='visible';
+document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-space:pre-wrap;max-width:36em;margin:18vh auto;padding:0 1.5rem">This is the content of a report without its kit, so there is nothing to see yet.\nTo read it, join it to a kit from the beautiful-html skill:\n\ncat content.html kit/'+d.dataset.bhDirection+'.kit.html > report.html</pre>'})</script>
+<style id="bh-overrides">
+/* Leave empty: the Hunt & Hackett look is built into the kit. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<!-- Front page: a cover and a byline. A report that is sent to a customer and read from start to end; its numbers belong to the first section, not the title page. -->
+<header class="bh-header bh-cover">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Incident report IR-2026-031</span></div>
+  <h1>A stolen session became domain administrator in 41 hours</h1>
+  <p class="bh-standfirst">Between 14 and 16 September an intruder moved from one finance mailbox to the domain controller of Meridian Freight. <strong>Nothing in the path was an exploit: every step used access that was already allowed.</strong> The intruder was removed before any data left the network.</p>
+  <p class="bh-byline">Prepared by Hunt &amp; Hackett Incident Response for the CISO of Meridian Freight. 2 October 2026.</p>
+</header>
+
+<section class="bh-section" data-nav="Summary">
+  <h2>The intruder was fast at the end and patient in the middle</h2>
+  <p class="bh-lead">The whole intrusion took two days. Three quarters of that time was spent on one workstation, waiting for an administrator to sign in.</p>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">First access to domain administrator</p><p class="bh-keyfigure-value">41<small>hours</small></p><p class="bh-keyfigure-note">14 September 08:12 to 16 September 01:20</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Detection to containment</p><p class="bh-keyfigure-value">5.5<small>hours</small></p><p class="bh-keyfigure-note">alert at 01:50, accounts disabled by 07:20</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Systems the intruder used</p><p class="bh-keyfigure-value">5</p><p class="bh-keyfigure-note">of 1,840 in the domain</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Largest outbound transfer</p><p class="bh-keyfigure-value">4<small>MB</small></p><p class="bh-keyfigure-note">no sign that data was taken</p></div>
+  </div>
+  <p>This report sets out the path the intruder took, the evidence for each step, why none of it raised an alarm for 41 hours, and the three changes that would have stopped it.</p>
+</section>
+
+<section class="bh-section bh-split" data-nav="The path">
+  <h2>Five hops from a mailbox to the domain controller</h2>
+  <p>Each hop used a credential that the previous system handed over. The five steps below take them one at a time.</p>
+  <figure class="bh-figure" data-bh-table="off">
+    <h3 class="bh-figure-title">Each hop used access the last one had earned</h3>
+    <p class="bh-figure-sub">Path of the intrusion, by network zone</p>
+    <div class="bh-plot" id="fig-path"></div>
+    <figcaption class="bh-figure-note">Source: mail, endpoint and directory logs, 14 to 16 September 2026.</figcaption>
+  </figure>
+  <div class="bh-step" data-bh-step="1">
+    <h3>Hour 0. A session is stolen</h3>
+    <p>A finance clerk signs in on a page that looks like the company portal. The page relays the login to the real one, including the code from the authenticator app, and keeps the session cookie.</p>
+    <p>Eleven minutes later the same session is used from an address in another country.</p>
+  </div>
+  <div class="bh-step" data-bh-step="2">
+    <h3>Hour 2. A colleague opens a document</h3>
+    <p>From the clerk's mailbox the intruder replies to a real thread with a spreadsheet. It comes from a known sender, about a known invoice, so a colleague opens it and enables its content.</p>
+    <p>The macro starts a remote-access tool on workstation WS-FIN-07.</p>
+  </div>
+  <div class="bh-step" data-bh-step="3">
+    <h3>Hour 32. An administrator signs in</h3>
+    <p>For thirty hours the tool does nothing but check in. Then a file-server administrator signs in to WS-FIN-07 to fix a printer, and the intruder copies that sign-in from memory.</p>
+  </div>
+  <div class="bh-step" data-bh-step="4">
+    <h3>Hour 38. A password is found in a script</h3>
+    <p>With the administrator's sign-in the intruder browses file server FS-02 and finds a backup script. The script holds the password of the account <code>svc-backup</code> in plain text. The password was set in 2019.</p>
+  </div>
+  <div class="bh-step" data-bh-step="5">
+    <h3>Hour 41. The directory is theirs</h3>
+    <p>The backup account may replicate the directory. The intruder uses it to request the password data of every account, which is the same as holding the domain.</p>
+    <p>That request is the first thing in the whole path that raised an alert.</p>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Timeline">
+  <h2>Thirty of the 41 hours passed on one workstation</h2>
+  <p>The intruder touched five systems. On four of them the activity lasted a few hours at most. The long bar is the wait on WS-FIN-07, and it was the best chance to catch the intrusion: a remote-access tool was checking in every ten minutes, from a finance workstation, for more than a day.</p>
+  <aside class="bh-aside"><h3>How to read it</h3><p>A bar is the time the intruder was active on a system. A dot is an event described in the path above. The dashed line is the first alert.</p></aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The wait on the workstation is most of the intrusion</h3>
+    <p class="bh-figure-sub">Intruder activity by system, hours since first access</p>
+    <div class="bh-plot" id="fig-lanes"></div>
+    <figcaption class="bh-figure-note">Source: endpoint telemetry and sign-in logs. Hour 0 is 14 September 2026, 08:12 UTC.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Evidence">
+  <h2>Three log entries carry the case</h2>
+  <p>Each of the three turning points left one record that settles what happened. They are reproduced as found, shortened where marked.</p>
+  <pre class="bh-code bh-wide"><code><i># Sign-in log: one session, two countries, eleven minutes apart</i>
+08:12:41  j.vermeer  session 7f3a…c1  NL  Windows  authenticator  success
+<mark>08:23:55  j.vermeer  session 7f3a…c1  RO  Linux    (token)        success</mark>
+
+<i># FS-02, D:\Scripts\nightly-backup.ps1, last changed 2019-03-04</i>
+$user = "MERIDIAN\svc-backup"
+<mark>$pass = "…"   <i># in plain text; removed from this report</i></mark>
+
+<i># DC-01 security log, 16 September 01:20:07</i>
+<mark>4662  svc-backup  Replicating Directory Changes All  from 10.20.7.31</mark></code></pre>
+  <dl class="bh-terms">
+    <dt>Phishing domain</dt><dd>portal-meridianfreight.example, registered 9 September</dd>
+    <dt>Relay address</dt><dd>203.0.113.48</dd>
+    <dt>Remote-access tool</dt><dd>finsync.exe, in the user's AppData folder, checking in every 600 seconds</dd>
+    <dt>Accounts used</dt><dd>j.vermeer, adm-dkoster, svc-backup</dd>
+  </dl>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>The five systems, and where each stands now</caption>
+      <thead><tr><th scope="col">System</th><th scope="col">Used for</th><th scope="col" class="bh-num">Hours</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Finance mailbox</th><td>Sending the document</td><td class="bh-num">2.5</td><td><span class="bh-status" data-status="good">Sessions revoked</span></td></tr>
+        <tr data-highlight><th scope="row">WS-FIN-07</th><td>Waiting for a better credential</td><td class="bh-num">32</td><td><span class="bh-status" data-status="good">Rebuilt</span></td></tr>
+        <tr><th scope="row">FS-02</th><td>Finding the backup password</td><td class="bh-num">7</td><td><span class="bh-status" data-status="warn">Scripts under review</span></td></tr>
+        <tr><th scope="row">svc-backup</th><td>Replicating the directory</td><td class="bh-num">3.5</td><td><span class="bh-status" data-status="good">Replaced</span></td></tr>
+        <tr><th scope="row">DC-01</th><td>Target</td><td class="bh-num">6</td><td><span class="bh-status" data-status="warn">Monitored until 16 December</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="What changes">
+  <h2>Any one of three controls would have ended it</h2>
+  <p>The path had five hops, and it needed all of them. Each of the measures below removes one, at a different point and at a different cost.</p>
+  <ol class="bh-findings">
+    <li><h3>Bind sessions to the device</h3><p>The stolen session would not have worked from the intruder's machine. Stops the path at hour 0.</p></li>
+    <li><h3>Keep administrators off workstations</h3><p>There would have been no better credential to wait for. Stops it at hour 32.</p></li>
+    <li><h3>Rotate and vault service passwords</h3><p>The script would have held nothing of use. Stops it at hour 38.</p></li>
+  </ol>
+  <ol class="bh-timeline">
+    <li data-key><span class="bh-when">16 Sep</span><div><p>Contained</p><p>Three accounts disabled, WS-FIN-07 isolated, directory password data reset twice.</p></div></li>
+    <li><span class="bh-when">30 Sep</span><div><p>Service passwords rotated</p><p>All 46 service accounts; 9 scripts with passwords in them rewritten.</p></div></li>
+    <li><span class="bh-when">31 Oct</span><div><p>Device-bound sessions for finance and administrators</p></div></li>
+    <li><span class="bh-when">15 Dec</span><div><p>Separate administration workstations in use</p></div></li>
+  </ol>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Decision needed</p>
+    <h3>Extend device-bound sessions from 240 people to all 2,400 by March</h3>
+    <p>Finance and administrators are covered by 31 October. Every other mailbox can still be used the way this one was.</p>
+  </div>
+  <div class="bh-notes"><h3>What we did not find</h3><p>No outbound transfer larger than 4 MB from any of the five systems, no new accounts, no changes to group policy, and no sign of the tool on any other workstation. Mail rules on the clerk's mailbox were unchanged.</p></div>
+</section>
+
+<footer class="bh-footer"><p>Hunt &amp; Hackett Incident Response, 2 October 2026. An example report: Meridian Freight, the people and the events in it are invented.</p></footer>
+</main>
+
+<script type="text/csv" id="d-lanes">
+system,start,end
+Finance mailbox,0,2.5
+WS-FIN-07,2,34
+FS-02,32,39
+svc-backup,38,41.5
+DC-01,41,47
+</script>
+<script type="text/csv" id="d-events">
+system,hour,event
+Finance mailbox,0,Session replayed
+WS-FIN-07,2,Macro runs
+WS-FIN-07,32,Administrator signs in
+FS-02,38,Password read from script
+DC-01,41,Directory replicated
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.flow('#fig-path', {
+    flow: true,
+    zones: [{ id: 'out', label: 'Internet' }, { id: 'work', label: 'Workplace' }, { id: 'srv', label: 'Servers' }, { id: 'id', label: 'Identity' }],
+    nodes: [
+      { id: 'page', label: 'Phishing page', kind: 'external', zone: 'out' },
+      { id: 'box', label: 'Finance mailbox', kind: 'person', zone: 'work' },
+      { id: 'ws', label: 'WS-FIN-07', sub: 'finance workstation', zone: 'work' },
+      { id: 'fs', label: 'FS-02', sub: 'file server', kind: 'store', zone: 'srv' },
+      { id: 'svc', label: 'svc-backup', sub: 'password from 2019', kind: 'person', zone: 'id' },
+      { id: 'dc', label: 'DC-01', sub: 'domain controller', kind: 'gateway', zone: 'id' },
+    ],
+    edges: [
+      { from: 'page', to: 'box', label: 'steals session' },
+      { from: 'box', to: 'ws', label: 'sends document' },
+      { from: 'ws', to: 'fs', label: 'reuses admin sign-in' },
+      { from: 'fs', to: 'svc', label: 'reads password' },
+      { from: 'svc', to: 'dc', label: 'replicates directory' },
+    ],
+    highlight: ['page', 'box', 'ws', 'fs', 'svc', 'dc'],
+    highlightLabel: 'The path taken',
+    overview: 'The whole path. Step through it, or press Play.',
+    steps: [
+      { title: 'Hour 0. A session is stolen.', text: 'A fake sign-in page relays the login and keeps the session.', nodes: ['page', 'box'], edges: ['page>box'] },
+      { title: 'Hour 2. A colleague opens a document.', text: 'It arrives from a real mailbox, in a real thread.', nodes: ['box', 'ws'], edges: ['box>ws'] },
+      { title: 'Hour 32. An administrator signs in.', text: 'The intruder has waited thirty hours for this.', nodes: ['ws', 'fs'], edges: ['ws>fs'] },
+      { title: 'Hour 38. A password is found in a script.', text: 'It was set in 2019.', nodes: ['fs', 'svc'], edges: ['fs>svc'] },
+      { title: 'Hour 41. The directory is theirs.', text: 'The first alert follows half an hour later.', nodes: ['svc', 'dc'], edges: ['svc>dc'] },
+    ],
+  });
+
+  // A timeline of intervals by system: a form the kit has no function for, so it is drawn with BH.plot.
+  const lanes = BH.data('#d-lanes'), events = BH.data('#d-events');
+  const systems = lanes.map(d => d.system);
+  BH.plot('#fig-lanes', {
+    height: 268, marginLeft: 112, marginRight: 12, marginTop: 28, marginBottom: 40,
+    x: { domain: [0, 48], ticks: [0, 8, 16, 24, 32, 40, 48], label: 'Hours since first access', labelAnchor: 'center', labelOffset: 36 },
+    y: { domain: systems, label: null, tickSize: 0, padding: 0.42 },
+    marks: [
+      Plot.gridX([8, 16, 24, 32, 40, 48], { stroke: 'var(--bh-rule)', strokeOpacity: 1 }),
+      Plot.barX(lanes, { x1: 'start', x2: 'end', y: 'system', fill: d => (d.system === 'WS-FIN-07' ? 'var(--bh-accent)' : 'var(--bh-neutral-soft)') }),
+      Plot.ruleX([41.5], { stroke: 'var(--bh-bad)', strokeWidth: 1.5, strokeDasharray: '4 3' }),
+      Plot.text([{ hour: 41.5 }], { x: 'hour', frameAnchor: 'top', dy: -18, text: () => 'First alert', fill: 'var(--bh-bad)', fontWeight: 700, textAnchor: 'end', dx: -6 }),
+      Plot.dot(events, { x: 'hour', y: 'system', r: 4, fill: 'var(--bh-ink)', stroke: 'var(--bh-ground)', strokeWidth: 1.5, title: d => `Hour ${d.hour}: ${d.event}` }),
+      Plot.ruleX([0], { stroke: 'var(--bh-ink)' }),
+    ],
+  });
+});</script>

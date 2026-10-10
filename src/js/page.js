@@ -96,3 +96,89 @@ export function buildProgress() {
     else if (e.key === 'End') { e.preventDefault(); go(screens.length - 1); }
   });
 }
+
+// Reading steps. In a split section, blocks marked data-bh-step="n" stand for
+// the steps of the section's diagram. On a wide screen the diagram is pinned
+// beside them and shows the step of the block being read; scrolling is the
+// control. A diagram taller than the window keeps its size and moves inside
+// its frame to keep the current step in view. On a phone and on paper the
+// blocks are plain text and the diagram keeps its own controls.
+export function buildSteps(entryFor) {
+  const wide = matchMedia('screen and (min-width: 62rem)');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  const TOP = 76, BOTTOM = 20, LEAST = 240;        // clear of the section navigator and the window's edge; the smallest useful frame
+  const groups = [];
+  for (const section of document.querySelectorAll('main.bh-report > .bh-section.bh-split')) {
+    const blocks = [...section.querySelectorAll(':scope > [data-bh-step]')];
+    const figure = section.querySelector(':scope > .bh-figure');
+    const plot = figure && figure.querySelector('.bh-plot[data-bh-kind="flow"]');
+    if (!blocks.length || !plot || !entryFor(plot)) continue;
+    blocks[blocks.length - 1].classList.add('is-last');
+    groups.push({ section, blocks, figure, plot, entry: entryFor(plot), pinned: false, room: 0, step: -1 });
+  }
+  if (!groups.length) return;
+  const stageOf = g => g.plot.querySelector('.bh-flow-stage');
+
+  const unpin = g => {
+    const stage = stageOf(g);
+    g.pinned = false; g.step = -1;
+    g.section.classList.remove('has-steps');
+    g.figure.classList.remove('is-pinned');
+    g.figure.style.top = '';
+    g.blocks.forEach(b => b.classList.remove('is-current'));
+    if (stage) { stage.style.maxHeight = ''; stage.classList.remove('is-framed', 'more-above', 'more-below'); stage.scrollTop = 0; }
+    if (g.room) { g.room = 0; delete g.entry.options.maxHeight; g.entry.render(); }
+    else if (g.entry.api) g.entry.api.step(0);
+  };
+  // Pin the diagram. If it is taller than the room it has, ask it to close up
+  // its gaps; if that is not enough, show it through a frame of that height.
+  const fit = g => {
+    const stage = stageOf(g);
+    if (!wide.matches || !stage) return unpin(g);
+    g.section.classList.add('has-steps');
+    g.figure.classList.add('is-pinned');
+    stage.style.maxHeight = '';
+    stage.classList.remove('is-framed');
+    const room = Math.floor(innerHeight - TOP - BOTTOM - (g.figure.offsetHeight - stage.offsetHeight));   // less the title, key and note
+    if (room < LEAST) return unpin(g);
+    if (stage.scrollHeight > room && room !== g.room) { g.room = room; g.entry.options.maxHeight = room; g.entry.render(); return; }   // runs again on bh:render
+    if (stage.scrollHeight > room) { stage.style.maxHeight = `${room}px`; stage.classList.add('is-framed'); }
+    g.figure.style.top = `${TOP}px`;
+    g.pinned = true;
+  };
+  // Move a framed diagram so the nodes of the current step sit in the middle of the frame.
+  const frame = g => {
+    const stage = stageOf(g), flow = g.plot.__bhFlow;
+    if (!stage || !stage.classList.contains('is-framed') || !flow) return;
+    const ids = ((g.entry.options.steps || [])[g.step - 1] || {}).nodes || [];
+    const boxes = flow.nodes.filter(n => ids.includes(n.id));
+    const most = stage.scrollHeight - stage.clientHeight;
+    const to = boxes.length ? Math.max(0, Math.min(most, (Math.min(...boxes.map(b => b.y)) + Math.max(...boxes.map(b => b.y + b.h))) / 2 - stage.clientHeight / 2)) : 0;
+    stage.classList.toggle('more-above', to > 1);
+    stage.classList.toggle('more-below', to < most - 1);
+    stage.scrollTo({ top: to, behavior: calm.matches ? 'auto' : 'smooth' });
+  };
+
+  // The block being read is the last whose top has passed a line two fifths down the window.
+  let queued = false;
+  const read = () => {
+    queued = false;
+    for (const g of groups) {
+      if (!g.pinned) continue;
+      let current = null;
+      for (const b of g.blocks) if (b.getBoundingClientRect().top <= innerHeight * 0.4) current = b;
+      const step = current ? Number(current.dataset.bhStep) || 0 : 0;
+      g.blocks.forEach(b => b.classList.toggle('is-current', b === current));
+      if (step !== g.step && g.entry.api) { g.step = step; g.entry.api.pause(); g.entry.api.step(step); frame(g); }
+    }
+  };
+  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(read); } };
+  const refit = () => { groups.forEach(g => { g.step = -1; fit(g); }); read(); };
+  for (const g of groups) g.plot.addEventListener('bh:render', () => { g.step = -1; fit(g); queue(); });
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', refit);
+  wide.addEventListener('change', refit);
+  addEventListener('beforeprint', () => groups.forEach(unpin));
+  addEventListener('afterprint', refit);
+  refit();
+}
