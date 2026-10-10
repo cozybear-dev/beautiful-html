@@ -1,0 +1,22 @@
+{
+  "name": "beautiful-html",
+  "owner": {
+    "name": "cozybear-dev"
+  },
+  "metadata": {
+    "description": "The beautiful-html skill: well-designed, self-contained HTML reports from any coding agent."
+  },
+  "plugins": [
+    {
+      "name": "beautiful-html",
+      "source": "./",
+      "description": "Well-designed, self-contained HTML reports with sound charts, system flow diagrams and purposeful motion, from a prebuilt kit and an automated check.",
+      "version": "0.1.0",
+      "author": {
+        "name": "cozybear-dev"
+      },
+      "license": "MIT",
+      "category": "productivity"
+    }
+  ]
+}

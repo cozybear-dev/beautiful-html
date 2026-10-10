@@ -1,0 +1,10 @@
+{
+  "name": "beautiful-html",
+  "version": "0.1.0",
+  "description": "Well-designed, self-contained HTML reports with sound charts, system flow diagrams and purposeful motion, from a prebuilt kit and an automated check.",
+  "author": {
+    "name": "cozybear-dev"
+  },
+  "license": "MIT",
+  "keywords": ["report", "html", "charts", "diagrams", "data-visualisation", "design"]
+}

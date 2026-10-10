@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHK-212 single-page checkout: experiment readout</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10); --series: #2a78d6;
+  --good: #006300; --warn: #8a5a00; --bad: #b02a2a; --callout: #eef4fc;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10); --series: #3987e5;
+    --good: #0ca30c; --warn: #fab219; --bad: #e66767; --callout: #16222f;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 940px; margin: 0 auto; padding: 40px 24px 72px; }
+h1 { font-size: 30px; line-height: 1.2; margin: 6px 0 14px; letter-spacing: -0.01em; }
+h2 { font-size: 21px; line-height: 1.3; margin: 52px 0 10px; }
+h3 { font-size: 16px; margin: 0 0 4px; }
+p { margin: 0 0 12px; max-width: 74ch; }
+.eyebrow { color: var(--ink2); font-size: 14px; margin: 0; }
+.lead { font-size: 18px; }
+.meta { color: var(--ink2); font-size: 14px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.rec { background: var(--callout); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin: 20px 0 22px; }
+.rec p { margin: 0; font-size: 19px; line-height: 1.45; font-weight: 600; max-width: none; }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 22px 0 6px; }
+.tile .k { font-size: 14px; color: var(--ink2); min-height: 2.9em; line-height: 1.35; }
+.tile .v { font-size: 34px; font-weight: 600; line-height: 1.15; margin-top: 6px; }
+.tile .s { font-size: 13.5px; color: var(--ink2); margin-top: 6px; line-height: 1.4; }
+.fig { margin: 18px 0 8px; position: relative; }
+.fig h3 { margin-bottom: 2px; }
+.fig .sub { color: var(--ink2); font-size: 14px; margin: 0 0 10px; max-width: none; }
+.fig svg { display: block; width: 100%; height: auto; }
+.cap { color: var(--ink2); font-size: 13.5px; margin: 10px 0 0; max-width: none; }
+svg text { font-family: inherit; }
+.grid { stroke: var(--grid); stroke-width: 1; }
+.axis { stroke: var(--axis); stroke-width: 1; }
+.tick { fill: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.note { fill: var(--ink2); font-size: 13px; }
+.line { fill: none; stroke: var(--series); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.dot { fill: var(--series); stroke: var(--surface); stroke-width: 2; }
+.ci { stroke: var(--series); stroke-width: 2; stroke-linecap: round; opacity: 0.55; }
+.xhair { stroke: var(--axis); stroke-width: 1; }
+.lab, .val { fill: var(--ink); font-size: 14px; font-weight: 600; }
+.rng { fill: var(--ink2); font-size: 12.5px; }
+.grp { fill: var(--ink2); font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+.rowl { fill: var(--ink); font-size: 15px; }
+.verd { fill: var(--ink2); font-size: 13.5px; }
+#tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 10px; font-size: 13px; line-height: 1.45; box-shadow: 0 4px 14px rgba(0,0,0,0.12); display: none; white-space: nowrap; z-index: 2; }
+#tip b { display: block; }
+#tip span { color: var(--ink2); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { font-size: 13px; color: var(--ink2); font-weight: 600; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.sub td:first-child { padding-left: 26px; color: var(--ink2); }
+tr.sub td { color: var(--ink2); }
+tr.top td { font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+.st { font-weight: 600; white-space: nowrap; }
+.st.ok { color: var(--good); } .st.watch { color: var(--warn); } .st.no { color: var(--bad); }
+ul, ol { margin: 0 0 12px; padding-left: 22px; max-width: 74ch; }
+li { margin-bottom: 8px; }
+.steps li { margin-bottom: 12px; }
+.aside { border-left: 3px solid var(--axis); padding: 2px 0 2px 14px; color: var(--ink2); font-size: 14.5px; margin: 16px 0; }
+.aside p { max-width: 78ch; }
+.aside p:last-child { margin-bottom: 0; }
+.scroll { overflow-x: auto; }
+footer { margin-top: 56px; border-top: 1px solid var(--grid); padding-top: 18px; color: var(--ink2); font-size: 14px; }
+footer h2 { font-size: 16px; margin: 0 0 8px; color: var(--ink); }
+footer li { margin-bottom: 6px; }
+@media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, 1fr); } .tile .k { min-height: 0; } }
+@media print { body { background: #fff; } .card, .rec { break-inside: avoid; } h2 { break-after: avoid; } }
+</style>
+</head>
+<body>
+<main>
+
+<p class="eyebrow">Experiment readout · CHK-212 · Growth team · for product leadership</p>
+<h1>The single-page checkout wins on desktop and does not help on mobile web</h1>
+
+<div class="rec">
+  <p>Recommendation: ship it on desktop and tablet now. Hold it back on mobile web until the pay button is fixed, then re-test there.</p>
+</div>
+
+<p class="lead">Over four weeks, 3.38% of visitors who got the new checkout placed an order, against 3.18% on the current one. That is +6.3% more orders per visitor, and the gain is real, not luck. It comes almost entirely from desktop. On mobile web, about half of all visitors, the new checkout did not help and probably converted slightly worse, which fits the known problem of the pay button sitting below the fold on short screens.</p>
+
+<p class="meta">Test ran 31 August to 27 September 2026 · 568,171 visitors, split 50/50 · 18,625 orders</p>
+
+<div class="tiles">
+  <div class="card tile"><div class="k">Orders per visitor, all visitors, whole test</div><div class="v">+6.3%</div><div class="s">Likely range +3.4% to +9.4%</div></div>
+  <div class="card tile"><div class="k">Same, weeks 2–4 only (after the early boost)</div><div class="v">+5.3%</div><div class="s">Likely range +1.9% to +8.8%</div></div>
+  <div class="card tile"><div class="k">Desktop</div><div class="v">+11.1%</div><div class="s">Likely range +7.4% to +14.9%</div></div>
+  <div class="card tile"><div class="k">Mobile web</div><div class="v">−2.3%</div><div class="s">Likely range −5.8% to +1.4%</div></div>
+</div>
+<p class="cap">All changes are relative: +10% means ten more orders for every hundred the current checkout gets from the same number of visitors. "Likely range" is where the true effect very probably sits given the amount of data (a 95% confidence interval). A range that includes zero means we cannot rule out "no difference".</p>
+
+<h2>1. Did the new checkout win? Yes.</h2>
+<div class="scroll">
+<table>
+  <thead><tr><th></th><th class="n">Visitors</th><th class="n">Orders</th><th class="n">Visitors who ordered</th></tr></thead>
+  <tbody>
+    <tr><td>Current three-step checkout</td><td class="n">284,134</td><td class="n">9,029</td><td class="n">3.18%</td></tr>
+    <tr><td>New single-page checkout</td><td class="n">284,037</td><td class="n">9,596</td><td class="n">3.38%</td></tr>
+    <tr class="top"><td>Difference</td><td class="n"></td><td class="n"></td><td class="n">+6.3%</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>2. How sure can we be? Sure it is better; less sure by how much.</h2>
+<ul>
+  <li><strong>The direction is not in doubt.</strong> If the two checkouts really performed the same, a gap this large would turn up by chance roughly once in 50,000 tests. The new checkout was also ahead on every one of the 28 days.</li>
+  <li><strong>The test itself was sound.</strong> The two groups were almost exactly the same size (284,134 and 284,037), so the split worked as designed, and the test ran its planned four full weeks.</li>
+  <li><strong>The size is less certain, and the four-week average flatters it.</strong> The lift was +9.3% in the first week and settled at about +5.3% for the remaining three. For planning, use the settled figure: roughly +5%, with a likely range of +1.9% to +8.8%.</li>
+</ul>
+
+<div class="card fig" id="fig1">
+  <h3>The lift started near +12% and levelled off at about +5% from the second week</h3>
+  <p class="sub">Extra orders per visitor on the new checkout compared with the current one, each day of the test</p>
+  <svg id="c1" viewBox="0 0 880 300" role="img" aria-label="Daily lift in conversion for the new checkout, falling from about 11.6% on day one to about 5% from the second week"><line class="axis" x1="46" x2="816" y1="266.0" y2="266.0"/><text class="tick" x="38" y="270.0" text-anchor="end">0</text><line class="grid" x1="46" x2="816" y1="218.0" y2="218.0"/><text class="tick" x="38" y="222.0" text-anchor="end">+3%</text><line class="grid" x1="46" x2="816" y1="170.0" y2="170.0"/><text class="tick" x="38" y="174.0" text-anchor="end">+6%</text><line class="grid" x1="46" x2="816" y1="122.0" y2="122.0"/><text class="tick" x="38" y="126.0" text-anchor="end">+9%</text><line class="grid" x1="46" x2="816" y1="74.0" y2="74.0"/><text class="tick" x="38" y="78.0" text-anchor="end">+12%</text><line class="grid" x1="46" x2="816" y1="26.0" y2="26.0"/><text class="tick" x="38" y="30.0" text-anchor="end">+15%</text><text class="tick" x="46.0" y="288" text-anchor="middle">31 Aug</text><text class="tick" x="245.6" y="288" text-anchor="middle">7 Sep</text><text class="tick" x="445.3" y="288" text-anchor="middle">14 Sep</text><text class="tick" x="644.9" y="288" text-anchor="middle">21 Sep</text><text class="tick" x="816.0" y="288" text-anchor="middle">27 Sep</text><line class="axis" x1="231.4" x2="231.4" y1="18" y2="266.0"/><text class="note" x="223.4" y="28" text-anchor="end">Week 1: average +9.3%</text><text class="note" x="239.4" y="28">Weeks 2–4: average +5.3%</text><polyline class="line" points="46.0,80.5 74.5,93.4 103.0,109.2 131.6,119.8 160.1,134.5 188.6,142.6 217.1,156.4 245.6,187.2 274.1,166.7 302.7,190.3 331.2,177.7 359.7,165.0 388.2,182.4 416.7,191.8 445.3,195.4 473.8,180.1 502.3,187.6 530.8,170.7 559.3,180.6 587.9,181.7 616.4,187.3 644.9,188.5 673.4,184.8 701.9,167.6 730.4,167.4 759.0,175.8 787.5,183.0 816.0,185.9"/><circle class="dot" cx="46.0" cy="80.5" r="5"/><circle class="dot" cx="816.0" cy="185.9" r="5"/><text class="lab" x="54.0" y="71.5">+11.6%</text><text class="lab" x="826.0" y="189.9">+5.0%</text><line id="xh" class="xhair" x1="0" x2="0" y1="26" y2="266.0" visibility="hidden"/><circle id="xd" class="dot" r="5" visibility="hidden"/><rect id="hit" x="46" y="26" width="770" height="240" fill="transparent"/></svg>
+  <div id="tip"></div>
+  <p class="cap">An early boost that fades is common when a familiar page changes. What matters is that the lift stopped falling: it has been flat for three weeks, and is not drifting towards zero. Single days are noisy, so read the shape, not individual points.</p>
+</div>
+
+<h2>3. Is the answer the same for everyone? No. It depends on the device.</h2>
+<p>Desktop visitors converted clearly better on the new checkout (3.61% to 4.01%). Mobile web visitors did not (2.48% to 2.42%). The gap between the two is far too large to be chance, even allowing for the fact that we looked at several groups. New and returning customers responded alike (+5.2% and +4.5%), so customer type does not change the answer.</p>
+
+<div class="card fig">
+  <h3>Desktop gains about 11%; mobile web gains nothing</h3>
+  <p class="sub">Change in orders per visitor, new checkout against current. Dot = best estimate, bar = likely range.</p>
+  <svg viewBox="0 0 880 330" role="img" aria-label="Lift by device and customer type with plausible ranges. Desktop plus 11.1 percent, tablet plus 5.7 percent, mobile web minus 2.3 percent; new and returning customers both about plus 5 percent."><line class="grid" x1="190.0" x2="190.0" y1="12" y2="286"/><text class="tick" x="190.0" y="304" text-anchor="middle">−10%</text><line class="grid" x1="246.7" x2="246.7" y1="12" y2="286"/><text class="tick" x="246.7" y="304" text-anchor="middle">−5%</text><line class="axis" x1="303.3" x2="303.3" y1="12" y2="286"/><text class="tick" x="303.3" y="304" text-anchor="middle">0</text><line class="grid" x1="360.0" x2="360.0" y1="12" y2="286"/><text class="tick" x="360.0" y="304" text-anchor="middle">+5%</text><line class="grid" x1="416.7" x2="416.7" y1="12" y2="286"/><text class="tick" x="416.7" y="304" text-anchor="middle">+10%</text><line class="grid" x1="473.3" x2="473.3" y1="12" y2="286"/><text class="tick" x="473.3" y="304" text-anchor="middle">+15%</text><line class="grid" x1="530.0" x2="530.0" y1="12" y2="286"/><text class="tick" x="530.0" y="304" text-anchor="middle">+20%</text><text class="tick" x="293.3" y="324" text-anchor="end">← new checkout worse</text><text class="tick" x="313.3" y="324">new checkout better →</text><text class="grp" x="14" y="32">By device</text><text class="rowl" x="14" y="71.0">Desktop</text><line class="ci" x1="387.3" x2="471.8" y1="66.0" y2="66.0"/><circle class="dot" cx="428.8" cy="66.0" r="6"/><text class="val" x="556" y="64.0">+11.1%</text><text class="rng" x="556" y="80.0">+7.4% to +14.9%</text><text class="verd" x="686" y="71.0">Clear gain</text><text class="rowl" x="14" y="111.0">Tablet</text><line class="ci" x1="270.4" x2="472.9" y1="106.0" y2="106.0"/><circle class="dot" cx="367.4" cy="106.0" r="6"/><text class="val" x="556" y="104.0">+5.7%</text><text class="rng" x="556" y="120.0">−2.9% to +15.0%</text><text class="verd" x="686" y="111.0">Likely gain, unproven</text><text class="rowl" x="14" y="151.0">Mobile web</text><line class="ci" x1="237.6" x2="319.4" y1="146.0" y2="146.0"/><circle class="dot" cx="277.7" cy="146.0" r="6"/><text class="val" x="556" y="144.0">−2.3%</text><text class="rng" x="556" y="160.0">−5.8% to +1.4%</text><text class="verd" x="686" y="151.0">No gain, possibly a loss</text><text class="grp" x="14" y="192">By customer type</text><text class="rowl" x="14" y="231.0">New customers</text><line class="ci" x1="320.1" x2="405.4" y1="226.0" y2="226.0"/><circle class="dot" cx="362.0" cy="226.0" r="6"/><text class="val" x="556" y="224.0">+5.2%</text><text class="rng" x="556" y="240.0">+1.5% to +9.0%</text><text class="verd" x="686" y="231.0">Gain</text><text class="rowl" x="14" y="271.0">Returning customers</text><line class="ci" x1="317.4" x2="392.9" y1="266.0" y2="266.0"/><circle class="dot" cx="354.5" cy="266.0" r="6"/><text class="val" x="556" y="264.0">+4.5%</text><text class="rng" x="556" y="280.0">+1.2% to +7.9%</text><text class="verd" x="686" y="271.0">Gain</text></svg>
+</div>
+
+<ul>
+  <li><strong>Mobile web (52% of visitors).</strong> The best estimate is a small loss, and the range runs from a clear loss to a small gain. On its own that is not proof of harm, but there is no sign of benefit and there is a known cause: on screens under 700 px tall the single page pushes the pay button below the fold.</li>
+  <li><strong>Tablet (8% of visitors).</strong> The estimate is positive (+5.7%) but there are too few tablet visitors to be sure. Tablets have tall screens, so the pay-button problem should not apply, and the result looks like desktop's rather than mobile's.</li>
+</ul>
+
+<div class="scroll">
+<table>
+  <thead><tr><th>Group</th><th class="n">Share of visitors</th><th class="n">Current</th><th class="n">New</th><th class="n">Change</th><th class="n">Likely range</th></tr></thead>
+  <tbody><tr class="top"><td>Desktop</td><td class="n">40%</td><td class="n">3.61%</td><td class="n">4.01%</td><td class="n">+11.1%</td><td class="n">+7.4% to +14.9%</td></tr><tr class="sub"><td>New customers</td><td class="n">23%</td><td class="n">2.61%</td><td class="n">2.92%</td><td class="n">+11.8%</td><td class="n">+6.1% to +17.9%</td></tr><tr class="sub"><td>Returning customers</td><td class="n">17%</td><td class="n">4.95%</td><td class="n">5.45%</td><td class="n">+10.2%</td><td class="n">+5.5% to +15.1%</td></tr><tr class="top"><td>Tablet</td><td class="n">8%</td><td class="n">2.98%</td><td class="n">3.14%</td><td class="n">+5.7%</td><td class="n">−2.9% to +15.0%</td></tr><tr class="sub"><td>New customers</td><td class="n">5%</td><td class="n">2.24%</td><td class="n">2.38%</td><td class="n">+6.1%</td><td class="n">−6.3% to +20.2%</td></tr><tr class="sub"><td>Returning customers</td><td class="n">3%</td><td class="n">4.18%</td><td class="n">4.38%</td><td class="n">+4.9%</td><td class="n">−6.5% to +17.6%</td></tr><tr class="top"><td>Mobile web</td><td class="n">52%</td><td class="n">2.48%</td><td class="n">2.42%</td><td class="n">−2.3%</td><td class="n">−5.8% to +1.4%</td></tr><tr class="sub"><td>New customers</td><td class="n">33%</td><td class="n">1.88%</td><td class="n">1.86%</td><td class="n">−1.2%</td><td class="n">−6.3% to +4.2%</td></tr><tr class="sub"><td>Returning customers</td><td class="n">19%</td><td class="n">3.52%</td><td class="n">3.41%</td><td class="n">−3.1%</td><td class="n">−7.9% to +2.0%</td></tr></tbody>
+</table>
+</div>
+
+<div class="aside">
+  <p><strong>One caution on the breakdown figures.</strong> The device and customer-type file contains 862,816 visitors and 26,254 orders, more than the 568,171 visitors and 18,625 orders in the daily file for the same test, and its overall lift is +4.9% rather than +6.3%. The cause is not yet confirmed; the breakdown may be counting people once per device or per visit. Because both checkouts are counted the same way within that file, the desktop-versus-mobile pattern holds. The breakdown numbers should not be added to, or set against, the headline numbers.</p>
+</div>
+
+<h2>4. Did anything else get worse? Nothing that blocks shipping.</h2>
+<div class="scroll">
+<table>
+  <thead><tr><th>Safety check</th><th class="n">Current</th><th class="n">New</th><th>Reading</th></tr></thead>
+  <tbody>
+    <tr><td>Revenue per visitor</td><td class="n">€2.26</td><td class="n">€2.37</td><td><span class="st ok">✓ Better</span> — up +4.9% (likely range +3.9% to +5.8%); about +3.9% in weeks 2–4.</td></tr>
+    <tr><td>Average order value</td><td class="n">€71.00</td><td class="n">€70.08</td><td><span class="st watch">● Watch</span> — down −1.3% (likely range −1.9% to −0.7%). Orders on the new checkout are slightly smaller, which is why revenue rose less than orders. Not a formal safety check, but worth tracking.</td></tr>
+    <tr><td>Payment error rate</td><td class="n">1.9%</td><td class="n">2.0%</td><td><span class="st watch">● Watch</span> — a tenth of a point higher. Only the rounded rates were available, so we cannot say whether this is noise. Small either way.</td></tr>
+    <tr><td>Refund rate</td><td class="n">3.1%</td><td class="n">3.0%</td><td><span class="st ok">✓ No change</span></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Recommendation</h2>
+<ol class="steps">
+  <li><strong>Ship the single-page checkout to desktop and tablet now.</strong> Desktop's gain is large and certain, and tablet points the same way. Expect the desktop lift to settle somewhat below the +11.1% measured here, because that figure includes the first-week boost.</li>
+  <li><strong>Keep mobile web on the current checkout for now.</strong> Shipping everywhere today would still be a net gain overall, but it would put a page with a known defect in front of half our visitors for no measured benefit and a probable small loss.</li>
+  <li><strong>Fix the pay button on short screens, then re-test on mobile web only.</strong> If the fix brings mobile anywhere near desktop's result, that is the largest remaining upside in this project, since mobile is the biggest group.</li>
+  <li><strong>After launch, track three things for four weeks:</strong> that the desktop lift holds, average order value, and payment errors (with full counts this time).</li>
+</ol>
+
+<h2>What we still do not know</h2>
+<ul>
+  <li><strong>How much of desktop's gain is the early boost.</strong> The device breakdown is not available by day, so we cannot see desktop's settled level directly, or whether mobile got better or worse as the test went on.</li>
+  <li><strong>Why the breakdown file has more visitors than the daily file</strong> (see the caution in section 3).</li>
+  <li><strong>Whether the payment error difference is real.</strong> This needs the underlying counts.</li>
+  <li><strong>Anything beyond four weeks,</strong> such as repeat purchases.</li>
+</ul>
+
+<footer>
+  <h2>How the numbers were worked out</h2>
+  <ul>
+    <li>Conversion is orders divided by visitors, as defined in the test design. Headline figures use the daily file; device and customer-type figures use the breakdown file.</li>
+    <li>Likely ranges are 95% confidence intervals on the relative change. The "once in 50,000" figure comes from a standard two-sided test of two proportions (p = 0.00002). The design set the significance level at 0.05.</li>
+    <li>The desktop-versus-mobile difference was tested directly (p below 0.000001), so it survives correction for the handful of group comparisons made.</li>
+    <li>The ranges for revenue per visitor and average order value are based on the 28 day-by-day differences, since order-level revenue was not available.</li>
+    <li>The design planned for detecting a 3% relative lift. The whole-test range sits above that; the weeks 2–4 range does not quite, so "at least 3%" is likely but not certain.</li>
+  </ul>
+</footer>
+
+</main>
+<script>
+(function () {
+  var c = {"ml": 46, "pw": 770, "mt": 26, "ph": 240, "ymax": 0.15, "W": 880, "days": [{"d": "Mon 31 Aug", "cc": "3.11%", "ct": "3.47%", "lift": "+11.6%", "v": 0.11594736126754035}, {"d": "Tue 1 Sep", "cc": "3.15%", "ct": "3.48%", "lift": "+10.8%", "v": 0.10785415111522689}, {"d": "Wed 2 Sep", "cc": "3.06%", "ct": "3.36%", "lift": "+9.8%", "v": 0.09797033871873251}, {"d": "Thu 3 Sep", "cc": "3.18%", "ct": "3.47%", "lift": "+9.1%", "v": 0.09136203151165723}, {"d": "Fri 4 Sep", "cc": "3.07%", "ct": "3.32%", "lift": "+8.2%", "v": 0.08220601127559624}, {"d": "Sat 5 Sep", "cc": "3.36%", "ct": "3.62%", "lift": "+7.7%", "v": 0.07712911461657712}, {"d": "Sun 6 Sep", "cc": "3.34%", "ct": "3.57%", "lift": "+6.8%", "v": 0.06849015715768592}, {"d": "Mon 7 Sep", "cc": "3.03%", "ct": "3.18%", "lift": "+4.9%", "v": 0.04924951086102758}, {"d": "Tue 8 Sep", "cc": "3.13%", "ct": "3.32%", "lift": "+6.2%", "v": 0.06206068737793968}, {"d": "Wed 9 Sep", "cc": "3.14%", "ct": "3.29%", "lift": "+4.7%", "v": 0.04729926944637608}, {"d": "Thu 10 Sep", "cc": "3.07%", "ct": "3.23%", "lift": "+5.5%", "v": 0.05515845433505695}, {"d": "Fri 11 Sep", "cc": "3.16%", "ct": "3.35%", "lift": "+6.3%", "v": 0.06310728348177674}, {"d": "Sat 12 Sep", "cc": "3.45%", "ct": "3.63%", "lift": "+5.2%", "v": 0.05224177552677611}, {"d": "Sun 13 Sep", "cc": "3.34%", "ct": "3.49%", "lift": "+4.6%", "v": 0.04635545455372747}, {"d": "Mon 14 Sep", "cc": "3.13%", "ct": "3.26%", "lift": "+4.4%", "v": 0.04414808869406239}, {"d": "Tue 15 Sep", "cc": "3.12%", "ct": "3.28%", "lift": "+5.4%", "v": 0.05366673540936273}, {"d": "Wed 16 Sep", "cc": "3.06%", "ct": "3.21%", "lift": "+4.9%", "v": 0.04899002047332335}, {"d": "Thu 17 Sep", "cc": "3.19%", "ct": "3.38%", "lift": "+6.0%", "v": 0.059571071804072506}, {"d": "Fri 18 Sep", "cc": "3.18%", "ct": "3.35%", "lift": "+5.3%", "v": 0.05338662240470571}, {"d": "Sat 19 Sep", "cc": "3.31%", "ct": "3.49%", "lift": "+5.3%", "v": 0.052693589047646094}, {"d": "Sun 20 Sep", "cc": "3.32%", "ct": "3.48%", "lift": "+4.9%", "v": 0.04916477978463374}, {"d": "Mon 21 Sep", "cc": "3.10%", "ct": "3.25%", "lift": "+4.8%", "v": 0.04845384420909027}, {"d": "Tue 22 Sep", "cc": "3.10%", "ct": "3.26%", "lift": "+5.1%", "v": 0.05072903965972286}, {"d": "Wed 23 Sep", "cc": "3.19%", "ct": "3.38%", "lift": "+6.1%", "v": 0.061491875037476884}, {"d": "Thu 24 Sep", "cc": "3.19%", "ct": "3.39%", "lift": "+6.2%", "v": 0.061651596531088426}, {"d": "Fri 25 Sep", "cc": "3.17%", "ct": "3.35%", "lift": "+5.6%", "v": 0.05635475467063977}, {"d": "Sat 26 Sep", "cc": "3.40%", "ct": "3.57%", "lift": "+5.2%", "v": 0.05190311418685112}, {"d": "Sun 27 Sep", "cc": "3.28%", "ct": "3.45%", "lift": "+5.0%", "v": 0.05003641687388716}]};
+  var svg = document.getElementById('c1'), hit = document.getElementById('hit'), tip = document.getElementById('tip');
+  var xh = document.getElementById('xh'), xd = document.getElementById('xd'), fig = document.getElementById('fig1');
+  function move(e) {
+    var r = svg.getBoundingClientRect(), s = r.width / c.W;
+    var x = (e.clientX - r.left) / s;
+    var i = Math.max(0, Math.min(27, Math.round((x - c.ml) / c.pw * 27)));
+    var d = c.days[i], px = c.ml + c.pw * i / 27, py = c.mt + c.ph * (1 - d.v / c.ymax);
+    xh.setAttribute('x1', px); xh.setAttribute('x2', px); xh.setAttribute('visibility', 'visible');
+    xd.setAttribute('cx', px); xd.setAttribute('cy', py); xd.setAttribute('visibility', 'visible');
+    tip.innerHTML = '<b>' + d.d + ': ' + d.lift + '</b><span>New ' + d.ct + ' · Current ' + d.cc + '</span>';
+    tip.style.display = 'block';
+    var fr = fig.getBoundingClientRect(), left = r.left - fr.left + px * s + 12;
+    if (left + tip.offsetWidth > fr.width - 8) left = r.left - fr.left + px * s - tip.offsetWidth - 12;
+    tip.style.left = left + 'px';
+    tip.style.top = (r.top - fr.top + py * s - tip.offsetHeight - 10) + 'px';
+  }
+  function out() { tip.style.display = 'none'; xh.setAttribute('visibility', 'hidden'); xd.setAttribute('visibility', 'hidden'); }
+  hit.addEventListener('pointermove', move); hit.addEventListener('pointerleave', out);
+})();
+</script>
+</body>
+</html>

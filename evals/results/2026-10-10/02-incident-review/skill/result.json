@@ -1,0 +1,18 @@
+{
+  "brief": "02-incident-review",
+  "arm": "skill",
+  "exitCode": 0,
+  "minutes": 3.8,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 36,
+  "costUsd": 1.2999414,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 773353,
+  "errors": 0,
+  "warnings": 0,
+  "codes": {}
+}

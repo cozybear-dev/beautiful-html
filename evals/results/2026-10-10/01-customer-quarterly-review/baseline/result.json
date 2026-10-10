@@ -1,0 +1,25 @@
+{
+  "brief": "01-customer-quarterly-review",
+  "arm": "baseline",
+  "exitCode": 0,
+  "minutes": 4,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 22,
+  "costUsd": 0.9777737999999999,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 35008,
+  "errors": 3,
+  "warnings": 20,
+  "codes": {
+    "missing-guide": 1,
+    "missing-kit": 1,
+    "low-contrast": 1,
+    "small-text": 15,
+    "long-lines": 1,
+    "label-overlap": 4
+  }
+}

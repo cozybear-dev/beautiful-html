@@ -1,0 +1,149 @@
+[
+  {
+    "brief": "01-customer-quarterly-review",
+    "arm": "baseline",
+    "exitCode": 0,
+    "minutes": 4,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 22,
+    "costUsd": 0.9777737999999999,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 35008,
+    "errors": 3,
+    "warnings": 20,
+    "codes": {
+      "missing-guide": 1,
+      "missing-kit": 1,
+      "low-contrast": 1,
+      "small-text": 15,
+      "long-lines": 1,
+      "label-overlap": 4
+    }
+  },
+  {
+    "brief": "02-incident-review",
+    "arm": "baseline",
+    "exitCode": 0,
+    "minutes": 6.8,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 19,
+    "costUsd": 1.4668320000000001,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 67587,
+    "errors": 2,
+    "warnings": 19,
+    "codes": {
+      "missing-guide": 1,
+      "missing-kit": 1,
+      "small-text": 16,
+      "clipped-text": 1,
+      "long-lines": 1,
+      "heading-skip": 1
+    }
+  },
+  {
+    "brief": "03-survey-results",
+    "arm": "baseline",
+    "exitCode": 0,
+    "minutes": 5.1,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 20,
+    "costUsd": 1.1934859,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 38287,
+    "errors": 2,
+    "warnings": 10,
+    "codes": {
+      "missing-guide": 1,
+      "missing-kit": 1,
+      "small-text": 8,
+      "long-lines": 1,
+      "figure-no-title": 1
+    }
+  },
+  {
+    "brief": "04-experiment-readout",
+    "arm": "baseline",
+    "exitCode": 0,
+    "minutes": 4.8,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 22,
+    "costUsd": 1.2257442,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 25849,
+    "errors": 15,
+    "warnings": 13,
+    "codes": {
+      "missing-guide": 1,
+      "missing-kit": 1,
+      "low-contrast": 13,
+      "small-text": 11,
+      "long-lines": 2
+    }
+  },
+  {
+    "brief": "05-sales-pipeline",
+    "arm": "baseline",
+    "exitCode": 0,
+    "minutes": 6.5,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 28,
+    "costUsd": 1.4476808,
+    "isError": false,
+    "files": [
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 50167,
+    "errors": 8,
+    "warnings": 18,
+    "codes": {
+      "missing-guide": 1,
+      "missing-kit": 1,
+      "low-contrast": 6,
+      "small-text": 16,
+      "long-lines": 2
+    }
+  },
+  {
+    "brief": "06-security-data-flows",
+    "arm": "baseline",
+    "exitCode": 0,
+    "minutes": 8.2,
+    "model": "claude-haiku-5-5, claude-opus-5-5",
+    "turns": 16,
+    "costUsd": 1.4744297,
+    "isError": false,
+    "files": [
+      "build_report.py",
+      "report.html"
+    ],
+    "report": true,
+    "bytes": 39920,
+    "errors": 3,
+    "warnings": 18,
+    "codes": {
+      "missing-guide": 1,
+      "missing-kit": 1,
+      "small-text": 17,
+      "long-lines": 1,
+      "horizontal-overflow": 1
+    }
+  }
+]

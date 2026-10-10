@@ -1,0 +1,24 @@
+{
+  "brief": "05-sales-pipeline",
+  "arm": "baseline",
+  "exitCode": 0,
+  "minutes": 6.5,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 28,
+  "costUsd": 1.4476808,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 50167,
+  "errors": 8,
+  "warnings": 18,
+  "codes": {
+    "missing-guide": 1,
+    "missing-kit": 1,
+    "low-contrast": 6,
+    "small-text": 16,
+    "long-lines": 2
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "brief": "02-incident-review",
+  "arm": "baseline",
+  "exitCode": 0,
+  "minutes": 6.8,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 19,
+  "costUsd": 1.4668320000000001,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 67587,
+  "errors": 2,
+  "warnings": 19,
+  "codes": {
+    "missing-guide": 1,
+    "missing-kit": 1,
+    "small-text": 16,
+    "clipped-text": 1,
+    "long-lines": 1,
+    "heading-skip": 1
+  }
+}

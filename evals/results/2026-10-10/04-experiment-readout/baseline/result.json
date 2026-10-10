@@ -1,0 +1,24 @@
+{
+  "brief": "04-experiment-readout",
+  "arm": "baseline",
+  "exitCode": 0,
+  "minutes": 4.8,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 22,
+  "costUsd": 1.2257442,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 25849,
+  "errors": 15,
+  "warnings": 13,
+  "codes": {
+    "missing-guide": 1,
+    "missing-kit": 1,
+    "low-contrast": 13,
+    "small-text": 11,
+    "long-lines": 2
+  }
+}

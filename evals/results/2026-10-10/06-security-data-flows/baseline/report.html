@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How customer data flows through our systems</title>
+<style>
+:root{
+  --bg:#fcfcfb; --surface:#ffffff; --zone:#f2f1ed; --border:#d3d1ca; --rule:#e6e4de;
+  --ink:#0b0b0b; --ink2:#52514e; --muted:#6c6a65;
+  --crit:#d03b3b; --crit-ink:#a82626; --crit-bg:#fcefee; --on-crit:#ffffff;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1a1a19; --surface:#2b2b29; --zone:#222221; --border:#4a4944; --rule:#353532;
+    --ink:#f0efec; --ink2:#c3c2b7; --muted:#a3a199;
+    --crit:#e05a5a; --crit-ink:#f08a8a; --crit-bg:#3a2222; --on-crit:#1a1a19;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+main{max-width:1160px;margin:0 auto;padding:48px 28px 64px}
+.prose{max-width:74ch}
+h1{font-size:30px;line-height:1.2;margin:0 0 8px;letter-spacing:-.01em}
+h2{font-size:21px;line-height:1.3;margin:56px 0 12px;padding-top:20px;border-top:1px solid var(--rule)}
+h3{font-size:16px;margin:28px 0 8px}
+p{margin:0 0 14px}
+.meta{color:var(--muted);font-size:14px;margin:0 0 28px}
+.lead{font-size:18px;line-height:1.55}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:28px 0 0}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.tile b{display:block;font-size:22px;line-height:1.25;font-weight:650}
+.tile span{display:block;color:var(--ink2);font-size:14px;margin-top:2px}
+.tile.gap{border-color:var(--crit);border-left-width:4px}
+.callout{background:var(--crit-bg);border:1px solid var(--crit);border-left-width:4px;border-radius:8px;
+  padding:20px 24px;margin:16px 0 0}
+.callout p:last-child{margin-bottom:0}
+.callout dl{margin:16px 0 0}
+dl.facts{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:10px 24px;margin:16px 0 0}
+dl.facts dt{color:var(--ink2);font-size:14px;padding-top:2px}
+dl.facts dd{margin:0}
+.flag{color:var(--crit-ink);font-weight:650}
+figure{margin:20px 0 0}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.diagram{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px}
+.diagram svg{display:block;width:100%;min-width:900px;height:auto;font-family:inherit}
+figcaption{color:var(--ink2);font-size:14px;margin-top:10px;max-width:90ch}
+.key{display:flex;flex-wrap:wrap;gap:8px 28px;list-style:none;padding:0;margin:14px 0 0;font-size:14px;color:var(--ink2)}
+.key li{display:flex;align-items:center;gap:8px}
+.key svg{flex:none}
+/* diagram */
+.zone{fill:var(--zone);stroke:var(--border);stroke-width:1}
+.zone-label{font-size:11px;font-weight:650;letter-spacing:.08em;fill:var(--muted)}
+.node rect{fill:var(--surface);stroke:var(--border);stroke-width:1.25}
+.node.store rect{stroke:var(--ink);stroke-width:2.25}
+.node text{text-anchor:middle}
+.node .nm{font-size:13px;font-weight:650;fill:var(--ink)}
+.node .sub{font-size:11px;fill:var(--ink2)}
+.edge .ln{stroke:var(--ink2);stroke-width:1.5;fill:none}
+.edge .hit{stroke:transparent;stroke-width:14}
+.edge.gap .ln{stroke:var(--crit);stroke-width:2.25;stroke-dasharray:7 4}
+.ah{fill:var(--ink2)} .ah.gap{fill:var(--crit)}
+.pill rect{fill:var(--surface);stroke:var(--border);stroke-width:1}
+.pill circle{fill:var(--ink)}
+.pill .num{font-size:10px;font-weight:700;text-anchor:middle;fill:var(--bg)}
+.pill .lbl{font-size:11px;fill:var(--ink)}
+.pill.gap rect{stroke:var(--crit);stroke-width:1.5;fill:var(--crit-bg)}
+.pill.gap circle{fill:var(--crit)} .pill.gap .num{fill:var(--on-crit)}
+.pill.gap .lbl{font-weight:650}
+.gap-note{font-size:12px;font-weight:650;text-anchor:middle;fill:var(--crit-ink)}
+svg.dim .edge,svg.dim .pill{opacity:.22}
+svg.dim .edge.on,svg.dim .pill.on{opacity:1}
+svg .edge.on .ln{stroke-width:3}
+svg .pill.on rect{stroke:var(--ink);stroke-width:1.75}
+/* tables */
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:1px solid var(--rule)}
+thead th{font-size:12.5px;font-weight:650;color:var(--ink2);border-bottom:1px solid var(--border);
+  vertical-align:bottom;white-space:nowrap}
+tr.grp th{font-size:12.5px;font-weight:650;letter-spacing:.02em;color:var(--ink2);background:var(--zone);
+  border-bottom:1px solid var(--border);padding:7px 12px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.n{width:1%;padding-right:4px}
+.nw{white-space:nowrap}
+.zn{display:block;color:var(--muted);font-size:13px;margin-top:1px}
+.dash{color:var(--muted)}
+.badge{display:inline-block;min-width:22px;height:22px;line-height:22px;border-radius:11px;text-align:center;
+  font-size:12px;font-weight:700;background:var(--ink);color:var(--bg);font-variant-numeric:tabular-nums}
+tr.gap td{background:var(--crit-bg)}
+tr.gap td:first-child{box-shadow:inset 4px 0 0 var(--crit)}
+tr.gap .badge{background:var(--crit);color:var(--on-crit)}
+tbody tr.on td{background:var(--zone)}
+tbody tr.gap.on td{background:var(--crit-bg)}
+.table{margin-top:16px;min-width:0}
+.table table{min-width:860px}
+.table.narrow table{min-width:640px}
+.note{color:var(--ink2);font-size:14px;margin-top:12px;max-width:90ch}
+footer{margin-top:56px;padding-top:16px;border-top:1px solid var(--rule);color:var(--muted);font-size:13.5px}
+@media (max-width:640px){
+  main{padding:28px 16px 48px} h1{font-size:25px} .lead{font-size:17px}
+  dl.facts{grid-template-columns:1fr;gap:2px 0} dl.facts dd{margin-bottom:10px}
+  .callout{padding:16px}
+}
+@media print{
+  :root{--bg:#fff;--surface:#fff;--zone:#f2f1ed;--border:#bdbbb4;--rule:#dcdad4;--ink:#000;--ink2:#3d3c3a;
+    --muted:#5a5955;--crit:#c22f2f;--crit-ink:#a82626;--crit-bg:#fcefee;--on-crit:#fff}
+  body{font-size:11.5pt} main{max-width:none;padding:0}
+  .scroll{overflow:visible} .diagram svg,.table table,.table.narrow table{min-width:0}
+  table{font-size:9.5pt} h2{margin-top:28px}
+  figure,.callout,.tiles,tr{break-inside:avoid} h2,h3,tr.grp{break-after:avoid}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main>
+
+<header class="prose">
+  <h1>How customer data flows through our systems</h1>
+  <p class="meta">Prepared for your vendor security review &middot; 10 October 2026</p>
+  <p class="lead">Customer data enters through a CDN and web application firewall, passes a load balancer into
+  our application services, and is stored in 4 data stores that are encrypted at rest with AES-256.
+  All production systems run in the EU (Frankfurt and Dublin).</p>
+  <p class="lead">16 of the 17 connections between systems are encrypted with TLS 1.2 or 1.3.
+  The exception is a nightly export of pseudonymised data from the primary database to the reporting warehouse,
+  which uses unencrypted FTP inside our private network. It is described in full directly below and is due to be
+  replaced by 30 November 2026.</p>
+</header>
+
+<div class="tiles">
+  <div class="tile"><b>16 of 17</b><span>connections encrypted in transit (TLS 1.2 or 1.3)</span></div>
+  <div class="tile"><b>4 of 4</b><span>data stores encrypted at rest (AES-256)</span></div>
+  <div class="tile"><b>2 subprocessors</b><span>receive customer data, both processing in the EU</span></div>
+  <div class="tile gap"><b>1 known gap</b><span>medium risk, fix due 30 November 2026</span></div>
+</div>
+
+<section>
+  <h2>1. Known gap: unencrypted nightly export to the reporting warehouse</h2>
+  <div class="callout">
+    <p class="prose"><strong>Connection 17, Primary database to Reporting warehouse,
+    is not encrypted in transit.</strong> Once a night, a pseudonymised export is copied from the primary database
+    to the reporting warehouse over FTP (port 21), authenticated with a shared password. FTP does not
+    encrypt, so both the export and that password cross the private network in clear text. Both systems are in the
+    Data zone, and the connection does not leave the private network.</p>
+    <dl class="facts">
+      <dt>Data exposed</dt><dd>Nightly export (pseudonymised)</dd>
+      <dt>Our risk rating</dt><dd>Medium. The data is pseudonymised and the connection is on the private network only.</dd>
+      <dt>Remediation</dt><dd>Replace with TLS-encrypted managed replication.</dd>
+      <dt>Due</dt><dd>30 November 2026</dd>
+      <dt>Owner</dt><dd>Analytics team</dd>
+    </dl>
+  </div>
+</section>
+
+<section>
+  <h2>2. Data flow by network zone</h2>
+  <p class="prose">Each box is a system, placed in the zone it runs in. Each arrow is a connection, numbered to
+  match the table in section 3 and labelled with its encryption in transit. Requests start at the customer's
+  browser at the top and move down to storage; third parties are on the right.</p>
+  <figure>
+    <div class="scroll diagram">
+<svg viewBox="0 0 1128 890" role="img" aria-labelledby="dg-t dg-d" xmlns="http://www.w3.org/2000/svg">
+<title id="dg-t">Customer data flow by network zone</title>
+<desc id="dg-d">14 systems in 5 zones joined by 17 numbered connections. Each connection is listed with the same number in the table that follows.</desc>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto"><path class="ah" d="M0 1 L10 5 L0 9 z"/></marker><marker id="ah-gap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path class="ah gap" d="M0 1 L10 5 L0 9 z"/></marker></defs>
+<rect class="zone" x="16" y="20" width="810" height="90" rx="8"/>
+<text class="zone-label" x="30" y="41">INTERNET ZONE</text>
+<rect class="zone" x="16" y="150" width="810" height="90" rx="8"/>
+<text class="zone-label" x="30" y="171">EDGE ZONE</text>
+<rect class="zone" x="16" y="280" width="810" height="350" rx="8"/>
+<text class="zone-label" x="30" y="301">APPLICATION ZONE</text>
+<rect class="zone" x="16" y="690" width="810" height="180" rx="8"/>
+<text class="zone-label" x="30" y="711">DATA ZONE</text>
+<rect class="zone" x="896" y="280" width="216" height="350" rx="8"/>
+<text class="zone-label" x="910" y="301">THIRD PARTY ZONE</text>
+<g class="edge" data-flow="1"><title>Connection 1: Customer browser to CDN and WAF. Page requests, form data. HTTPS port 443, TLS 1.3, authenticated by Session cookie.</title><line class="hit" x1="230" y1="92" x2="230" y2="168"/><line class="ln" x1="230" y1="92" x2="230" y2="168" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="2"><title>Connection 2: CDN and WAF to Load balancer. Filtered requests. HTTPS port 443, TLS 1.3, authenticated by mTLS.</title><line class="hit" x1="305" y1="195" x2="425" y2="195"/><line class="ln" x1="305" y1="195" x2="425" y2="195" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="3"><title>Connection 3: Load balancer to Web application. Page requests. HTTPS port 8443, TLS 1.2, authenticated by mTLS.</title><line class="hit" x1="530" y1="222" x2="600" y2="318"/><line class="ln" x1="530" y1="222" x2="600" y2="318" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="4"><title>Connection 4: Load balancer to API service. API requests. HTTPS port 8443, TLS 1.2, authenticated by mTLS + JWT.</title><line class="hit" x1="470" y1="222" x2="270" y2="418"/><line class="ln" x1="470" y1="222" x2="270" y2="418" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="5"><title>Connection 5: Web application to Identity provider (SSO). SAML / OIDC sign-in. HTTPS port 443, TLS 1.3, authenticated by Signed assertions.</title><line class="hit" x1="695" y1="345" x2="906" y2="345"/><line class="ln" x1="695" y1="345" x2="906" y2="345" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="6"><title>Connection 6: Web application to API service. API requests. HTTPS port 8443, TLS 1.2, authenticated by JWT.</title><line class="hit" x1="545" y1="355" x2="325" y2="430"/><line class="ln" x1="545" y1="355" x2="325" y2="430" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="7"><title>Connection 7: API service to Primary database. Customer records. PostgreSQL port 5432, TLS 1.2, authenticated by IAM role.</title><line class="hit" x1="280" y1="472" x2="410" y2="773"/><line class="ln" x1="280" y1="472" x2="410" y2="773" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="8"><title>Connection 8: API service to Document storage. Uploaded documents. HTTPS port 443, TLS 1.3, authenticated by IAM role.</title><line class="hit" x1="215" y1="472" x2="110" y2="773"/><line class="ln" x1="215" y1="472" x2="110" y2="773" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="9"><title>Connection 9: API service to Search index. Search queries. HTTPS port 9243, TLS 1.2, authenticated by API key.</title><line class="hit" x1="250" y1="472" x2="245" y2="773"/><line class="ln" x1="250" y1="472" x2="245" y2="773" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="10"><title>Connection 10: API service to Job queue. Job messages. AMQPS port 5671, TLS 1.2, authenticated by Service account.</title><line class="hit" x1="315" y1="472" x2="400" y2="565"/><line class="ln" x1="315" y1="472" x2="400" y2="565" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="11"><title>Connection 11: Job queue to Background workers. Job messages. AMQPS port 5671, TLS 1.2, authenticated by Service account.</title><line class="hit" x1="550" y1="570" x2="660" y2="570"/><line class="ln" x1="550" y1="570" x2="660" y2="570" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="12"><title>Connection 12: Background workers to Primary database. Customer records. PostgreSQL port 5432, TLS 1.2, authenticated by IAM role.</title><line class="hit" x1="715" y1="597" x2="470" y2="773"/><line class="ln" x1="715" y1="597" x2="470" y2="773" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="13"><title>Connection 13: Background workers to Search index. Index updates (pseudonymised). HTTPS port 9243, TLS 1.2, authenticated by API key.</title><line class="hit" x1="685" y1="597" x2="285" y2="773"/><line class="ln" x1="685" y1="597" x2="285" y2="773" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="14"><title>Connection 14: Background workers to Email provider. Recipient email address, message body. HTTPS port 443, TLS 1.3, authenticated by API key.</title><line class="hit" x1="810" y1="570" x2="906" y2="570"/><line class="ln" x1="810" y1="570" x2="906" y2="570" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="15"><title>Connection 15: API service to Log platform. Application logs (scrubbed). HTTPS port 443, TLS 1.3, authenticated by API key.</title><line class="hit" x1="325" y1="452" x2="906" y2="452"/><line class="ln" x1="325" y1="452" x2="906" y2="452" marker-end="url(#ah)"/></g>
+<g class="edge" data-flow="16"><title>Connection 16: Background workers to Log platform. Application logs (scrubbed). HTTPS port 443, TLS 1.3, authenticated by API key.</title><line class="hit" x1="790" y1="543" x2="950" y2="472"/><line class="ln" x1="790" y1="543" x2="950" y2="472" marker-end="url(#ah)"/></g>
+<g class="edge gap" data-flow="17"><title>Connection 17: Primary database to Reporting warehouse. Nightly export (pseudonymised). FTP port 21, not encrypted, authenticated by Shared password.</title><line class="hit" x1="515" y1="800" x2="660" y2="800"/><line class="ln" x1="515" y1="800" x2="660" y2="800" marker-end="url(#ah-gap)"/></g>
+<g class="node"><title>Customer browser: client, Internet zone, operated by Customer. Data held: Personal data.</title><rect x="155.0" y="38.0" width="150" height="54" rx="6"/><text class="nm" x="230" y="61">Customer browser</text><text class="sub" x="230" y="79">Personal data</text></g>
+<g class="node"><title>CDN and WAF: gateway, Edge zone, operated by Platform team. Data held: None stored.</title><rect x="155.0" y="168.0" width="150" height="54" rx="6"/><text class="nm" x="230" y="191">CDN and WAF</text><text class="sub" x="230" y="209">None stored</text></g>
+<g class="node"><title>Load balancer: gateway, Edge zone, operated by Platform team. Data held: None stored.</title><rect x="425.0" y="168.0" width="150" height="54" rx="6"/><text class="nm" x="500" y="191">Load balancer</text><text class="sub" x="500" y="209">None stored</text></g>
+<g class="node"><title>Identity provider (SSO): external, Third party zone, operated by Customer or Okta. Data held: Credentials.</title><rect x="906.0" y="318.0" width="190" height="54" rx="6"/><text class="nm" x="1001" y="341">Identity provider (SSO)</text><text class="sub" x="1001" y="359">Credentials</text></g>
+<g class="node"><title>API service: service, Application zone, operated by Core team. Data held: Personal data in transit.</title><rect x="175.0" y="418.0" width="150" height="54" rx="6"/><text class="nm" x="250" y="441">API service</text><text class="sub" x="250" y="459">Personal data in transit</text></g>
+<g class="node"><title>Web application: service, Application zone, operated by Core team. Data held: None stored.</title><rect x="545.0" y="318.0" width="150" height="54" rx="6"/><text class="nm" x="620" y="341">Web application</text><text class="sub" x="620" y="359">None stored</text></g>
+<g class="node"><title>Background workers: service, Application zone, operated by Core team. Data held: Personal data in transit.</title><rect x="660.0" y="543.0" width="150" height="54" rx="6"/><text class="nm" x="735" y="566">Background workers</text><text class="sub" x="735" y="584">Personal data in transit</text></g>
+<g class="node"><title>Job queue: queue, Application zone, operated by Platform team. Data held: Personal data in transit.</title><rect x="400.0" y="543.0" width="150" height="54" rx="6"/><text class="nm" x="475" y="566">Job queue</text><text class="sub" x="475" y="584">Personal data in transit</text></g>
+<g class="node store"><title>Primary database: database, Data zone, operated by Data team. Data held: Personal data.</title><rect x="365.0" y="773.0" width="150" height="54" rx="6"/><text class="nm" x="440" y="796">Primary database</text><text class="sub" x="440" y="814">Personal data</text></g>
+<g class="node store"><title>Document storage: database, Data zone, operated by Data team. Data held: Customer documents.</title><rect x="25.0" y="773.0" width="150" height="54" rx="6"/><text class="nm" x="100" y="796">Document storage</text><text class="sub" x="100" y="814">Customer documents</text></g>
+<g class="node store"><title>Search index: database, Data zone, operated by Data team. Data held: Pseudonymised.</title><rect x="193.0" y="773.0" width="150" height="54" rx="6"/><text class="nm" x="268" y="796">Search index</text><text class="sub" x="268" y="814">Pseudonymised</text></g>
+<g class="node store"><title>Reporting warehouse: database, Data zone, operated by Analytics team. Data held: Pseudonymised.</title><rect x="660.0" y="773.0" width="150" height="54" rx="6"/><text class="nm" x="735" y="796">Reporting warehouse</text><text class="sub" x="735" y="814">Pseudonymised</text></g>
+<g class="node"><title>Email provider: external, Third party zone, operated by Sendwell Inc.. Data held: Email address, message body.</title><rect x="906.0" y="543.0" width="190" height="54" rx="6"/><text class="nm" x="1001" y="566">Email provider</text><text class="sub" x="1001" y="584">Email address, message body</text></g>
+<g class="node"><title>Log platform: external, Third party zone, operated by Logline Ltd.. Data held: No personal data (scrubbed).</title><rect x="906.0" y="418.0" width="190" height="54" rx="6"/><text class="nm" x="1001" y="441">Log platform</text><text class="sub" x="1001" y="459">No personal data (scrubbed)</text></g>
+<g class="pill" data-flow="1"><title>Connection 1: Customer browser to CDN and WAF. Page requests, form data. HTTPS port 443, TLS 1.3, authenticated by Session cookie.</title><rect x="192.0" y="120.0" width="76.0" height="20" rx="10"/><circle cx="203.0" cy="130.0" r="8"/><text class="num" x="203.0" y="133.6">1</text><text class="lbl" x="216.0" y="134.0">TLS 1.3</text></g>
+<g class="pill" data-flow="2"><title>Connection 2: CDN and WAF to Load balancer. Filtered requests. HTTPS port 443, TLS 1.3, authenticated by mTLS.</title><rect x="322.2" y="185.0" width="76.0" height="20" rx="10"/><circle cx="333.2" cy="195.0" r="8"/><text class="num" x="333.2" y="198.6">2</text><text class="lbl" x="346.2" y="199.0">TLS 1.3</text></g>
+<g class="pill" data-flow="3"><title>Connection 3: Load balancer to Web application. Page requests. HTTPS port 8443, TLS 1.2, authenticated by mTLS.</title><rect x="523.5" y="255.2" width="76.0" height="20" rx="10"/><circle cx="534.5" cy="265.2" r="8"/><text class="num" x="534.5" y="268.8">3</text><text class="lbl" x="547.5" y="269.2">TLS 1.2</text></g>
+<g class="pill" data-flow="4"><title>Connection 4: Load balancer to API service. API requests. HTTPS port 8443, TLS 1.2, authenticated by mTLS + JWT.</title><rect x="332.0" y="310.0" width="76.0" height="20" rx="10"/><circle cx="343.0" cy="320.0" r="8"/><text class="num" x="343.0" y="323.6">4</text><text class="lbl" x="356.0" y="324.0">TLS 1.2</text></g>
+<g class="pill" data-flow="5"><title>Connection 5: Web application to Identity provider (SSO). SAML / OIDC sign-in. HTTPS port 443, TLS 1.3, authenticated by Signed assertions.</title><rect x="762.5" y="335.0" width="76.0" height="20" rx="10"/><circle cx="773.5" cy="345.0" r="8"/><text class="num" x="773.5" y="348.6">5</text><text class="lbl" x="786.5" y="349.0">TLS 1.3</text></g>
+<g class="pill" data-flow="6"><title>Connection 6: Web application to API service. API requests. HTTPS port 8443, TLS 1.2, authenticated by JWT.</title><rect x="397.0" y="382.5" width="76.0" height="20" rx="10"/><circle cx="408.0" cy="392.5" r="8"/><text class="num" x="408.0" y="396.1">6</text><text class="lbl" x="421.0" y="396.5">TLS 1.2</text></g>
+<g class="pill" data-flow="7"><title>Connection 7: API service to Primary database. Customer records. PostgreSQL port 5432, TLS 1.2, authenticated by IAM role.</title><rect x="322.6" y="648.6" width="76.0" height="20" rx="10"/><circle cx="333.6" cy="658.6" r="8"/><text class="num" x="333.6" y="662.2">7</text><text class="lbl" x="346.6" y="662.6">TLS 1.2</text></g>
+<g class="pill" data-flow="8"><title>Connection 8: API service to Document storage. Uploaded documents. HTTPS port 443, TLS 1.3, authenticated by IAM role.</title><rect x="124.5" y="612.5" width="76.0" height="20" rx="10"/><circle cx="135.5" cy="622.5" r="8"/><text class="num" x="135.5" y="626.1">8</text><text class="lbl" x="148.5" y="626.5">TLS 1.3</text></g>
+<g class="pill" data-flow="9"><title>Connection 9: API service to Search index. Search queries. HTTPS port 9243, TLS 1.2, authenticated by API key.</title><rect x="210.5" y="552.3" width="76.0" height="20" rx="10"/><circle cx="221.5" cy="562.3" r="8"/><text class="num" x="221.5" y="565.9">9</text><text class="lbl" x="234.5" y="566.3">TLS 1.2</text></g>
+<g class="pill" data-flow="10"><title>Connection 10: API service to Job queue. Job messages. AMQPS port 5671, TLS 1.2, authenticated by Service account.</title><rect x="319.5" y="508.5" width="76.0" height="20" rx="10"/><circle cx="330.5" cy="518.5" r="8"/><text class="num" x="330.5" y="522.1">10</text><text class="lbl" x="343.5" y="522.5">TLS 1.2</text></g>
+<g class="pill" data-flow="11"><title>Connection 11: Job queue to Background workers. Job messages. AMQPS port 5671, TLS 1.2, authenticated by Service account.</title><rect x="562.6" y="560.0" width="76.0" height="20" rx="10"/><circle cx="573.6" cy="570.0" r="8"/><text class="num" x="573.6" y="573.6">11</text><text class="lbl" x="586.6" y="574.0">TLS 1.2</text></g>
+<g class="pill" data-flow="12"><title>Connection 12: Background workers to Primary database. Customer records. PostgreSQL port 5432, TLS 1.2, authenticated by IAM role.</title><rect x="530.0" y="692.6" width="76.0" height="20" rx="10"/><circle cx="541.0" cy="702.6" r="8"/><text class="num" x="541.0" y="706.2">12</text><text class="lbl" x="554.0" y="706.6">TLS 1.2</text></g>
+<g class="pill" data-flow="13"><title>Connection 13: Background workers to Search index. Index updates (pseudonymised). HTTPS port 9243, TLS 1.2, authenticated by API key.</title><rect x="507.0" y="648.6" width="76.0" height="20" rx="10"/><circle cx="518.0" cy="658.6" r="8"/><text class="num" x="518.0" y="662.2">13</text><text class="lbl" x="531.0" y="662.6">TLS 1.2</text></g>
+<g class="pill" data-flow="14"><title>Connection 14: Background workers to Email provider. Recipient email address, message body. HTTPS port 443, TLS 1.3, authenticated by API key.</title><rect x="815.2" y="560.0" width="76.0" height="20" rx="10"/><circle cx="826.2" cy="570.0" r="8"/><text class="num" x="826.2" y="573.6">14</text><text class="lbl" x="839.2" y="574.0">TLS 1.3</text></g>
+<g class="pill" data-flow="15"><title>Connection 15: API service to Log platform. Application logs (scrubbed). HTTPS port 443, TLS 1.3, authenticated by API key.</title><rect x="647.2" y="442.0" width="76.0" height="20" rx="10"/><circle cx="658.2" cy="452.0" r="8"/><text class="num" x="658.2" y="455.6">15</text><text class="lbl" x="671.2" y="456.0">TLS 1.3</text></g>
+<g class="pill" data-flow="16"><title>Connection 16: Background workers to Log platform. Application logs (scrubbed). HTTPS port 443, TLS 1.3, authenticated by API key.</title><rect x="832.0" y="497.5" width="76.0" height="20" rx="10"/><circle cx="843.0" cy="507.5" r="8"/><text class="num" x="843.0" y="511.1">16</text><text class="lbl" x="856.0" y="511.5">TLS 1.3</text></g>
+<g class="pill gap" data-flow="17"><title>Connection 17: Primary database to Reporting warehouse. Nightly export (pseudonymised). FTP port 21, not encrypted, authenticated by Shared password.</title><rect x="533.1" y="790.0" width="100.0" height="20" rx="10"/><circle cx="544.1" cy="800.0" r="8"/><text class="num" x="544.1" y="803.6">17</text><text class="lbl" x="557.1" y="804.0">Unencrypted</text></g>
+<text class="gap-note" x="587.5" y="850">&#9888; Known gap, fix due 30 Nov 2026</text>
+</svg>
+    </div>
+    
+<ul class="key" aria-label="Key to the diagram">
+  <li><svg width="74" height="20" aria-hidden="true"><g class="pill"><rect x=".5" y=".5" width="73" height="19" rx="9.5"/><circle cx="11" cy="10" r="8"/><text class="num" x="11" y="13.6">n</text><text class="lbl" x="24" y="14">TLS 1.3</text></g></svg>Connection number and its encryption in transit</li>
+  <li><svg width="44" height="20" aria-hidden="true"><g class="edge gap"><line class="ln" x1="2" y1="10" x2="42" y2="10"/></g></svg>Unencrypted connection (the known gap)</li>
+  <li><svg width="34" height="20" aria-hidden="true"><g class="node store"><rect x="2" y="2" width="30" height="16" rx="4"/></g></svg>Data store, encrypted at rest with AES-256</li>
+  <li><svg width="34" height="20" aria-hidden="true"><g class="node"><rect x="2" y="2" width="30" height="16" rx="4"/></g></svg>Other system; the second line shows the data it holds</li>
+</ul>
+
+    <figcaption>All 14 systems that touch customer data and all 17 connections between
+    them are shown. Connection 17 is the known gap.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>3. How each connection is protected</h2>
+  <p class="prose">Numbers match the diagram. Every connection is authenticated; connection 17 is the only
+  one that is not encrypted and the only one that uses a shared password.</p>
+  <div class="scroll table">
+  <table>
+    <thead><tr>
+      <th scope="col">No.</th><th scope="col">Connection and zones</th><th scope="col">Data carried</th>
+      <th scope="col">Protocol</th><th scope="col">Encryption in transit</th>
+      <th scope="col">Authentication</th><th scope="col" class="num">Requests per day</th>
+    </tr></thead>
+    <tbody>
+<tr class="grp"><th colspan="7" scope="colgroup">From the browser into the application, including sign-in</th></tr>
+<tr data-flow="1"><td class="n"><span class="badge">1</span></td><td><strong>Customer browser</strong> &rarr; <strong>CDN and WAF</strong><span class="zn">Internet &rarr; Edge</span></td><td>Page requests, form data</td><td class="nw">HTTPS, port 443</td><td class="nw">TLS 1.3</td><td>Session cookie</td><td class="num">2,400,000</td></tr>
+<tr data-flow="2"><td class="n"><span class="badge">2</span></td><td><strong>CDN and WAF</strong> &rarr; <strong>Load balancer</strong><span class="zn">within Edge</span></td><td>Filtered requests</td><td class="nw">HTTPS, port 443</td><td class="nw">TLS 1.3</td><td>mTLS</td><td class="num">2,100,000</td></tr>
+<tr data-flow="3"><td class="n"><span class="badge">3</span></td><td><strong>Load balancer</strong> &rarr; <strong>Web application</strong><span class="zn">Edge &rarr; Application</span></td><td>Page requests</td><td class="nw">HTTPS, port 8443</td><td class="nw">TLS 1.2</td><td>mTLS</td><td class="num">900,000</td></tr>
+<tr data-flow="4"><td class="n"><span class="badge">4</span></td><td><strong>Load balancer</strong> &rarr; <strong>API service</strong><span class="zn">Edge &rarr; Application</span></td><td>API requests</td><td class="nw">HTTPS, port 8443</td><td class="nw">TLS 1.2</td><td>mTLS + JWT</td><td class="num">1,200,000</td></tr>
+<tr data-flow="5"><td class="n"><span class="badge">5</span></td><td><strong>Web application</strong> &rarr; <strong>Identity provider (SSO)</strong><span class="zn">Application &rarr; Third party</span></td><td>SAML / OIDC sign-in</td><td class="nw">HTTPS, port 443</td><td class="nw">TLS 1.3</td><td>Signed assertions</td><td class="num">42,000</td></tr>
+<tr data-flow="6"><td class="n"><span class="badge">6</span></td><td><strong>Web application</strong> &rarr; <strong>API service</strong><span class="zn">within Application</span></td><td>API requests</td><td class="nw">HTTPS, port 8443</td><td class="nw">TLS 1.2</td><td>JWT</td><td class="num">760,000</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">From the application to storage</th></tr>
+<tr data-flow="7"><td class="n"><span class="badge">7</span></td><td><strong>API service</strong> &rarr; <strong>Primary database</strong><span class="zn">Application &rarr; Data</span></td><td>Customer records</td><td class="nw">PostgreSQL, port 5432</td><td class="nw">TLS 1.2</td><td>IAM role</td><td class="num">3,900,000</td></tr>
+<tr data-flow="8"><td class="n"><span class="badge">8</span></td><td><strong>API service</strong> &rarr; <strong>Document storage</strong><span class="zn">Application &rarr; Data</span></td><td>Uploaded documents</td><td class="nw">HTTPS, port 443</td><td class="nw">TLS 1.3</td><td>IAM role</td><td class="num">61,000</td></tr>
+<tr data-flow="9"><td class="n"><span class="badge">9</span></td><td><strong>API service</strong> &rarr; <strong>Search index</strong><span class="zn">Application &rarr; Data</span></td><td>Search queries</td><td class="nw">HTTPS, port 9243</td><td class="nw">TLS 1.2</td><td>API key</td><td class="num">540,000</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Background processing</th></tr>
+<tr data-flow="10"><td class="n"><span class="badge">10</span></td><td><strong>API service</strong> &rarr; <strong>Job queue</strong><span class="zn">within Application</span></td><td>Job messages</td><td class="nw">AMQPS, port 5671</td><td class="nw">TLS 1.2</td><td>Service account</td><td class="num">380,000</td></tr>
+<tr data-flow="11"><td class="n"><span class="badge">11</span></td><td><strong>Job queue</strong> &rarr; <strong>Background workers</strong><span class="zn">within Application</span></td><td>Job messages</td><td class="nw">AMQPS, port 5671</td><td class="nw">TLS 1.2</td><td>Service account</td><td class="num">380,000</td></tr>
+<tr data-flow="12"><td class="n"><span class="badge">12</span></td><td><strong>Background workers</strong> &rarr; <strong>Primary database</strong><span class="zn">Application &rarr; Data</span></td><td>Customer records</td><td class="nw">PostgreSQL, port 5432</td><td class="nw">TLS 1.2</td><td>IAM role</td><td class="num">820,000</td></tr>
+<tr data-flow="13"><td class="n"><span class="badge">13</span></td><td><strong>Background workers</strong> &rarr; <strong>Search index</strong><span class="zn">Application &rarr; Data</span></td><td>Index updates (pseudonymised)</td><td class="nw">HTTPS, port 9243</td><td class="nw">TLS 1.2</td><td>API key</td><td class="num">210,000</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">To subprocessors</th></tr>
+<tr data-flow="14"><td class="n"><span class="badge">14</span></td><td><strong>Background workers</strong> &rarr; <strong>Email provider</strong><span class="zn">Application &rarr; Third party</span></td><td>Recipient email address, message body</td><td class="nw">HTTPS, port 443</td><td class="nw">TLS 1.3</td><td>API key</td><td class="num">96,000</td></tr>
+<tr data-flow="15"><td class="n"><span class="badge">15</span></td><td><strong>API service</strong> &rarr; <strong>Log platform</strong><span class="zn">Application &rarr; Third party</span></td><td>Application logs (scrubbed)</td><td class="nw">HTTPS, port 443</td><td class="nw">TLS 1.3</td><td>API key</td><td class="num">5,200,000</td></tr>
+<tr data-flow="16"><td class="n"><span class="badge">16</span></td><td><strong>Background workers</strong> &rarr; <strong>Log platform</strong><span class="zn">Application &rarr; Third party</span></td><td>Application logs (scrubbed)</td><td class="nw">HTTPS, port 443</td><td class="nw">TLS 1.3</td><td>API key</td><td class="num">1,100,000</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Reporting export</th></tr>
+<tr data-flow="17" class=gap><td class="n"><span class="badge">17</span></td><td><strong>Primary database</strong> &rarr; <strong>Reporting warehouse</strong><span class="zn">within Data</span></td><td>Nightly export (pseudonymised)</td><td class="nw">FTP, port 21</td><td class="nw"><span class="flag">&#9888; None</span></td><td>Shared password</td><td class="num">1 (nightly)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">7 connections use TLS 1.3, 9 use TLS 1.2 and 1 is unencrypted. TLS 1.3 is used on
+  every connection that crosses the Internet or reaches a third party; TLS 1.2 is used only between our own
+  systems in the Edge, Application and Data zones.</p>
+</section>
+
+<section>
+  <h2>4. Systems and the data they hold</h2>
+  <div class="scroll table">
+  <table>
+    <thead><tr>
+      <th scope="col">System</th><th scope="col">Type</th><th scope="col">Operated by</th>
+      <th scope="col">Data held</th><th scope="col">Encryption at rest</th>
+    </tr></thead>
+    <tbody>
+<tr class="grp"><th colspan="5" scope="colgroup">Internet zone</th></tr>
+<tr><td><strong>Customer browser</strong></td><td>Client</td><td>Customer</td><td>Personal data</td><td><span class="dash">&ndash;</span></td></tr>
+<tr class="grp"><th colspan="5" scope="colgroup">Edge zone</th></tr>
+<tr><td><strong>CDN and WAF</strong></td><td>Gateway</td><td>Platform team</td><td>None stored</td><td><span class="dash">&ndash;</span></td></tr>
+<tr><td><strong>Load balancer</strong></td><td>Gateway</td><td>Platform team</td><td>None stored</td><td><span class="dash">&ndash;</span></td></tr>
+<tr class="grp"><th colspan="5" scope="colgroup">Application zone</th></tr>
+<tr><td><strong>API service</strong></td><td>Service</td><td>Core team</td><td>Personal data in transit</td><td><span class="dash">&ndash;</span></td></tr>
+<tr><td><strong>Web application</strong></td><td>Service</td><td>Core team</td><td>None stored</td><td><span class="dash">&ndash;</span></td></tr>
+<tr><td><strong>Background workers</strong></td><td>Service</td><td>Core team</td><td>Personal data in transit</td><td><span class="dash">&ndash;</span></td></tr>
+<tr><td><strong>Job queue</strong></td><td>Queue</td><td>Platform team</td><td>Personal data in transit</td><td><span class="dash">&ndash;</span></td></tr>
+<tr class="grp"><th colspan="5" scope="colgroup">Data zone</th></tr>
+<tr><td><strong>Primary database</strong></td><td>Database</td><td>Data team</td><td>Personal data</td><td>AES-256</td></tr>
+<tr><td><strong>Document storage</strong></td><td>Database</td><td>Data team</td><td>Customer documents</td><td>AES-256</td></tr>
+<tr><td><strong>Search index</strong></td><td>Database</td><td>Data team</td><td>Pseudonymised</td><td>AES-256</td></tr>
+<tr><td><strong>Reporting warehouse</strong></td><td>Database</td><td>Analytics team</td><td>Pseudonymised</td><td>AES-256</td></tr>
+<tr class="grp"><th colspan="5" scope="colgroup">Third party zone</th></tr>
+<tr><td><strong>Identity provider (SSO)</strong></td><td>External</td><td>Customer or Okta</td><td>Credentials</td><td><span class="dash">&ndash;</span></td></tr>
+<tr><td><strong>Email provider</strong></td><td>External</td><td>Sendwell Inc.</td><td>Email address, message body</td><td><span class="dash">&ndash;</span></td></tr>
+<tr><td><strong>Log platform</strong></td><td>External</td><td>Logline Ltd.</td><td>No personal data (scrubbed)</td><td><span class="dash">&ndash;</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Identifiable personal data and customer documents are stored in the primary database and
+  document storage. The search index and reporting warehouse hold pseudonymised data. Encryption at rest is
+  stated for the 4 data stores; the other systems we operate are listed as storing no customer data
+  or handling it in transit only.</p>
+</section>
+
+<section>
+  <h2>5. Third parties</h2>
+  <h3>Subprocessors</h3>
+  <div class="scroll table narrow">
+  <table>
+    <thead><tr>
+      <th scope="col">Subprocessor</th><th scope="col">Purpose</th><th scope="col">Data received</th>
+      <th scope="col">Sent by</th><th scope="col">Processing location</th>
+    </tr></thead>
+    <tbody>
+<tr><td><strong>Sendwell Inc.</strong></td><td>Transactional email</td><td>Email address, message body</td><td>Background workers (connection 14)</td><td>EU</td></tr>
+<tr><td><strong>Logline Ltd.</strong></td><td>Log storage</td><td>Scrubbed application logs</td><td>API service and Background workers (connections 15, 16)</td><td>EU</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Application logs are scrubbed of personal data before they leave the Application zone.</p>
+  <h3>Identity provider</h3>
+  <p class="prose">Sign-in is delegated to an identity provider operated by the customer or by Okta
+  (connection 5). The web application exchanges SAML / OIDC sign-in
+  messages with it over TLS 1.3, authenticated by
+  signed assertions. Credentials are held by the identity provider.</p>
+</section>
+
+<section>
+  <h2>6. Controls and assurance</h2>
+  <dl class="facts prose">
+    <dt>Encryption at rest</dt><dd>AES-256 for the primary database, document storage, search index and reporting warehouse; keys in a managed KMS, rotated yearly.</dd>
+    <dt>Encryption in transit</dt><dd>TLS 1.2 or 1.3 on 16 of 17 connections; see section 1 for the exception.</dd>
+    <dt>Data residency</dt><dd>All production systems run in the EU (Frankfurt and Dublin). The email provider processes in the EU; the log platform in the EU.</dd>
+    <dt>Certifications</dt><dd>ISO 27001 (2025)<br>SOC 2 Type II (period ending 30 June 2026)</dd>
+    <dt>Last penetration test</dt><dd>14 July 2026, no critical or high findings open.</dd>
+  </dl>
+</section>
+
+<footer>Prepared 10 October 2026 from our system inventory, connection inventory and controls register.</footer>
+
+</main>
+<script>
+(function(){
+  var svg=document.querySelector('.diagram svg'); if(!svg) return;
+  function set(n,on){
+    svg.classList.toggle('dim',on);
+    document.querySelectorAll('[data-flow="'+n+'"]').forEach(function(el){el.classList.toggle('on',on)});
+  }
+  document.querySelectorAll('[data-flow]').forEach(function(el){
+    var n=el.getAttribute('data-flow');
+    el.addEventListener('mouseenter',function(){set(n,true)});
+    el.addEventListener('mouseleave',function(){set(n,false)});
+  });
+})();
+</script>
+</body>
+</html>

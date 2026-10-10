@@ -1,0 +1,24 @@
+{
+  "brief": "03-survey-results",
+  "arm": "baseline",
+  "exitCode": 0,
+  "minutes": 5.1,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 20,
+  "costUsd": 1.1934859,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 38287,
+  "errors": 2,
+  "warnings": 10,
+  "codes": {
+    "missing-guide": 1,
+    "missing-kit": 1,
+    "small-text": 8,
+    "long-lines": 1,
+    "figure-no-title": 1
+  }
+}

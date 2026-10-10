@@ -1,0 +1,20 @@
+{
+  "brief": "01-customer-quarterly-review",
+  "arm": "skill",
+  "exitCode": 0,
+  "minutes": 3.2,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 34,
+  "costUsd": 1.1359466,
+  "isError": false,
+  "files": [
+    "content.html",
+    "report.check",
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 687729,
+  "errors": 0,
+  "warnings": 0,
+  "codes": {}
+}

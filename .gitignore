@@ -1,6 +1,8 @@
 node_modules/
 .superpowers/
-evals/results/
+dist/
 *.check/
 *.log
 .DS_Store
+evals/results/*/*/*/check/
+evals/results/*/*/*/run.json

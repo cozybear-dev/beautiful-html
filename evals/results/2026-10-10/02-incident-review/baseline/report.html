@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Post-incident review: checkout outage, 17 September 2026</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #6f6d68;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --series: #2a78d6; --critical: #d03b3b; --serious: #ec835a; --warning: #fab219;
+  --band-build: rgba(250,178,25,0.13); --band-out: rgba(208,59,59,0.08);
+  --note-bg: #f1f0ea;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #a09e97;
+    --grid: #2c2c2a; --axis: #4a4a46; --border: rgba(255,255,255,0.10);
+    --series: #3987e5;
+    --band-build: rgba(250,178,25,0.10); --band-out: rgba(208,59,59,0.13);
+    --note-bg: #242422;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--page); color: var(--ink);
+  font: 17px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main { max-width: 1180px; margin: 0 auto; padding: 40px 28px 72px; }
+h1 { font-size: 34px; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+h2 { font-size: 25px; line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.005em; }
+h3 { font-size: 17px; margin: 0 0 4px; }
+p { margin: 0 0 12px; }
+.measure { max-width: 78ch; }
+.meta { color: var(--ink-2); font-size: 15px; margin-bottom: 22px; }
+.lead { font-size: 20px; line-height: 1.5; max-width: 80ch; margin-bottom: 22px; }
+section { margin-top: 52px; }
+.sub { color: var(--ink-2); margin-bottom: 18px; max-width: 78ch; }
+a { color: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+.nowrap { white-space: nowrap; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 22px; }
+.tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 22px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.tl { color: var(--ink-2); font-size: 14px; }
+.tv { font-size: 30px; font-weight: 600; line-height: 1.2; margin-top: 2px; }
+.ts { color: var(--ink-2); font-size: 13px; min-height: 1em; }
+
+.answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.answers .card p { margin: 0; font-size: 16px; }
+.answers h3 { margin-bottom: 6px; }
+
+.scroll { overflow-x: auto; }
+.scroll > .inner { min-width: 860px; position: relative; }
+svg { display: block; width: 100%; height: auto; font-family: inherit; }
+svg text { fill: var(--ink-2); font-size: 12.5px; }
+#chart:focus-visible { outline: 2px solid var(--series); outline-offset: 4px; }
+
+/* chart */
+.ptitle { fill: var(--ink); font-size: 14.5px; font-weight: 600; }
+.tick { fill: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.grid { stroke: var(--grid); stroke-width: 1; }
+.axis { stroke: var(--axis); stroke-width: 1; }
+.ev { stroke: var(--axis); stroke-width: 1; }
+.line { fill: none; stroke: var(--series); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.wash { fill: var(--series); fill-opacity: 0.10; }
+.band-build { fill: var(--band-build); }
+.band-out { fill: var(--band-out); }
+.bracket { stroke: var(--warning); stroke-width: 3; }
+.bracket.strong { stroke: var(--critical); }
+svg text.phase { fill: var(--ink); font-size: 13.5px; }
+svg text.phase.b { font-weight: 600; }
+svg text.dl { fill: var(--ink); font-size: 13px; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.badge { fill: var(--ink); }
+svg text.badge-t { fill: var(--surface); font-size: 12px; font-weight: 700; }
+.cross { stroke: var(--ink-2); stroke-width: 1; }
+.dot { fill: var(--series); stroke: var(--surface); stroke-width: 2; }
+#tip {
+  position: absolute; top: 60px; display: none; pointer-events: none; z-index: 2;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.14); padding: 8px 12px; font-size: 14px; white-space: nowrap;
+}
+#tip b { display: block; margin-bottom: 2px; }
+#tip span { color: var(--ink-2); display: inline-block; min-width: 13.5em; }
+
+/* request path diagram */
+.node { fill: var(--surface); stroke: var(--axis); stroke-width: 1.25; }
+.node.origin { stroke: var(--critical); stroke-width: 2.5; }
+svg text.nname { fill: var(--ink); font-size: 14px; font-weight: 600; }
+svg text.nzone { fill: var(--muted); font-size: 11.5px; }
+svg text.elab { font-size: 12.5px; }
+svg text.callout { font-size: 13.5px; }
+svg text.strong { fill: var(--ink); font-weight: 700; }
+.edge { fill: none; }
+.edge.normal { stroke: var(--axis); stroke-width: 1.5; }
+.edge.degraded { stroke: var(--serious); stroke-width: 3.5; }
+.edge.failed { stroke: var(--critical); stroke-width: 5; }
+.head.normal { fill: var(--axis); }
+.head.degraded { fill: var(--serious); }
+.head.failed { fill: var(--critical); }
+
+.chain { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.chain li { border-top: 1px solid var(--grid); padding-top: 12px; font-size: 15.5px; line-height: 1.45; }
+.chain b { display: block; margin-bottom: 3px; }
+.hbadge {
+  display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--ink); color: var(--surface); font-size: 12.5px; font-weight: 700; margin-right: 6px; vertical-align: 1px;
+}
+
+table { border-collapse: collapse; width: 100%; font-size: 15.5px; }
+th { text-align: left; font-weight: 600; color: var(--ink-2); font-size: 14px; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--axis); vertical-align: bottom; }
+td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--grid); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.c { width: 34px; }
+th.r, td.r { text-align: right; }
+
+details { margin-top: 14px; }
+summary { cursor: pointer; color: var(--ink-2); font-size: 15px; }
+details .tablewrap { max-height: 380px; overflow: auto; margin-top: 10px; }
+details table { width: auto; }
+details td, details th { padding-right: 28px; text-align: right; }
+.fignote { color: var(--ink-2); font-size: 14.5px; margin: 14px 0 0; max-width: 100ch; }
+
+.phase-row { display: grid; grid-template-columns: 260px 1fr; column-gap: 24px; padding: 13px 0; border-bottom: 1px solid var(--grid); }
+.phase-row:last-of-type { border-bottom: 0; }
+.pt { grid-row: span 2; }
+.pt .num { display: block; color: var(--ink-2); font-size: 14.5px; }
+.pb { display: flex; align-items: center; gap: 10px; height: 22px; }
+.bar { height: 16px; min-width: 4px; background: var(--series); border-radius: 0 4px 4px 0; }
+.bv { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.phase-row p { margin: 5px 0 0; color: var(--ink-2); font-size: 15.5px; max-width: 80ch; }
+.total { margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--axis); font-weight: 600; }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+ul.plain { margin: 0; padding-left: 20px; }
+ul.plain li { margin-bottom: 8px; }
+.st { display: inline-flex; gap: 7px; align-items: flex-start; font-size: 14.5px; }
+.st.muted { color: var(--ink-2); }
+.ic {
+  flex: none; display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; margin-top: 2px;
+  border-radius: 50%; background: var(--warning); color: #0b0b0b; font-size: 12px; font-weight: 700;
+}
+.note { background: var(--note-bg); border-radius: 10px; padding: 16px 20px; }
+.note h3 { margin-bottom: 8px; }
+blockquote { margin: 0; padding: 0; }
+blockquote p { margin-bottom: 10px; }
+blockquote p:last-child { margin-bottom: 0; }
+
+@media (max-width: 900px) {
+  body { font-size: 16px; }
+  main { padding: 24px 16px 48px; }
+  h1 { font-size: 27px; }
+  .lead { font-size: 18px; }
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .answers, .two, .chain { grid-template-columns: 1fr; }
+  .phase-row { grid-template-columns: 1fr; }
+}
+@media print {
+  :root { --page: #fff; }
+  main { padding: 0; max-width: none; }
+  section, .card, .phase-row, tr { break-inside: avoid; }
+  #tip { display: none !important; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>Checkout outage, 17 September 2026: post-incident review</h1>
+  <p class="meta">SEV-1 · Change CHG-4471 · All times UTC · Prepared 10 October 2026 ·
+    Customer success: the merchant explanation is in <a href="#merchants">section 5</a></p>
+
+  <p class="lead">At 13:52 a configuration change cut the memory limit of the feature cache from 24 GB to 8 GB.
+    The cache emptied, the fraud service that relies on it became about 30 times slower, and 14 minutes later the
+    payments service ran out of connections waiting for it. From 14:06 to 14:53 almost every card checkout failed.
+    Rolling the change back at 14:46 restored service.</p>
+
+  <div class="tiles">
+<div class="tile"><div class="tl">Checkout outage</div><div class="tv">47 min</div><div class="ts">14:06 to 14:53 UTC</div></div>
+<div class="tile"><div class="tl">Failed checkouts</div><div class="tv">18,420</div><div class="ts"></div></div>
+<div class="tile"><div class="tl">Customers affected</div><div class="tv">15,890</div><div class="ts"></div></div>
+<div class="tile"><div class="tl">Estimated lost revenue</div><div class="tv">€412,000</div><div class="ts"></div></div>
+<div class="tile"><div class="tl">SLA credits</div><div class="tv">€38,000</div><div class="ts"></div></div>
+  </div>
+
+  <div class="answers">
+    <div class="card"><h3>How a cache change reached checkout</h3>
+      <p>Checkout depends on Payments, which depends on Fraud, which depends on the cache. Nothing on that path
+        cut a slow call short, so the slowdown passed from one service to the next until checkout stopped.</p></div>
+    <div class="card"><h3>Why it took 61 minutes to fix</h3>
+      <p>Our only alert was on checkout errors, three systems away from the cause. It fired 17 minutes after the
+        change, and it took another 29 minutes to trace the failure back to the cache.</p></div>
+    <div class="card"><h3>What we are changing</h3>
+      <p>Payments will stop waiting on a slow Fraud service. Cache configuration changes will roll out gradually
+        and roll back automatically. We will alert on the cache and on fraud scoring directly.</p></div>
+  </div>
+</header>
+
+<section id="path">
+  <h2>1. How one cache change took down checkout</h2>
+  <p class="sub">Every card checkout passes through the same chain of services. The cache sits at the far end of it,
+    three calls downstream of the Checkout service. Requests travel left to right; the failure travelled
+    right to left, in the order 1 to 5.</p>
+  <div class="card">
+    <div class="scroll"><div class="inner">
+<svg id="path" viewBox="0 0 1120 360" role="img" aria-labelledby="path-title path-desc">
+<title id="path-title">The request path for a card checkout and which calls were affected</title>
+<desc id="path-desc">Requests go from the web and mobile apps to the API gateway, Checkout service, Payments service, Fraud service and Feature cache. The call from Fraud to the Feature cache failed first. Every call back along that path to the customer, and the call from Fraud to the Feature store, slowed or errored as a result. Calls to the Orders database, Token vault and Card processor were unaffected.</desc>
+<line class="edge degraded" x1="129" x2="199" y1="180.0" y2="180.0"/>
+<polygon class="head degraded" points="206,180.0 196,174.5 196,185.5"/>
+<text class="elab" x="167.5" y="155.0" text-anchor="middle">POST</text>
+<text class="elab" x="167.5" y="169.0" text-anchor="middle">/checkout</text>
+<line class="edge degraded" x1="325" x2="395" y1="180.0" y2="180.0"/>
+<polygon class="head degraded" points="402,180.0 392,174.5 392,185.5"/>
+<text class="elab" x="363.5" y="155.0" text-anchor="middle">routes</text>
+<text class="elab" x="363.5" y="169.0" text-anchor="middle">request</text>
+<line class="edge normal" x1="462.0" x2="462.0" y1="147" y2="99"/>
+<polygon class="head normal" points="462.0,92 456.5,102 467.5,102"/>
+<text class="elab" x="472.0" y="123.5">writes order</text>
+<line class="edge degraded" x1="521" x2="591" y1="180.0" y2="180.0"/>
+<polygon class="head degraded" points="598,180.0 588,174.5 588,185.5"/>
+<text class="elab" x="559.5" y="155.0" text-anchor="middle">authorise</text>
+<text class="elab" x="559.5" y="169.0" text-anchor="middle">payment</text>
+<line class="edge degraded" x1="717" x2="787" y1="180.0" y2="180.0"/>
+<polygon class="head degraded" points="794,180.0 784,174.5 784,185.5"/>
+<text class="elab" x="755.5" y="155.0" text-anchor="middle">score</text>
+<text class="elab" x="755.5" y="169.0" text-anchor="middle">transaction</text>
+<text class="elab" x="755.5" y="199.0" text-anchor="middle">pool of 200</text>
+<text class="elab" x="755.5" y="213.0" text-anchor="middle">connections</text>
+<line class="edge failed" x1="913" x2="983" y1="180.0" y2="180.0"/>
+<polygon class="head failed" points="990,180.0 980,174.5 980,185.5"/>
+<text class="elab" x="951.5" y="155.0" text-anchor="middle">reads</text>
+<text class="elab" x="951.5" y="169.0" text-anchor="middle">features</text>
+<text class="elab strong" x="951.5" y="199.0" text-anchor="middle">failed first</text>
+<line class="edge degraded" x1="854.0" x2="854.0" y1="213" y2="269"/>
+<polygon class="head degraded" points="854.0,276 848.5,266 859.5,266"/>
+<text class="elab" x="864.0" y="241.5">recomputes on</text>
+<text class="elab" x="864.0" y="255.5">cache miss</text>
+<line class="edge normal" x1="658.0" x2="658.0" y1="147" y2="99"/>
+<polygon class="head normal" points="658.0,92 652.5,102 663.5,102"/>
+<text class="elab" x="668.0" y="123.5">reads card token</text>
+<line class="edge normal" x1="658.0" x2="658.0" y1="213" y2="269"/>
+<polygon class="head normal" points="658.0,276 652.5,266 663.5,266"/>
+<text class="elab" x="668.0" y="248.5">charges card</text>
+<rect class="node" x="14" y="150" width="112" height="60" rx="8"/>
+<text class="nname" x="70.0" y="170" text-anchor="middle">Web and</text>
+<text class="nname" x="70.0" y="186" text-anchor="middle">mobile apps</text>
+<text class="nzone" x="70.0" y="202" text-anchor="middle">Customers</text>
+<circle class="badge" cx="16" cy="152" r="11"/><text class="badge-t" x="16" y="156.5" text-anchor="middle">5</text>
+<rect class="node" x="210" y="150" width="112" height="60" rx="8"/>
+<text class="nname" x="266.0" y="170" text-anchor="middle">API</text>
+<text class="nname" x="266.0" y="186" text-anchor="middle">gateway</text>
+<text class="nzone" x="266.0" y="202" text-anchor="middle">Edge</text>
+<rect class="node" x="406" y="150" width="112" height="60" rx="8"/>
+<text class="nname" x="462.0" y="170" text-anchor="middle">Checkout</text>
+<text class="nname" x="462.0" y="186" text-anchor="middle">service</text>
+<text class="nzone" x="462.0" y="202" text-anchor="middle">Application</text>
+<circle class="badge" cx="408" cy="152" r="11"/><text class="badge-t" x="408" y="156.5" text-anchor="middle">4</text>
+<rect class="node" x="602" y="150" width="112" height="60" rx="8"/>
+<text class="nname" x="658.0" y="170" text-anchor="middle">Payments</text>
+<text class="nname" x="658.0" y="186" text-anchor="middle">service</text>
+<text class="nzone" x="658.0" y="202" text-anchor="middle">Application</text>
+<circle class="badge" cx="604" cy="152" r="11"/><text class="badge-t" x="604" y="156.5" text-anchor="middle">3</text>
+<rect class="node" x="798" y="150" width="112" height="60" rx="8"/>
+<text class="nname" x="854.0" y="170" text-anchor="middle">Fraud</text>
+<text class="nname" x="854.0" y="186" text-anchor="middle">service</text>
+<text class="nzone" x="854.0" y="202" text-anchor="middle">Application</text>
+<circle class="badge" cx="800" cy="152" r="11"/><text class="badge-t" x="800" y="156.5" text-anchor="middle">2</text>
+<rect class="node origin" x="994" y="150" width="112" height="60" rx="8"/>
+<text class="nname" x="1050.0" y="170" text-anchor="middle">Feature</text>
+<text class="nname" x="1050.0" y="186" text-anchor="middle">cache</text>
+<text class="nzone" x="1050.0" y="202" text-anchor="middle">Data</text>
+<circle class="badge" cx="996" cy="152" r="11"/><text class="badge-t" x="996" y="156.5" text-anchor="middle">1</text>
+<rect class="node" x="406" y="28" width="112" height="60" rx="8"/>
+<text class="nname" x="462.0" y="48" text-anchor="middle">Orders</text>
+<text class="nname" x="462.0" y="64" text-anchor="middle">database</text>
+<text class="nzone" x="462.0" y="80" text-anchor="middle">Data</text>
+<rect class="node" x="602" y="28" width="112" height="60" rx="8"/>
+<text class="nname" x="658.0" y="48" text-anchor="middle">Token</text>
+<text class="nname" x="658.0" y="64" text-anchor="middle">vault</text>
+<text class="nzone" x="658.0" y="80" text-anchor="middle">Data</text>
+<rect class="node" x="602" y="280" width="112" height="60" rx="8"/>
+<text class="nname" x="658.0" y="300" text-anchor="middle">Card</text>
+<text class="nname" x="658.0" y="316" text-anchor="middle">processor</text>
+<text class="nzone" x="658.0" y="332" text-anchor="middle">Third party</text>
+<rect class="node" x="798" y="280" width="112" height="60" rx="8"/>
+<text class="nname" x="854.0" y="300" text-anchor="middle">Feature</text>
+<text class="nname" x="854.0" y="316" text-anchor="middle">store</text>
+<text class="nzone" x="854.0" y="332" text-anchor="middle">Data</text>
+<text class="callout strong" x="1050.0" y="108" text-anchor="middle">Change made here</text>
+<text class="callout" x="1050.0" y="123" text-anchor="middle">memory limit cut</text>
+<text class="callout" x="1050.0" y="137" text-anchor="middle">24 GB to 8 GB</text>
+<line class="edge failed" x1="14" x2="50" y1="288" y2="288"/>
+<polygon class="head failed" points="60,288 50,282.5 50,293.5"/>
+<text class="callout" x="70" y="292">Call that failed first</text>
+<line class="edge degraded" x1="14" x2="50" y1="310" y2="310"/>
+<polygon class="head degraded" points="60,310 50,304.5 50,315.5"/>
+<text class="callout" x="70" y="314">Call that slowed or returned errors as a result</text>
+<line class="edge normal" x1="14" x2="50" y1="332" y2="332"/>
+<polygon class="head normal" points="60,332 50,326.5 50,337.5"/>
+<text class="callout" x="70" y="336">Call that kept working normally</text>
+</svg>
+    </div></div>
+    <ol class="chain">
+      <li><b><span class="hbadge">1</span>Feature cache</b>
+        With a third of its memory, the cache evicted most of its contents. Its hit rate fell from 97% to 12%.</li>
+      <li><b><span class="hbadge">2</span>Fraud service</b>
+        Fraud had to recompute features from the feature store on most requests. Scoring time rose from about
+        45 ms to more than 1.2 s.</li>
+      <li><b><span class="hbadge">3</span>Payments service</b>
+        Payments has 200 connections to Fraud. Each slow call held one for longer, and at 14:06 all 200 were in use.
+        Nothing cut the slow calls short.</li>
+      <li><b><span class="hbadge">4</span>Checkout service</b>
+        Payment authorisations stopped completing. Checkout waited about 10 s per request, and errors went from
+        6.7% to 94% in five minutes.</li>
+      <li><b><span class="hbadge">5</span>Customers</b>
+        Checkout failed in the web and mobile apps. The orders database, token vault and card processor
+        were working normally throughout.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="metrics">
+  <h2>2. Fraud scoring slowed 14 minutes before checkout failed</h2>
+  <p class="sub">The cause was visible in fraud scoring time one minute after the change. Checkout held on, with errors
+    rising slowly, until Payments ran out of connections at 14:06. Letters mark the events in the timeline below.</p>
+  <div class="card">
+    <div class="scroll"><div class="inner">
+<svg id="chart" viewBox="0 0 1100 626" role="img" tabindex="0" aria-labelledby="chart-title chart-desc">
+<title id="chart-title">Fraud scoring response time, checkout response time and checkout error rate, 13:30 to 15:30 UTC</title>
+<desc id="chart-desc">Fraud scoring slows from 13:53, one minute after the cache change. Checkout response time and error rate jump at 14:06 and stay high until 14:53. The full per-minute data is in the table below the chart.</desc>
+<line class="bracket" x1="250.5" x2="365.6" y1="26" y2="26"/>
+<line class="bracket strong" x1="369.6" x2="763.0" y1="26" y2="26"/>
+<text class="phase" x="361.6" y="17" text-anchor="end">Slowing down, no alert · 14 min</text>
+<text class="phase b" x="373.6" y="17">Checkout failing for customers · 47 min</text>
+<circle class="badge" cx="249.5" cy="50" r="10"/><text class="badge-t" x="249.5" y="54.3" text-anchor="middle">A</text>
+<circle class="badge" cx="367.6" cy="50" r="10"/><text class="badge-t" x="367.6" y="54.3" text-anchor="middle">B</text>
+<circle class="badge" cx="392.9" cy="50" r="10"/><text class="badge-t" x="392.9" y="54.3" text-anchor="middle">C</text>
+<circle class="badge" cx="494.1" cy="50" r="10"/><text class="badge-t" x="494.1" y="54.3" text-anchor="middle">D</text>
+<circle class="badge" cx="637.5" cy="50" r="10"/><text class="badge-t" x="637.5" y="54.3" text-anchor="middle">E</text>
+<circle class="badge" cx="704.9" cy="50" r="10"/><text class="badge-t" x="704.9" y="54.3" text-anchor="middle">F</text>
+<circle class="badge" cx="764.0" cy="50" r="10"/><text class="badge-t" x="764.0" y="54.3" text-anchor="middle">G</text>
+<circle class="badge" cx="907.3" cy="50" r="10"/><text class="badge-t" x="907.3" y="54.3" text-anchor="middle">H</text>
+<text class="ptitle" x="64" y="82">Fraud scoring response time (p95)</text>
+<rect class="band-build" x="249.5" y="96" width="118.1" height="124"/>
+<rect class="band-out" x="367.6" y="96" width="396.4" height="124"/>
+<line class="axis" x1="64" x2="1076" y1="220.0" y2="220.0"/>
+<text class="tick" x="56" y="224.0" text-anchor="end">0</text>
+<line class="grid" x1="64" x2="1076" y1="185.6" y2="185.6"/>
+<text class="tick" x="56" y="189.6" text-anchor="end">500 ms</text>
+<line class="grid" x1="64" x2="1076" y1="151.1" y2="151.1"/>
+<text class="tick" x="56" y="155.1" text-anchor="end">1,000 ms</text>
+<line class="grid" x1="64" x2="1076" y1="116.7" y2="116.7"/>
+<text class="tick" x="56" y="120.7" text-anchor="end">1,500 ms</text>
+<line class="ev" x1="249.5" x2="249.5" y1="96" y2="220"/>
+<line class="ev" x1="367.6" x2="367.6" y1="96" y2="220"/>
+<line class="ev" x1="392.9" x2="392.9" y1="96" y2="220"/>
+<line class="ev" x1="494.1" x2="494.1" y1="96" y2="220"/>
+<line class="ev" x1="637.5" x2="637.5" y1="96" y2="220"/>
+<line class="ev" x1="704.9" x2="704.9" y1="96" y2="220"/>
+<line class="ev" x1="764.0" x2="764.0" y1="96" y2="220"/>
+<line class="ev" x1="907.3" x2="907.3" y1="96" y2="220"/>
+<polygon class="wash" points="64.0,220 64.0,217.0 72.4,216.9 80.9,216.8 89.3,217.1 97.7,216.8 106.2,217.0 114.6,216.9 123.0,217.1 131.5,216.8 139.9,217.0 148.3,217.0 156.8,217.0 165.2,216.9 173.6,217.0 182.1,217.0 190.5,216.9 198.9,216.9 207.4,216.8 215.8,216.7 224.2,217.0 232.7,216.9 241.1,216.8 249.5,217.0 258.0,210.2 266.4,203.1 274.8,198.6 283.3,192.7 291.7,185.8 300.1,177.6 308.6,172.1 317.0,164.1 325.4,159.5 333.9,147.0 342.3,139.7 350.7,142.5 359.2,137.0 367.6,138.6 376.0,133.0 384.5,120.7 392.9,110.0 401.3,110.9 409.8,128.7 418.2,129.3 426.6,129.2 435.1,127.4 443.5,113.2 451.9,107.3 460.4,119.2 468.8,128.4 477.2,138.8 485.7,130.9 494.1,116.7 502.5,106.1 511.0,117.5 519.4,127.2 527.8,132.9 536.3,133.8 544.7,120.1 553.1,111.2 561.6,110.4 570.0,129.3 578.4,128.7 586.9,128.3 595.3,124.5 603.7,109.8 612.2,119.7 620.6,120.8 629.0,129.9 637.5,134.4 645.9,127.5 654.3,116.3 662.8,110.2 671.2,119.2 679.6,131.8 688.1,130.9 696.5,121.9 704.9,121.4 713.4,115.2 721.8,123.3 730.2,122.6 738.7,134.3 747.1,134.7 755.5,118.1 764.0,179.0 772.4,183.8 780.8,188.8 789.3,191.9 797.7,196.1 806.1,198.5 814.6,202.7 823.0,207.7 831.4,211.2 839.9,215.8 848.3,217.0 856.7,216.8 865.2,216.7 873.6,216.7 882.0,216.8 890.5,216.8 898.9,217.0 907.3,217.0 915.8,216.8 924.2,217.0 932.6,217.1 941.1,217.1 949.5,216.9 957.9,217.0 966.4,216.7 974.8,217.0 983.2,216.7 991.7,216.8 1000.1,216.8 1008.5,216.8 1017.0,217.0 1025.4,216.8 1033.8,216.9 1042.3,217.0 1050.7,217.0 1059.1,217.0 1067.6,216.8 1076.0,216.7 1076.0,220"/>
+<polyline class="line" points="64.0,217.0 72.4,216.9 80.9,216.8 89.3,217.1 97.7,216.8 106.2,217.0 114.6,216.9 123.0,217.1 131.5,216.8 139.9,217.0 148.3,217.0 156.8,217.0 165.2,216.9 173.6,217.0 182.1,217.0 190.5,216.9 198.9,216.9 207.4,216.8 215.8,216.7 224.2,217.0 232.7,216.9 241.1,216.8 249.5,217.0 258.0,210.2 266.4,203.1 274.8,198.6 283.3,192.7 291.7,185.8 300.1,177.6 308.6,172.1 317.0,164.1 325.4,159.5 333.9,147.0 342.3,139.7 350.7,142.5 359.2,137.0 367.6,138.6 376.0,133.0 384.5,120.7 392.9,110.0 401.3,110.9 409.8,128.7 418.2,129.3 426.6,129.2 435.1,127.4 443.5,113.2 451.9,107.3 460.4,119.2 468.8,128.4 477.2,138.8 485.7,130.9 494.1,116.7 502.5,106.1 511.0,117.5 519.4,127.2 527.8,132.9 536.3,133.8 544.7,120.1 553.1,111.2 561.6,110.4 570.0,129.3 578.4,128.7 586.9,128.3 595.3,124.5 603.7,109.8 612.2,119.7 620.6,120.8 629.0,129.9 637.5,134.4 645.9,127.5 654.3,116.3 662.8,110.2 671.2,119.2 679.6,131.8 688.1,130.9 696.5,121.9 704.9,121.4 713.4,115.2 721.8,123.3 730.2,122.6 738.7,134.3 747.1,134.7 755.5,118.1 764.0,179.0 772.4,183.8 780.8,188.8 789.3,191.9 797.7,196.1 806.1,198.5 814.6,202.7 823.0,207.7 831.4,211.2 839.9,215.8 848.3,217.0 856.7,216.8 865.2,216.7 873.6,216.7 882.0,216.8 890.5,216.8 898.9,217.0 907.3,217.0 915.8,216.8 924.2,217.0 932.6,217.1 941.1,217.1 949.5,216.9 957.9,217.0 966.4,216.7 974.8,217.0 983.2,216.7 991.7,216.8 1000.1,216.8 1008.5,216.8 1017.0,217.0 1025.4,216.8 1033.8,216.9 1042.3,217.0 1050.7,217.0 1059.1,217.0 1067.6,216.8 1076.0,216.7"/>
+<text class="ptitle" x="64" y="262">Checkout response time (p95)</text>
+<rect class="band-build" x="249.5" y="276" width="118.1" height="124"/>
+<rect class="band-out" x="367.6" y="276" width="396.4" height="124"/>
+<line class="axis" x1="64" x2="1076" y1="400.0" y2="400.0"/>
+<text class="tick" x="56" y="404.0" text-anchor="end">0</text>
+<line class="grid" x1="64" x2="1076" y1="348.3" y2="348.3"/>
+<text class="tick" x="56" y="352.3" text-anchor="end">5 s</text>
+<line class="grid" x1="64" x2="1076" y1="296.7" y2="296.7"/>
+<text class="tick" x="56" y="300.7" text-anchor="end">10 s</text>
+<line class="ev" x1="249.5" x2="249.5" y1="276" y2="400"/>
+<line class="ev" x1="367.6" x2="367.6" y1="276" y2="400"/>
+<line class="ev" x1="392.9" x2="392.9" y1="276" y2="400"/>
+<line class="ev" x1="494.1" x2="494.1" y1="276" y2="400"/>
+<line class="ev" x1="637.5" x2="637.5" y1="276" y2="400"/>
+<line class="ev" x1="704.9" x2="704.9" y1="276" y2="400"/>
+<line class="ev" x1="764.0" x2="764.0" y1="276" y2="400"/>
+<line class="ev" x1="907.3" x2="907.3" y1="276" y2="400"/>
+<polygon class="wash" points="64.0,400 64.0,396.8 72.4,396.8 80.9,396.9 89.3,396.7 97.7,396.8 106.2,396.9 114.6,396.7 123.0,396.9 131.5,396.7 139.9,396.9 148.3,396.6 156.8,396.7 165.2,396.7 173.6,396.8 182.1,396.6 190.5,396.8 198.9,396.7 207.4,396.7 215.8,396.9 224.2,396.7 232.7,397.0 241.1,396.9 249.5,397.0 258.0,395.3 266.4,393.5 274.8,391.9 283.3,389.8 291.7,388.7 300.1,387.5 308.6,384.8 317.0,383.0 325.4,382.0 333.9,381.0 342.3,378.2 350.7,376.3 359.2,376.5 367.6,298.7 376.0,295.2 384.5,294.4 392.9,296.6 401.3,299.5 409.8,303.5 418.2,297.8 426.6,303.2 435.1,295.8 443.5,302.7 451.9,303.6 460.4,301.2 468.8,295.0 477.2,295.0 485.7,300.6 494.1,298.3 502.5,301.8 511.0,298.9 519.4,300.4 527.8,301.2 536.3,302.9 544.7,295.6 553.1,302.4 561.6,297.5 570.0,295.2 578.4,303.4 586.9,295.4 595.3,303.6 603.7,295.5 612.2,299.1 620.6,300.7 629.0,297.3 637.5,300.8 645.9,298.2 654.3,295.9 662.8,297.7 671.2,302.1 679.6,294.7 688.1,303.0 696.5,300.8 704.9,299.3 713.4,299.8 721.8,297.0 730.2,295.7 738.7,294.0 747.1,302.2 755.5,301.0 764.0,374.5 772.4,378.2 780.8,381.5 789.3,384.0 797.7,387.4 806.1,390.8 814.6,394.1 823.0,396.7 831.4,396.7 839.9,396.8 848.3,396.8 856.7,396.9 865.2,396.8 873.6,396.8 882.0,396.7 890.5,396.7 898.9,396.7 907.3,396.8 915.8,396.9 924.2,396.8 932.6,396.8 941.1,396.7 949.5,396.9 957.9,396.8 966.4,396.7 974.8,396.7 983.2,396.8 991.7,396.9 1000.1,396.8 1008.5,396.7 1017.0,396.8 1025.4,396.9 1033.8,396.8 1042.3,396.7 1050.7,396.7 1059.1,396.7 1067.6,396.7 1076.0,396.8 1076.0,400"/>
+<polyline class="line" points="64.0,396.8 72.4,396.8 80.9,396.9 89.3,396.7 97.7,396.8 106.2,396.9 114.6,396.7 123.0,396.9 131.5,396.7 139.9,396.9 148.3,396.6 156.8,396.7 165.2,396.7 173.6,396.8 182.1,396.6 190.5,396.8 198.9,396.7 207.4,396.7 215.8,396.9 224.2,396.7 232.7,397.0 241.1,396.9 249.5,397.0 258.0,395.3 266.4,393.5 274.8,391.9 283.3,389.8 291.7,388.7 300.1,387.5 308.6,384.8 317.0,383.0 325.4,382.0 333.9,381.0 342.3,378.2 350.7,376.3 359.2,376.5 367.6,298.7 376.0,295.2 384.5,294.4 392.9,296.6 401.3,299.5 409.8,303.5 418.2,297.8 426.6,303.2 435.1,295.8 443.5,302.7 451.9,303.6 460.4,301.2 468.8,295.0 477.2,295.0 485.7,300.6 494.1,298.3 502.5,301.8 511.0,298.9 519.4,300.4 527.8,301.2 536.3,302.9 544.7,295.6 553.1,302.4 561.6,297.5 570.0,295.2 578.4,303.4 586.9,295.4 595.3,303.6 603.7,295.5 612.2,299.1 620.6,300.7 629.0,297.3 637.5,300.8 645.9,298.2 654.3,295.9 662.8,297.7 671.2,302.1 679.6,294.7 688.1,303.0 696.5,300.8 704.9,299.3 713.4,299.8 721.8,297.0 730.2,295.7 738.7,294.0 747.1,302.2 755.5,301.0 764.0,374.5 772.4,378.2 780.8,381.5 789.3,384.0 797.7,387.4 806.1,390.8 814.6,394.1 823.0,396.7 831.4,396.7 839.9,396.8 848.3,396.8 856.7,396.9 865.2,396.8 873.6,396.8 882.0,396.7 890.5,396.7 898.9,396.7 907.3,396.8 915.8,396.9 924.2,396.8 932.6,396.8 941.1,396.7 949.5,396.9 957.9,396.8 966.4,396.7 974.8,396.7 983.2,396.8 991.7,396.9 1000.1,396.8 1008.5,396.7 1017.0,396.8 1025.4,396.9 1033.8,396.8 1042.3,396.7 1050.7,396.7 1059.1,396.7 1067.6,396.7 1076.0,396.8"/>
+<text class="ptitle" x="64" y="442">Checkout error rate</text>
+<rect class="band-build" x="249.5" y="456" width="118.1" height="124"/>
+<rect class="band-out" x="367.6" y="456" width="396.4" height="124"/>
+<line class="axis" x1="64" x2="1076" y1="580.0" y2="580.0"/>
+<text class="tick" x="56" y="584.0" text-anchor="end">0</text>
+<line class="grid" x1="64" x2="1076" y1="518.0" y2="518.0"/>
+<text class="tick" x="56" y="522.0" text-anchor="end">50%</text>
+<line class="grid" x1="64" x2="1076" y1="456.0" y2="456.0"/>
+<text class="tick" x="56" y="460.0" text-anchor="end">100%</text>
+<line class="ev" x1="249.5" x2="249.5" y1="456" y2="580"/>
+<line class="ev" x1="367.6" x2="367.6" y1="456" y2="580"/>
+<line class="ev" x1="392.9" x2="392.9" y1="456" y2="580"/>
+<line class="ev" x1="494.1" x2="494.1" y1="456" y2="580"/>
+<line class="ev" x1="637.5" x2="637.5" y1="456" y2="580"/>
+<line class="ev" x1="704.9" x2="704.9" y1="456" y2="580"/>
+<line class="ev" x1="764.0" x2="764.0" y1="456" y2="580"/>
+<line class="ev" x1="907.3" x2="907.3" y1="456" y2="580"/>
+<polygon class="wash" points="64.0,580 64.0,579.5 72.4,579.5 80.9,579.5 89.3,579.5 97.7,579.5 106.2,579.5 114.6,579.5 123.0,579.5 131.5,579.5 139.9,579.5 148.3,579.5 156.8,579.5 165.2,579.5 173.6,579.5 182.1,579.5 190.5,579.5 198.9,579.5 207.4,579.5 215.8,579.5 224.2,579.5 232.7,579.5 241.1,579.5 249.5,579.5 258.0,578.9 266.4,578.4 274.8,577.5 283.3,577.0 291.7,576.2 300.1,575.7 308.6,574.9 317.0,574.5 325.4,573.9 333.9,573.1 342.3,572.4 350.7,571.8 359.2,571.7 367.6,543.2 376.0,525.9 384.5,501.4 392.9,485.5 401.3,462.9 409.8,466.9 418.2,470.1 426.6,462.1 435.1,464.3 443.5,459.2 451.9,470.4 460.4,459.2 468.8,469.4 477.2,457.4 485.7,458.6 494.1,469.9 502.5,469.0 511.0,457.7 519.4,462.3 527.8,463.6 536.3,460.7 544.7,468.9 553.1,464.8 561.6,460.0 570.0,463.4 578.4,460.1 586.9,461.1 595.3,457.5 603.7,458.6 612.2,464.2 620.6,465.3 629.0,464.7 637.5,464.3 645.9,461.0 654.3,464.8 662.8,466.5 671.2,461.2 679.6,464.4 688.1,468.8 696.5,458.7 704.9,469.8 713.4,471.7 721.8,489.0 730.2,494.2 738.7,505.2 747.1,519.0 755.5,528.2 764.0,555.0 772.4,560.4 780.8,568.1 789.3,573.6 797.7,579.5 806.1,579.5 814.6,579.5 823.0,579.5 831.4,579.5 839.9,579.5 848.3,579.5 856.7,579.5 865.2,579.5 873.6,579.5 882.0,579.5 890.5,579.5 898.9,579.5 907.3,579.5 915.8,579.5 924.2,579.5 932.6,579.5 941.1,579.5 949.5,579.5 957.9,579.5 966.4,579.5 974.8,579.5 983.2,579.5 991.7,579.5 1000.1,579.5 1008.5,579.5 1017.0,579.5 1025.4,579.5 1033.8,579.5 1042.3,579.5 1050.7,579.5 1059.1,579.5 1067.6,579.5 1076.0,579.5 1076.0,580"/>
+<polyline class="line" points="64.0,579.5 72.4,579.5 80.9,579.5 89.3,579.5 97.7,579.5 106.2,579.5 114.6,579.5 123.0,579.5 131.5,579.5 139.9,579.5 148.3,579.5 156.8,579.5 165.2,579.5 173.6,579.5 182.1,579.5 190.5,579.5 198.9,579.5 207.4,579.5 215.8,579.5 224.2,579.5 232.7,579.5 241.1,579.5 249.5,579.5 258.0,578.9 266.4,578.4 274.8,577.5 283.3,577.0 291.7,576.2 300.1,575.7 308.6,574.9 317.0,574.5 325.4,573.9 333.9,573.1 342.3,572.4 350.7,571.8 359.2,571.7 367.6,543.2 376.0,525.9 384.5,501.4 392.9,485.5 401.3,462.9 409.8,466.9 418.2,470.1 426.6,462.1 435.1,464.3 443.5,459.2 451.9,470.4 460.4,459.2 468.8,469.4 477.2,457.4 485.7,458.6 494.1,469.9 502.5,469.0 511.0,457.7 519.4,462.3 527.8,463.6 536.3,460.7 544.7,468.9 553.1,464.8 561.6,460.0 570.0,463.4 578.4,460.1 586.9,461.1 595.3,457.5 603.7,458.6 612.2,464.2 620.6,465.3 629.0,464.7 637.5,464.3 645.9,461.0 654.3,464.8 662.8,466.5 671.2,461.2 679.6,464.4 688.1,468.8 696.5,458.7 704.9,469.8 713.4,471.7 721.8,489.0 730.2,494.2 738.7,505.2 747.1,519.0 755.5,528.2 764.0,555.0 772.4,560.4 780.8,568.1 789.3,573.6 797.7,579.5 806.1,579.5 814.6,579.5 823.0,579.5 831.4,579.5 839.9,579.5 848.3,579.5 856.7,579.5 865.2,579.5 873.6,579.5 882.0,579.5 890.5,579.5 898.9,579.5 907.3,579.5 915.8,579.5 924.2,579.5 932.6,579.5 941.1,579.5 949.5,579.5 957.9,579.5 966.4,579.5 974.8,579.5 983.2,579.5 991.7,579.5 1000.1,579.5 1008.5,579.5 1017.0,579.5 1025.4,579.5 1033.8,579.5 1042.3,579.5 1050.7,579.5 1059.1,579.5 1067.6,579.5 1076.0,579.5"/>
+<text class="dl" x="72.4" y="206.9" text-anchor="start">about 45 ms</text>
+<text class="dl" x="357.2" y="116.7" text-anchor="end">1.2 s by 14:05</text>
+<text class="dl" x="384.5" y="167.6" text-anchor="start">1.2 to 1.7 s, about 30 times normal</text>
+<text class="dl" x="72.4" y="386.8" text-anchor="start">about 0.3 s</text>
+<text class="dl" x="384.5" y="327.7" text-anchor="start">about 10 s: requests waited, then failed</text>
+<text class="dl" x="72.4" y="569.5" text-anchor="start">0.4%</text>
+<text class="dl" x="357.2" y="542.8" text-anchor="end">creeps up to 6.7%</text>
+<text class="dl" x="494.1" y="503.1" text-anchor="start">peak 98.9% at 14:19</text>
+<text class="dl" x="814.6" y="542.8" text-anchor="start">under 5% from 14:57</text>
+<line class="axis" x1="64.0" x2="64.0" y1="580" y2="585"/>
+<text class="tick" x="64.0" y="600" text-anchor="middle">13:30</text>
+<line class="axis" x1="148.3" x2="148.3" y1="580" y2="585"/>
+<text class="tick" x="148.3" y="600" text-anchor="middle">13:40</text>
+<line class="axis" x1="232.7" x2="232.7" y1="580" y2="585"/>
+<text class="tick" x="232.7" y="600" text-anchor="middle">13:50</text>
+<line class="axis" x1="317.0" x2="317.0" y1="580" y2="585"/>
+<text class="tick" x="317.0" y="600" text-anchor="middle">14:00</text>
+<line class="axis" x1="401.3" x2="401.3" y1="580" y2="585"/>
+<text class="tick" x="401.3" y="600" text-anchor="middle">14:10</text>
+<line class="axis" x1="485.7" x2="485.7" y1="580" y2="585"/>
+<text class="tick" x="485.7" y="600" text-anchor="middle">14:20</text>
+<line class="axis" x1="570.0" x2="570.0" y1="580" y2="585"/>
+<text class="tick" x="570.0" y="600" text-anchor="middle">14:30</text>
+<line class="axis" x1="654.3" x2="654.3" y1="580" y2="585"/>
+<text class="tick" x="654.3" y="600" text-anchor="middle">14:40</text>
+<line class="axis" x1="738.7" x2="738.7" y1="580" y2="585"/>
+<text class="tick" x="738.7" y="600" text-anchor="middle">14:50</text>
+<line class="axis" x1="823.0" x2="823.0" y1="580" y2="585"/>
+<text class="tick" x="823.0" y="600" text-anchor="middle">15:00</text>
+<line class="axis" x1="907.3" x2="907.3" y1="580" y2="585"/>
+<text class="tick" x="907.3" y="600" text-anchor="middle">15:10</text>
+<line class="axis" x1="991.7" x2="991.7" y1="580" y2="585"/>
+<text class="tick" x="991.7" y="600" text-anchor="middle">15:20</text>
+<line class="axis" x1="1076.0" x2="1076.0" y1="580" y2="585"/>
+<text class="tick" x="1076.0" y="600" text-anchor="middle">15:30</text>
+<text class="tick" x="1076" y="618" text-anchor="end">Time, UTC</text>
+<g id="hover" style="display:none">
+<line class="cross" data-k="fraud" y1="96" y2="220"/>
+<line class="cross" data-k="clat" y1="276" y2="400"/>
+<line class="cross" data-k="err" y1="456" y2="580"/>
+<circle class="dot" data-k="fraud" r="5"/>
+<circle class="dot" data-k="clat" r="5"/>
+<circle class="dot" data-k="err" r="5"/>
+</g></svg>
+      <div id="tip" role="status"></div>
+    </div></div>
+    <p class="fignote">p95 is the response time that 95% of requests were faster than. The shaded bands run from the
+      change (13:52) to the first failures (14:06), and from there to mitigation (14:53).
+      The timeline records mitigation at 14:53 with the error rate below 5%; the per-minute data shows 20.2% at 14:53
+      and under 5% from 14:57. See open points.</p>
+    <details>
+      <summary>Show the per-minute data as a table</summary>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Time (UTC)</th><th>Fraud scoring p95 (ms)</th><th>Checkout p95 (ms)</th><th>Checkout error rate (%)</th></tr></thead>
+        <tbody>
+<tr><td class="num">13:30</td><td class="num">44</td><td class="num">313</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:31</td><td class="num">45</td><td class="num">310</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:32</td><td class="num">46</td><td class="num">298</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:33</td><td class="num">42</td><td class="num">323</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:34</td><td class="num">46</td><td class="num">310</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:35</td><td class="num">44</td><td class="num">296</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:36</td><td class="num">45</td><td class="num">322</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:37</td><td class="num">42</td><td class="num">298</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:38</td><td class="num">47</td><td class="num">320</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:39</td><td class="num">44</td><td class="num">304</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:40</td><td class="num">44</td><td class="num">325</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:41</td><td class="num">43</td><td class="num">316</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:42</td><td class="num">45</td><td class="num">319</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:43</td><td class="num">43</td><td class="num">310</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:44</td><td class="num">43</td><td class="num">325</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:45</td><td class="num">45</td><td class="num">307</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:46</td><td class="num">45</td><td class="num">323</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:47</td><td class="num">46</td><td class="num">319</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:48</td><td class="num">48</td><td class="num">300</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:49</td><td class="num">44</td><td class="num">320</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:50</td><td class="num">45</td><td class="num">295</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:51</td><td class="num">47</td><td class="num">300</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:52</td><td class="num">43</td><td class="num">295</td><td class="num">0.4</td></tr>
+<tr><td class="num">13:53</td><td class="num">142</td><td class="num">452</td><td class="num">0.9</td></tr>
+<tr><td class="num">13:54</td><td class="num">246</td><td class="num">628</td><td class="num">1.3</td></tr>
+<tr><td class="num">13:55</td><td class="num">311</td><td class="num">781</td><td class="num">2.0</td></tr>
+<tr><td class="num">13:56</td><td class="num">397</td><td class="num">990</td><td class="num">2.4</td></tr>
+<tr><td class="num">13:57</td><td class="num">496</td><td class="num">1,090</td><td class="num">3.1</td></tr>
+<tr><td class="num">13:58</td><td class="num">616</td><td class="num">1,211</td><td class="num">3.5</td></tr>
+<tr><td class="num">13:59</td><td class="num">696</td><td class="num">1,471</td><td class="num">4.1</td></tr>
+<tr><td class="num">14:00</td><td class="num">812</td><td class="num">1,642</td><td class="num">4.4</td></tr>
+<tr><td class="num">14:01</td><td class="num">878</td><td class="num">1,740</td><td class="num">4.9</td></tr>
+<tr><td class="num">14:02</td><td class="num">1,060</td><td class="num">1,836</td><td class="num">5.6</td></tr>
+<tr><td class="num">14:03</td><td class="num">1,166</td><td class="num">2,105</td><td class="num">6.1</td></tr>
+<tr><td class="num">14:04</td><td class="num">1,125</td><td class="num">2,289</td><td class="num">6.6</td></tr>
+<tr><td class="num">14:05</td><td class="num">1,205</td><td class="num">2,275</td><td class="num">6.7</td></tr>
+<tr><td class="num">14:06</td><td class="num">1,181</td><td class="num">9,802</td><td class="num">29.7</td></tr>
+<tr><td class="num">14:07</td><td class="num">1,263</td><td class="num">10,145</td><td class="num">43.6</td></tr>
+<tr><td class="num">14:08</td><td class="num">1,442</td><td class="num">10,219</td><td class="num">63.4</td></tr>
+<tr><td class="num">14:09</td><td class="num">1,597</td><td class="num">10,004</td><td class="num">76.2</td></tr>
+<tr><td class="num">14:10</td><td class="num">1,584</td><td class="num">9,729</td><td class="num">94.4</td></tr>
+<tr><td class="num">14:11</td><td class="num">1,325</td><td class="num">9,335</td><td class="num">91.2</td></tr>
+<tr><td class="num">14:12</td><td class="num">1,316</td><td class="num">9,895</td><td class="num">88.6</td></tr>
+<tr><td class="num">14:13</td><td class="num">1,318</td><td class="num">9,363</td><td class="num">95.1</td></tr>
+<tr><td class="num">14:14</td><td class="num">1,344</td><td class="num">10,080</td><td class="num">93.3</td></tr>
+<tr><td class="num">14:15</td><td class="num">1,550</td><td class="num">9,413</td><td class="num">97.4</td></tr>
+<tr><td class="num">14:16</td><td class="num">1,636</td><td class="num">9,325</td><td class="num">88.4</td></tr>
+<tr><td class="num">14:17</td><td class="num">1,463</td><td class="num">9,559</td><td class="num">97.4</td></tr>
+<tr><td class="num">14:18</td><td class="num">1,330</td><td class="num">10,157</td><td class="num">89.2</td></tr>
+<tr><td class="num">14:19</td><td class="num">1,178</td><td class="num">10,166</td><td class="num">98.9</td></tr>
+<tr><td class="num">14:20</td><td class="num">1,294</td><td class="num">9,624</td><td class="num">97.9</td></tr>
+<tr><td class="num">14:21</td><td class="num">1,500</td><td class="num">9,846</td><td class="num">88.8</td></tr>
+<tr><td class="num">14:22</td><td class="num">1,654</td><td class="num">9,502</td><td class="num">89.5</td></tr>
+<tr><td class="num">14:23</td><td class="num">1,488</td><td class="num">9,783</td><td class="num">98.6</td></tr>
+<tr><td class="num">14:24</td><td class="num">1,347</td><td class="num">9,642</td><td class="num">94.9</td></tr>
+<tr><td class="num">14:25</td><td class="num">1,265</td><td class="num">9,565</td><td class="num">93.9</td></tr>
+<tr><td class="num">14:26</td><td class="num">1,252</td><td class="num">9,399</td><td class="num">96.2</td></tr>
+<tr><td class="num">14:27</td><td class="num">1,450</td><td class="num">10,105</td><td class="num">89.6</td></tr>
+<tr><td class="num">14:28</td><td class="num">1,580</td><td class="num">9,449</td><td class="num">92.9</td></tr>
+<tr><td class="num">14:29</td><td class="num">1,591</td><td class="num">9,916</td><td class="num">96.8</td></tr>
+<tr><td class="num">14:30</td><td class="num">1,316</td><td class="num">10,145</td><td class="num">94.0</td></tr>
+<tr><td class="num">14:31</td><td class="num">1,325</td><td class="num">9,350</td><td class="num">96.7</td></tr>
+<tr><td class="num">14:32</td><td class="num">1,331</td><td class="num">10,122</td><td class="num">95.9</td></tr>
+<tr><td class="num">14:33</td><td class="num">1,387</td><td class="num">9,331</td><td class="num">98.8</td></tr>
+<tr><td class="num">14:34</td><td class="num">1,599</td><td class="num">10,114</td><td class="num">97.9</td></tr>
+<tr><td class="num">14:35</td><td class="num">1,456</td><td class="num">9,760</td><td class="num">93.4</td></tr>
+<tr><td class="num">14:36</td><td class="num">1,440</td><td class="num">9,605</td><td class="num">92.5</td></tr>
+<tr><td class="num">14:37</td><td class="num">1,308</td><td class="num">9,942</td><td class="num">93.0</td></tr>
+<tr><td class="num">14:38</td><td class="num">1,242</td><td class="num">9,602</td><td class="num">93.3</td></tr>
+<tr><td class="num">14:39</td><td class="num">1,343</td><td class="num">9,853</td><td class="num">96.0</td></tr>
+<tr><td class="num">14:40</td><td class="num">1,506</td><td class="num">10,079</td><td class="num">92.9</td></tr>
+<tr><td class="num">14:41</td><td class="num">1,594</td><td class="num">9,899</td><td class="num">91.5</td></tr>
+<tr><td class="num">14:42</td><td class="num">1,463</td><td class="num">9,478</td><td class="num">95.8</td></tr>
+<tr><td class="num">14:43</td><td class="num">1,280</td><td class="num">10,193</td><td class="num">93.2</td></tr>
+<tr><td class="num">14:44</td><td class="num">1,293</td><td class="num">9,385</td><td class="num">89.7</td></tr>
+<tr><td class="num">14:45</td><td class="num">1,424</td><td class="num">9,601</td><td class="num">97.8</td></tr>
+<tr><td class="num">14:46</td><td class="num">1,432</td><td class="num">9,745</td><td class="num">88.9</td></tr>
+<tr><td class="num">14:47</td><td class="num">1,521</td><td class="num">9,693</td><td class="num">87.3</td></tr>
+<tr><td class="num">14:48</td><td class="num">1,403</td><td class="num">9,967</td><td class="num">73.4</td></tr>
+<tr><td class="num">14:49</td><td class="num">1,414</td><td class="num">10,098</td><td class="num">69.2</td></tr>
+<tr><td class="num">14:50</td><td class="num">1,244</td><td class="num">10,256</td><td class="num">60.3</td></tr>
+<tr><td class="num">14:51</td><td class="num">1,238</td><td class="num">9,461</td><td class="num">49.2</td></tr>
+<tr><td class="num">14:52</td><td class="num">1,479</td><td class="num">9,576</td><td class="num">41.8</td></tr>
+<tr><td class="num">14:53</td><td class="num">595</td><td class="num">2,463</td><td class="num">20.2</td></tr>
+<tr><td class="num">14:54</td><td class="num">526</td><td class="num">2,105</td><td class="num">15.8</td></tr>
+<tr><td class="num">14:55</td><td class="num">453</td><td class="num">1,789</td><td class="num">9.6</td></tr>
+<tr><td class="num">14:56</td><td class="num">408</td><td class="num">1,546</td><td class="num">5.2</td></tr>
+<tr><td class="num">14:57</td><td class="num">347</td><td class="num">1,215</td><td class="num">0.4</td></tr>
+<tr><td class="num">14:58</td><td class="num">312</td><td class="num">886</td><td class="num">0.4</td></tr>
+<tr><td class="num">14:59</td><td class="num">251</td><td class="num">570</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:00</td><td class="num">178</td><td class="num">318</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:01</td><td class="num">128</td><td class="num">315</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:02</td><td class="num">61</td><td class="num">311</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:03</td><td class="num">43</td><td class="num">305</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:04</td><td class="num">47</td><td class="num">304</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:05</td><td class="num">48</td><td class="num">311</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:06</td><td class="num">48</td><td class="num">314</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:07</td><td class="num">46</td><td class="num">322</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:08</td><td class="num">46</td><td class="num">324</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:09</td><td class="num">43</td><td class="num">320</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:10</td><td class="num">43</td><td class="num">312</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:11</td><td class="num">46</td><td class="num">298</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:12</td><td class="num">43</td><td class="num">311</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:13</td><td class="num">42</td><td class="num">311</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:14</td><td class="num">42</td><td class="num">322</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:15</td><td class="num">45</td><td class="num">298</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:16</td><td class="num">43</td><td class="num">306</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:17</td><td class="num">48</td><td class="num">318</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:18</td><td class="num">43</td><td class="num">321</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:19</td><td class="num">48</td><td class="num">313</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:20</td><td class="num">47</td><td class="num">301</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:21</td><td class="num">46</td><td class="num">314</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:22</td><td class="num">47</td><td class="num">324</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:23</td><td class="num">44</td><td class="num">306</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:24</td><td class="num">46</td><td class="num">299</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:25</td><td class="num">45</td><td class="num">305</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:26</td><td class="num">44</td><td class="num">316</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:27</td><td class="num">43</td><td class="num">323</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:28</td><td class="num">44</td><td class="num">317</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:29</td><td class="num">46</td><td class="num">316</td><td class="num">0.4</td></tr>
+<tr><td class="num">15:30</td><td class="num">48</td><td class="num">311</td><td class="num">0.4</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3>Timeline</h3>
+    <table>
+      <thead><tr><th></th><th>Time</th><th>System</th><th>Event</th></tr></thead>
+      <tbody>
+<tr><td class="c"><span class="hbadge">A</span></td><td class="num">13:52</td><td>Feature cache</td><td>Config change deployed: max memory lowered from 24 GB to 8 GB (change CHG-4471)</td></tr>
+<tr><td class="c"></td><td class="num">13:53</td><td>Feature cache</td><td>Mass eviction begins; hit rate falls from 97% to 12%</td></tr>
+<tr><td class="c"></td><td class="num">13:55</td><td>Fraud service</td><td>p95 latency climbs as features are recomputed from the feature store</td></tr>
+<tr><td class="c"><span class="hbadge">B</span></td><td class="num">14:06</td><td>Payments service</td><td>Connection pool to Fraud service exhausted (200 of 200 in use)</td></tr>
+<tr><td class="c"></td><td class="num">14:06</td><td>Checkout service</td><td>Checkout error rate passes 30%; first customer reports</td></tr>
+<tr><td class="c"><span class="hbadge">C</span></td><td class="num">14:09</td><td>On-call</td><td>Page fires on checkout error rate; incident declared SEV-1</td></tr>
+<tr><td class="c"><span class="hbadge">D</span></td><td class="num">14:21</td><td>On-call</td><td>Payments restarted; no effect, pool exhausts again within 90 seconds</td></tr>
+<tr><td class="c"><span class="hbadge">E</span></td><td class="num">14:38</td><td>On-call</td><td>Fraud latency identified as the cause; cache config change found</td></tr>
+<tr><td class="c"><span class="hbadge">F</span></td><td class="num">14:46</td><td>Feature cache</td><td>Config rolled back to 24 GB; cache begins to warm</td></tr>
+<tr><td class="c"><span class="hbadge">G</span></td><td class="num">14:53</td><td>Checkout service</td><td>Error rate below 5%; incident mitigated after 47 minutes</td></tr>
+<tr><td class="c"><span class="hbadge">H</span></td><td class="num">15:10</td><td>Checkout service</td><td>Error rate back to baseline; incident closed</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="duration">
+  <h2>3. Where the 61 minutes went</h2>
+  <p class="sub">From the change to mitigation was 61 minutes. Customers were affected for 47 of them. Nearly half the
+    total, 29 minutes, was spent finding the cause.</p>
+  <div class="card">
+<div class="phase-row"><div class="pt"><span class="num">13:52 to 14:06</span><strong>Slowing down with no alert</strong></div><div class="pb"><span class="bar" style="width:calc((100% - 80px) * 0.483)"></span><span class="bv">14 min</span></div><p>Cache hit rate and fraud scoring time moved within a minute of the change, but neither had an alert. Checkout errors crept from 0.4% to 6.7% without paging anyone.</p></div>
+<div class="phase-row"><div class="pt"><span class="num">14:06 to 14:09</span><strong>Checkout failing, page not yet fired</strong></div><div class="pb"><span class="bar" style="width:calc((100% - 80px) * 0.103)"></span><span class="bv">3 min</span></div><p>Payments ran out of connections and checkout errors passed 30%. First customer reports arrived. The page fired three minutes later and the incident was declared SEV-1.</p></div>
+<div class="phase-row"><div class="pt"><span class="num">14:09 to 14:38</span><strong>Looking for the cause</strong></div><div class="pb"><span class="bar" style="width:calc((100% - 80px) * 1.000)"></span><span class="bv">29 min</span></div><p>The page pointed at checkout, and the visible fault was the exhausted connection pool in Payments, so Payments was restarted at 14:21. The pool filled again within 90 seconds. It took a further 17 minutes to follow the path to fraud scoring time and find the cache change.</p></div>
+<div class="phase-row"><div class="pt"><span class="num">14:38 to 14:46</span><strong>Rolling the change back</strong></div><div class="pb"><span class="bar" style="width:calc((100% - 80px) * 0.276)"></span><span class="bv">8 min</span></div><p>The cache memory limit was restored to 24 GB.</p></div>
+<div class="phase-row"><div class="pt"><span class="num">14:46 to 14:53</span><strong>Cache warming up</strong></div><div class="pb"><span class="bar" style="width:calc((100% - 80px) * 0.241)"></span><span class="bv">7 min</span></div><p>The cache refilled, fraud scoring sped up and Payments connections freed up. Checkout response time dropped from about 10 s to 2.5 s at 14:53.</p></div>
+    <div class="total">Change to mitigation: 61 min. The incident was closed at 15:10 once the error rate was back to baseline.</div>
+  </div>
+
+  <div class="two" style="margin-top:12px">
+    <div class="card"><h3>Why we found out late</h3>
+      <p>We paged on one signal, the checkout error rate. That signal is the last thing to move. Fraud scoring time
+        had tripled by 13:53 and was more than 25 times normal by 14:05, and the cache hit rate had already fallen
+        to 12%, but neither was alerted on. For 14 minutes the system was heading for failure and nobody was told.</p></div>
+    <div class="card"><h3>Why the cause was hard to find</h3>
+      <p>The page said "checkout", and the first broken thing responders saw was the connection pool in Payments.
+        Restarting Payments was a reasonable first move, and it cost time: the fault was two systems further down.
+        Nothing in our alerting connected checkout errors to a cache change made 17 minutes before the page.</p></div>
+  </div>
+</section>
+
+<section id="actions">
+  <h2>4. What we are changing</h2>
+  <p class="sub">Four agreed actions. Together they cover the trigger, the spread, the slow detection, and proof that
+    the fixes work.</p>
+  <div class="card scroll">
+    <table style="min-width:820px">
+      <thead><tr><th style="width:27%">Action</th><th style="width:33%">What it prevents</th><th>Owner</th><th>Due</th><th style="width:17%">Status</th></tr></thead>
+      <tbody>
+<tr><td><strong>Alert on fraud scoring latency and cache hit rate, not only on checkout errors</strong></td><td>Shortens detection and diagnosis. Both signals moved at 13:53, 13 minutes before checkout failed, and they point directly at the cause.</td><td>SRE</td><td class="num nowrap">2 Oct 2026</td><td><span class="st"><span class="ic" aria-hidden="true">!</span>Due date passed, completion to be confirmed</span></td></tr>
+<tr><td><strong>Add a circuit breaker and 300 ms timeout on Payments to Fraud; fall back to rules-based scoring</strong></td><td>Stops the spread. A slow Fraud service can no longer use up Payments connections; checkout carries on with rules-based scoring.</td><td>Payments team</td><td class="num nowrap">9 Oct 2026</td><td><span class="st"><span class="ic" aria-hidden="true">!</span>Due date passed, completion to be confirmed</span></td></tr>
+<tr><td><strong>Require a canary and automatic rollback for cache configuration changes</strong></td><td>Stops the trigger. A cache configuration change is tried on a small part of the cache first and is undone automatically if it goes wrong.</td><td>Platform team</td><td class="num nowrap">23 Oct 2026</td><td><span class="st muted">Not yet due</span></td></tr>
+<tr><td><strong>Load-test the checkout path with a cold feature cache each quarter</strong></td><td>Proves the fixes hold. An empty cache becomes a condition we test regularly, not one we discover in production.</td><td>SRE</td><td class="num nowrap">13 Nov 2026</td><td><span class="st muted">Not yet due</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fignote">Status is worked out from the due dates only, as of 10 October 2026. The incident data does not
+    record whether an action has been completed.</p>
+</section>
+
+<section id="merchants">
+  <h2>5. For customer success: what to tell merchants</h2>
+  <p class="sub">A plain-language account you can adapt. Every figure in it comes from this review.</p>
+  <div class="two">
+    <div class="card">
+      <h3>What happened</h3>
+      <blockquote>
+        <p>On 17 September 2026, between 14:06 and 14:53 UTC, most card checkouts on our platform failed.
+          For about 13 minutes before that, from 13:53, checkout was slower than usual and a small share of
+          attempts failed.</p>
+        <p>The cause was a configuration change we made to an internal system that supports our fraud checks.
+          It made fraud checks very slow, and payments could not complete while waiting for them. It was not caused
+          by your integration or by the card processor.</p>
+        <p>We reversed the change at 14:46. Checkout recovered over the following minutes and was fully back to normal by 15:10.
+          In total 18,420 checkout attempts failed, affecting 15,890 customers.</p>
+      </blockquote>
+    </div>
+    <div class="card">
+      <h3>What we are doing about it</h3>
+      <blockquote>
+        <p>If our fraud system is slow in future, payments will no longer wait for it. They will fall back to a
+          simpler set of fraud rules, so checkout keeps working.</p>
+        <p>Changes of this kind will be applied to a small part of the system first and reversed automatically if
+          they cause problems.</p>
+        <p>We are adding monitoring that warns us at the source of a problem like this, before it reaches checkout,
+          and we will test this failure regularly.</p>
+      </blockquote>
+    </div>
+  </div>
+  <div class="note" style="margin-top:12px">
+    <h3>Check before you promise</h3>
+    <ul class="plain">
+      <li>Whether any customer was charged for a checkout that failed. The card processor was working normally, but the
+        incident data does not answer this either way.</li>
+      <li>Figures for an individual merchant. The impact numbers here are platform totals.</li>
+      <li>How the €38,000 in SLA credits is divided between merchants, and when it will be paid.</li>
+      <li>Which of the fixes are already live (see the status column in section 4).</li>
+    </ul>
+  </div>
+</section>
+
+<section id="open">
+  <h2>6. Open points</h2>
+  <div class="card">
+    <ul class="plain measure">
+      <li><strong>Mitigation time.</strong> The timeline gives 14:53 as the point the error rate fell below 5%, which
+        is where the 47-minute duration comes from. The per-minute data shows 20.2% at 14:53, with the rate first
+        under 5% at 14:57. Response times did recover sharply at 14:53. If 14:57 is the right mark, the outage was
+        51 minutes.</li>
+      <li><strong>Action status.</strong> Two actions had due dates before this report was prepared: alerting on fraud
+        scoring time and cache hit rate (SRE, 2 October) and the circuit breaker on Payments to Fraud
+        (Payments team, 9 October). Their completion needs confirming.</li>
+      <li><strong>How change CHG-4471 was approved and rolled out.</strong> The data records that the change was
+        deployed, not how it was reviewed or why the limit was lowered. That would help the Platform team scope
+        the canary requirement.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+<script>
+(function () {
+  var D = {"t": ["13:30", "13:31", "13:32", "13:33", "13:34", "13:35", "13:36", "13:37", "13:38", "13:39", "13:40", "13:41", "13:42", "13:43", "13:44", "13:45", "13:46", "13:47", "13:48", "13:49", "13:50", "13:51", "13:52", "13:53", "13:54", "13:55", "13:56", "13:57", "13:58", "13:59", "14:00", "14:01", "14:02", "14:03", "14:04", "14:05", "14:06", "14:07", "14:08", "14:09", "14:10", "14:11", "14:12", "14:13", "14:14", "14:15", "14:16", "14:17", "14:18", "14:19", "14:20", "14:21", "14:22", "14:23", "14:24", "14:25", "14:26", "14:27", "14:28", "14:29", "14:30", "14:31", "14:32", "14:33", "14:34", "14:35", "14:36", "14:37", "14:38", "14:39", "14:40", "14:41", "14:42", "14:43", "14:44", "14:45", "14:46", "14:47", "14:48", "14:49", "14:50", "14:51", "14:52", "14:53", "14:54", "14:55", "14:56", "14:57", "14:58", "14:59", "15:00", "15:01", "15:02", "15:03", "15:04", "15:05", "15:06", "15:07", "15:08", "15:09", "15:10", "15:11", "15:12", "15:13", "15:14", "15:15", "15:16", "15:17", "15:18", "15:19", "15:20", "15:21", "15:22", "15:23", "15:24", "15:25", "15:26", "15:27", "15:28", "15:29", "15:30"], "PL": 64, "PW": 1012, "W": 1100, "N": 120, "panels": [{"k": "fraud", "top": 96, "h": 124, "dmax": 1800, "v": [44.0, 45.0, 46.0, 42.0, 46.0, 44.0, 45.0, 42.0, 47.0, 44.0, 44.0, 43.0, 45.0, 43.0, 43.0, 45.0, 45.0, 46.0, 48.0, 44.0, 45.0, 47.0, 43.0, 142.0, 246.0, 311.0, 397.0, 496.0, 616.0, 696.0, 812.0, 878.0, 1060.0, 1166.0, 1125.0, 1205.0, 1181.0, 1263.0, 1442.0, 1597.0, 1584.0, 1325.0, 1316.0, 1318.0, 1344.0, 1550.0, 1636.0, 1463.0, 1330.0, 1178.0, 1294.0, 1500.0, 1654.0, 1488.0, 1347.0, 1265.0, 1252.0, 1450.0, 1580.0, 1591.0, 1316.0, 1325.0, 1331.0, 1387.0, 1599.0, 1456.0, 1440.0, 1308.0, 1242.0, 1343.0, 1506.0, 1594.0, 1463.0, 1280.0, 1293.0, 1424.0, 1432.0, 1521.0, 1403.0, 1414.0, 1244.0, 1238.0, 1479.0, 595.0, 526.0, 453.0, 408.0, 347.0, 312.0, 251.0, 178.0, 128.0, 61.0, 43.0, 47.0, 48.0, 48.0, 46.0, 46.0, 43.0, 43.0, 46.0, 43.0, 42.0, 42.0, 45.0, 43.0, 48.0, 43.0, 48.0, 47.0, 46.0, 47.0, 44.0, 46.0, 45.0, 44.0, 43.0, 44.0, 46.0, 48.0]}, {"k": "clat", "top": 276, "h": 124, "dmax": 12000, "v": [313.0, 310.0, 298.0, 323.0, 310.0, 296.0, 322.0, 298.0, 320.0, 304.0, 325.0, 316.0, 319.0, 310.0, 325.0, 307.0, 323.0, 319.0, 300.0, 320.0, 295.0, 300.0, 295.0, 452.0, 628.0, 781.0, 990.0, 1090.0, 1211.0, 1471.0, 1642.0, 1740.0, 1836.0, 2105.0, 2289.0, 2275.0, 9802.0, 10145.0, 10219.0, 10004.0, 9729.0, 9335.0, 9895.0, 9363.0, 10080.0, 9413.0, 9325.0, 9559.0, 10157.0, 10166.0, 9624.0, 9846.0, 9502.0, 9783.0, 9642.0, 9565.0, 9399.0, 10105.0, 9449.0, 9916.0, 10145.0, 9350.0, 10122.0, 9331.0, 10114.0, 9760.0, 9605.0, 9942.0, 9602.0, 9853.0, 10079.0, 9899.0, 9478.0, 10193.0, 9385.0, 9601.0, 9745.0, 9693.0, 9967.0, 10098.0, 10256.0, 9461.0, 9576.0, 2463.0, 2105.0, 1789.0, 1546.0, 1215.0, 886.0, 570.0, 318.0, 315.0, 311.0, 305.0, 304.0, 311.0, 314.0, 322.0, 324.0, 320.0, 312.0, 298.0, 311.0, 311.0, 322.0, 298.0, 306.0, 318.0, 321.0, 313.0, 301.0, 314.0, 324.0, 306.0, 299.0, 305.0, 316.0, 323.0, 317.0, 316.0, 311.0]}, {"k": "err", "top": 456, "h": 124, "dmax": 100, "v": [0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.9, 1.3, 2.0, 2.4, 3.1, 3.5, 4.1, 4.4, 4.9, 5.6, 6.1, 6.6, 6.7, 29.7, 43.6, 63.4, 76.2, 94.4, 91.2, 88.6, 95.1, 93.3, 97.4, 88.4, 97.4, 89.2, 98.9, 97.9, 88.8, 89.5, 98.6, 94.9, 93.9, 96.2, 89.6, 92.9, 96.8, 94.0, 96.7, 95.9, 98.8, 97.9, 93.4, 92.5, 93.0, 93.3, 96.0, 92.9, 91.5, 95.8, 93.2, 89.7, 97.8, 88.9, 87.3, 73.4, 69.2, 60.3, 49.2, 41.8, 20.2, 15.8, 9.6, 5.2, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4]}]};
+  var svg = document.getElementById('chart'), hover = document.getElementById('hover'), tip = document.getElementById('tip');
+  if (!svg || !hover) return;
+  var cur = -1;
+  function fmtMs(v) { return v >= 1000 ? (v / 1000).toFixed(1) + ' s' : Math.round(v) + ' ms'; }
+  function show(i) {
+    i = Math.max(0, Math.min(D.N, i)); cur = i;
+    var x = D.PL + D.PW * i / D.N;
+    hover.style.display = '';
+    D.panels.forEach(function (p) {
+      var l = hover.querySelector('line[data-k="' + p.k + '"]'), c = hover.querySelector('circle[data-k="' + p.k + '"]');
+      l.setAttribute('x1', x); l.setAttribute('x2', x);
+      c.setAttribute('cx', x); c.setAttribute('cy', p.top + p.h - p.h * p.v[i] / p.dmax);
+    });
+    var v = {}; D.panels.forEach(function (p) { v[p.k] = p.v[i]; });
+    tip.innerHTML = '<b>' + D.t[i] + ' UTC</b>' +
+      '<span>Fraud scoring p95</span>' + fmtMs(v.fraud) + '<br>' +
+      '<span>Checkout p95</span>' + fmtMs(v.clat) + '<br>' +
+      '<span>Checkout error rate</span>' + v.err.toFixed(1) + '%';
+    tip.style.display = 'block';
+    var w = svg.getBoundingClientRect().width, px = x / D.W * w, tw = tip.offsetWidth;
+    tip.style.left = (px + 14 + tw > w ? px - 14 - tw : px + 14) + 'px';
+  }
+  function hide() { hover.style.display = 'none'; tip.style.display = 'none'; cur = -1; }
+  svg.addEventListener('pointermove', function (e) {
+    var r = svg.getBoundingClientRect();
+    show(Math.round(((e.clientX - r.left) / r.width * D.W - D.PL) / D.PW * D.N));
+  });
+  svg.addEventListener('pointerleave', hide);
+  svg.addEventListener('blur', hide);
+  svg.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { show(cur < 0 ? 22 : cur + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft') { show(cur < 0 ? 22 : cur - 1); e.preventDefault(); }
+    else if (e.key === 'Escape') hide();
+  });
+})();
+</script>
+</body>
+</html>

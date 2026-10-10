@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Employee engagement survey 2026: results</title>
+<style>
+:root{color-scheme:light;
+--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#6f6d68;--hair:#e1e0d9;--axis:#c3c2b7;
+--pos:#2a78d6;--neg:#e34948;--neu:#c3c2b7;--up:#006300;--dn:#b3261e;
+--lo2:#f5bdb8;--lo1:#fbe3e0;--mid:#f0efec;--hi1:#d9e9fb;--accent:#b3261e;}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;
+--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#a3a19a;--hair:#2c2c2a;--axis:#4a4a46;
+--pos:#3987e5;--neg:#e66767;--neu:#5c5b56;--up:#3fbf3f;--dn:#f08a8a;
+--lo2:#7d2b2b;--lo1:#472322;--mid:#2a2a28;--hi1:#1c3350;--accent:#f08a8a;}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--page);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+main{max-width:960px;margin:0 auto;padding:40px 24px 64px}
+h1{font-size:34px;line-height:1.15;margin:8px 0 20px;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:22px;line-height:1.25;margin:0 0 6px;text-wrap:balance}
+h3{font-size:16px;margin:0 0 4px}
+p{margin:0 0 12px;max-width:68ch}
+.eyebrow{font-size:13px;color:var(--ink2);margin:0;max-width:none}
+.lead p{font-size:18px;line-height:1.5}
+section{margin-top:48px}
+.sub{color:var(--ink2);margin-bottom:16px}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:20px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.tile{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:16px}
+.tile .l{font-size:13px;color:var(--ink2)}
+.tile .v{font-size:36px;font-weight:650;line-height:1.15;margin:2px 0}
+.tile .s{font-size:13px;color:var(--ink2)}
+.up{color:var(--up)}.dn{color:var(--dn)}
+table{border-collapse:collapse;width:100%}
+th{font-weight:400;text-align:left}
+.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.th{display:block;font-size:12px;color:var(--muted)}
+thead th{font-size:12px;color:var(--ink2);font-weight:500;padding:0 8px 8px;vertical-align:bottom}
+thead th.n{text-align:right}
+figure{margin:0}
+figcaption{font-size:15px;font-weight:600;margin-bottom:14px}
+figcaption small{display:block;font-weight:400;color:var(--ink2);font-size:13px}
+.note{font-size:13px;color:var(--ink2);margin:14px 0 0;max-width:76ch}
+.scroll{overflow-x:auto}
+/* change chart */
+.chg td,.chg tbody th{padding:7px 8px;border-top:1px solid var(--hair);vertical-align:middle}
+.chg .q{display:block;font-size:14px;line-height:1.3}
+.chg .track{position:relative;width:34%;min-width:150px;padding:0}
+.chg .zero{position:absolute;top:0;bottom:0;width:1px;background:var(--axis)}
+.chg .bar{position:absolute;top:50%;height:12px;margin-top:-6px}
+.bar.neg{background:var(--neg);border-radius:4px 0 0 4px}
+.bar.pos{background:var(--pos);border-radius:0 4px 4px 0}
+.delta{font-weight:600;width:64px}
+.y25{color:var(--ink2)}
+/* heatmap */
+.heat{border-collapse:separate;border-spacing:2px;min-width:720px}
+.heat thead th{text-align:center;padding:0 2px 6px;width:9.5%;line-height:1.2}
+.heat thead th:first-child{width:auto;text-align:left}
+.heat tbody th{font-size:14px;padding:6px 10px 6px 0;line-height:1.25;white-space:nowrap}
+.heat .c{text-align:center;font-variant-numeric:tabular-nums;font-size:15px;padding:10px 2px;border-radius:4px;background:var(--mid)}
+.heat .lo2{background:var(--lo2);font-weight:700}.heat .lo1{background:var(--lo1)}
+.heat .hi1{background:var(--hi1)}
+.heat .mk{font-size:10px;margin-right:3px;vertical-align:1px}
+.heat .medrow th,.heat .medrow td{color:var(--ink2);font-size:13px;padding-top:10px}
+.heat .medrow .c{background:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink2);margin-top:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:14px;border-radius:3px;display:inline-block}
+/* findings + priorities */
+.find{padding-left:20px;margin:20px 0 0}
+.find li{margin-bottom:10px;max-width:70ch}
+.prio{display:grid;gap:12px;margin-top:20px;counter-reset:p}
+.prio .card{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;counter-increment:p}
+.prio .card::before{content:counter(p);grid-row:1/span 4;font-size:30px;font-weight:650;line-height:1.1;color:var(--accent)}
+.prio h3{font-size:18px}
+.prio h3,.prio p,.prio ul{grid-column:2;margin:0 0 6px}
+.prio p,.prio ul{font-size:15px}
+.prio ul{padding-left:18px}.prio li{margin-bottom:4px;max-width:66ch}
+.prio .lbl{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);margin:6px 0 2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.two .card li{font-size:15px;margin-bottom:4px}.two ul{padding-left:18px;margin:0}
+/* full results */
+.full td,.full tbody th{padding:7px 8px;border-top:1px solid var(--hair);font-size:14px;vertical-align:middle}
+.full .grp th{font-weight:650;font-size:13px;padding-top:16px;border-top:0}
+.full .stackc{width:24%;min-width:120px}
+.stack{display:flex;gap:2px;height:10px}
+.stack i{display:block;min-width:2px}
+.sf{background:var(--pos);border-radius:4px 0 0 4px}.sn{background:var(--neu)}.su{background:var(--neg);border-radius:0 4px 4px 0}
+.notes{padding-left:20px}
+.notes li{margin-bottom:8px;max-width:76ch;font-size:14px;color:var(--ink2)}
+@media (max-width:720px){
+ main{padding:24px 16px 48px}h1{font-size:26px}.lead p{font-size:16px}
+ .tiles{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}
+ .chg .y25,.chg .y26,.full .y25,.full .stackc{display:none}
+ .chg .track{width:30%;min-width:96px}.card{padding:14px}
+ .prio .card{grid-template-columns:28px 1fr}
+}
+@media print{body{background:#fff}main{max-width:none;padding:0}section{margin-top:28px}
+ .card,.tile,tr{break-inside:avoid}h2{break-after:avoid}.heat{min-width:0}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="eyebrow">Employee engagement survey 2026 &middot; Results for the executive team and people managers &middot; People team, October 2026</p>
+<h1>Engagement is up. Career growth is the one area that got worse.</h1>
+<div class="lead">
+<p>1,284 of 1,585 people (81%) answered. The engagement index rose from 71 to 74 and eNPS from 19 to 24. Of the 16 questions, 13 improved on last year, led by senior leaders communicating a clear direction (up 7 points) and manageable workload (up 6).</p>
+<p>The three that fell are the three questions on career growth, each down 8 to 11 points. Fewer than half of respondents now see a path to advance here (48%) or think promotions are fair (44%).</p>
+<p>The problems are concentrated in three places, and we recommend acting on them in this order: career growth in Engineering and Customer Support, workload in Customer Support, and tools in Operations.</p>
+</div>
+<div class="tiles">
+<div class="tile"><div class="l">Engagement index</div><div class="v">74</div><div class="s"><span class="up">&#9650;</span> 3 points from 71 in 2025</div></div>
+<div class="tile"><div class="l">eNPS</div><div class="v">+24</div><div class="s"><span class="up">&#9650;</span> 5 points from +19 in 2025</div></div>
+<div class="tile"><div class="l">Response rate</div><div class="v">81%</div><div class="s">1,284 of 1,585 invited</div></div>
+<div class="tile"><div class="l">Questions that improved</div><div class="v">13 of 16</div><div class="s"><span class="dn">&#9660;</span> 3 fell, all on career growth</div></div>
+</div>
+</header>
+
+<section>
+<h2>What got better and what got worse</h2>
+<p class="sub">Every question, ordered from the biggest fall to the biggest gain.</p>
+<figure class="card">
+<figcaption>Change in favourable answers, 2025 to 2026<small>Percentage points. Favourable means agree or strongly agree.</small></figcaption>
+<table class="chg">
+<thead><tr><th scope="col">Question</th><th scope="col" class="n y25">2025</th><th scope="col" class="n y26">2026</th><th scope="col"><span class="legend" style="margin:0"><span><i class="sw" style="background:var(--neg)"></i>Fell</span><span><i class="sw" style="background:var(--pos)"></i>Rose</span></span></th><th scope="col" class="n">Change</th></tr></thead>
+<tbody>
+<tr><th scope="row"><span class="q">I see a path to advance my career here</span><span class="th">Career growth</span></th><td class="n y25">59%</td><td class="n y26">48%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar neg" style="left:5.00%;width:55.00%"></span></td><td class="n delta"><span class="dn">&#9660;</span>&nbsp;11</td></tr>
+<tr><th scope="row"><span class="q">Promotions here are fair</span><span class="th">Career growth</span></th><td class="n y25">52%</td><td class="n y26">44%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar neg" style="left:20.00%;width:40.00%"></span></td><td class="n delta"><span class="dn">&#9660;</span>&nbsp;8</td></tr>
+<tr><th scope="row"><span class="q">I have had a meaningful development conversation in the last 6 months</span><span class="th">Career growth</span></th><td class="n y25">60%</td><td class="n y26">52%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar neg" style="left:20.00%;width:40.00%"></span></td><td class="n delta"><span class="dn">&#9660;</span>&nbsp;8</td></tr>
+<tr><th scope="row"><span class="q">I am paid fairly for the work I do</span><span class="th">Pay and recognition</span></th><td class="n y25">53%</td><td class="n y26">55%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:10.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;2</td></tr>
+<tr><th scope="row"><span class="q">My team collaborates well</span><span class="th">Teamwork</span></th><td class="n y25">83%</td><td class="n y26">85%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:10.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;2</td></tr>
+<tr><th scope="row"><span class="q">My manager gives me useful feedback</span><span class="th">My manager</span></th><td class="n y25">84%</td><td class="n y26">86%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:10.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;2</td></tr>
+<tr><th scope="row"><span class="q">Other teams are easy to work with</span><span class="th">Teamwork</span></th><td class="n y25">58%</td><td class="n y26">61%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:15.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;3</td></tr>
+<tr><th scope="row"><span class="q">My manager cares about my wellbeing</span><span class="th">My manager</span></th><td class="n y25">85%</td><td class="n y26">88%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:15.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;3</td></tr>
+<tr><th scope="row"><span class="q">I can switch off outside working hours</span><span class="th">Workload</span></th><td class="n y25">62%</td><td class="n y26">66%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:20.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr><th scope="row"><span class="q">Good work is recognised here</span><span class="th">Pay and recognition</span></th><td class="n y25">66%</td><td class="n y26">70%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:20.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr><th scope="row"><span class="q">I have the tools I need to do my job well</span><span class="th">Tools</span></th><td class="n y25">70%</td><td class="n y26">74%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:20.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr><th scope="row"><span class="q">I understand how my work contributes to company goals</span><span class="th">Purpose</span></th><td class="n y25">78%</td><td class="n y26">82%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:20.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr><th scope="row"><span class="q">I am proud to work here</span><span class="th">Purpose</span></th><td class="n y25">80%</td><td class="n y26">84%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:20.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr><th scope="row"><span class="q">I trust the decisions of senior leadership</span><span class="th">Leadership</span></th><td class="n y25">63%</td><td class="n y26">68%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:25.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;5</td></tr>
+<tr><th scope="row"><span class="q">My workload is manageable</span><span class="th">Workload</span></th><td class="n y25">57%</td><td class="n y26">63%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:30.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;6</td></tr>
+<tr><th scope="row"><span class="q">Senior leaders communicate a clear direction</span><span class="th">Leadership</span></th><td class="n y25">64%</td><td class="n y26">71%</td><td class="track" aria-hidden="true"><span class="zero" style="left:60.00%"></span><span class="bar pos" style="left:60.00%;width:35.00%"></span></td><td class="n delta"><span class="up">&#9650;</span>&nbsp;7</td></tr>
+</tbody>
+</table>
+</figure>
+<ul class="find">
+<li><strong>Worse: career growth, on all three questions.</strong> Seeing a path to advance fell 11 points to 48%. Having had a meaningful development conversation in the last six months fell 8 to 52%. Believing promotions are fair fell 8 to 44%, the lowest score in the survey.</li>
+<li><strong>Better: leadership and workload.</strong> Senior leaders communicating a clear direction rose 7 points to 71%, trust in their decisions rose 5 to 68%, and manageable workload rose 6 to 63%.</li>
+<li><strong>Better, but still low.</strong> Being paid fairly (55%, up 2) and finding other teams easy to work with (61%, up 3) are the weakest scores outside career growth, and neither moved much.</li>
+<li><strong>Strong and holding.</strong> The two questions about managers remain the highest in the survey, at 86% and 88%.</li>
+</ul>
+<p class="note">Changes of 3 points or fewer are small enough that they could be chance rather than a real shift. 5 of the 13 gains are that small; all three falls are well beyond it.</p>
+</section>
+
+<section>
+<h2>Where the problems are concentrated</h2>
+<p class="sub">Four results stand well apart from the rest, and three of the four are in Engineering and Customer Support.</p>
+<figure class="card">
+<figcaption>Favourable answers by department and theme, 2026<small>Per cent favourable. Shading shows the gap to the median department for that theme. Themes run from lowest-scoring to highest.</small></figcaption>
+<div class="scroll">
+<table class="heat">
+<thead><tr><th scope="col">Department</th><th scope="col">Career growth</th><th scope="col">Pay and recognition</th><th scope="col">Workload</th><th scope="col">Leadership</th><th scope="col">Teamwork</th><th scope="col">Tools</th><th scope="col">Purpose</th><th scope="col">My manager</th></tr></thead>
+<tbody>
+<tr><th scope="row">Engineering<span class="th">312 respondents</span></th><td class="c lo2" title="Engineering, Career growth: 34% favourable, 15.5 points below the median department (49.5%)"><span class="mk">&#9660;</span>34</td><td class="c mid" title="Engineering, Pay and recognition: 62% favourable, 2.5 points below the median department (64.5%)">62</td><td class="c mid" title="Engineering, Workload: 64% favourable, 3.5 points below the median department (67.5%)">64</td><td class="c mid" title="Engineering, Leadership: 70% favourable, 1.5 points below the median department (71.5%)">70</td><td class="c lo1" title="Engineering, Teamwork: 70% favourable, 5.5 points below the median department (75.5%)">70</td><td class="c mid" title="Engineering, Tools: 81% favourable, 4 points above the median department (77%)">81</td><td class="c mid" title="Engineering, Purpose: 80% favourable, 3.5 points below the median department (83.5%)">80</td><td class="c mid" title="Engineering, My manager: 89% favourable, 0.5 points below the median department (89.5%)">89</td></tr>
+<tr><th scope="row">Operations<span class="th">284 respondents</span></th><td class="c mid" title="Operations, Career growth: 48% favourable, 1.5 points below the median department (49.5%)">48</td><td class="c mid" title="Operations, Pay and recognition: 64% favourable, 0.5 points below the median department (64.5%)">64</td><td class="c mid" title="Operations, Workload: 63% favourable, 4.5 points below the median department (67.5%)">63</td><td class="c mid" title="Operations, Leadership: 73% favourable, 1.5 points above the median department (71.5%)">73</td><td class="c mid" title="Operations, Teamwork: 75% favourable, 0.5 points below the median department (75.5%)">75</td><td class="c lo2" title="Operations, Tools: 62% favourable, 15 points below the median department (77%)"><span class="mk">&#9660;</span>62</td><td class="c mid" title="Operations, Purpose: 83% favourable, 0.5 points below the median department (83.5%)">83</td><td class="c mid" title="Operations, My manager: 85% favourable, 4.5 points below the median department (89.5%)">85</td></tr>
+<tr><th scope="row">Customer Support<span class="th">228 respondents</span></th><td class="c lo2" title="Customer Support, Career growth: 31% favourable, 18.5 points below the median department (49.5%)"><span class="mk">&#9660;</span>31</td><td class="c lo1" title="Customer Support, Pay and recognition: 59% favourable, 5.5 points below the median department (64.5%)">59</td><td class="c lo2" title="Customer Support, Workload: 49% favourable, 18.5 points below the median department (67.5%)"><span class="mk">&#9660;</span>49</td><td class="c mid" title="Customer Support, Leadership: 70% favourable, 1.5 points below the median department (71.5%)">70</td><td class="c mid" title="Customer Support, Teamwork: 72% favourable, 3.5 points below the median department (75.5%)">72</td><td class="c mid" title="Customer Support, Tools: 73% favourable, 4 points below the median department (77%)">73</td><td class="c mid" title="Customer Support, Purpose: 82% favourable, 1.5 points below the median department (83.5%)">82</td><td class="c mid" title="Customer Support, My manager: 88% favourable, 1.5 points below the median department (89.5%)">88</td></tr>
+<tr><th scope="row">Sales<span class="th">196 respondents</span></th><td class="c mid" title="Sales, Career growth: 49% favourable, 0.5 points below the median department (49.5%)">49</td><td class="c hi1" title="Sales, Pay and recognition: 74% favourable, 9.5 points above the median department (64.5%)">74</td><td class="c mid" title="Sales, Workload: 68% favourable, 0.5 points above the median department (67.5%)">68</td><td class="c mid" title="Sales, Leadership: 71% favourable, 0.5 points below the median department (71.5%)">71</td><td class="c mid" title="Sales, Teamwork: 76% favourable, 0.5 points above the median department (75.5%)">76</td><td class="c mid" title="Sales, Tools: 78% favourable, 1 points above the median department (77%)">78</td><td class="c mid" title="Sales, Purpose: 84% favourable, 0.5 points above the median department (83.5%)">84</td><td class="c mid" title="Sales, My manager: 93% favourable, 3.5 points above the median department (89.5%)">93</td></tr>
+<tr><th scope="row">Marketing<span class="th">88 respondents</span></th><td class="c mid" title="Marketing, Career growth: 51% favourable, 1.5 points above the median department (49.5%)">51</td><td class="c mid" title="Marketing, Pay and recognition: 66% favourable, 1.5 points above the median department (64.5%)">66</td><td class="c mid" title="Marketing, Workload: 68% favourable, 0.5 points above the median department (67.5%)">68</td><td class="c mid" title="Marketing, Leadership: 72% favourable, 0.5 points above the median department (71.5%)">72</td><td class="c mid" title="Marketing, Teamwork: 78% favourable, 2.5 points above the median department (75.5%)">78</td><td class="c mid" title="Marketing, Tools: 78% favourable, 1 points above the median department (77%)">78</td><td class="c mid" title="Marketing, Purpose: 85% favourable, 1.5 points above the median department (83.5%)">85</td><td class="c mid" title="Marketing, My manager: 91% favourable, 1.5 points above the median department (89.5%)">91</td></tr>
+<tr><th scope="row">Finance and Legal<span class="th">72 respondents</span></th><td class="c mid" title="Finance and Legal, Career growth: 50% favourable, 0.5 points above the median department (49.5%)">50</td><td class="c mid" title="Finance and Legal, Pay and recognition: 65% favourable, 0.5 points above the median department (64.5%)">65</td><td class="c mid" title="Finance and Legal, Workload: 67% favourable, 0.5 points below the median department (67.5%)">67</td><td class="c mid" title="Finance and Legal, Leadership: 70% favourable, 1.5 points below the median department (71.5%)">70</td><td class="c mid" title="Finance and Legal, Teamwork: 75% favourable, 0.5 points below the median department (75.5%)">75</td><td class="c mid" title="Finance and Legal, Tools: 77% favourable, level with the median department (77%)">77</td><td class="c mid" title="Finance and Legal, Purpose: 83% favourable, 0.5 points below the median department (83.5%)">83</td><td class="c mid" title="Finance and Legal, My manager: 90% favourable, 0.5 points above the median department (89.5%)">90</td></tr>
+<tr><th scope="row">Product and Design<span class="th">60 respondents</span></th><td class="c mid" title="Product and Design, Career growth: 50% favourable, 0.5 points above the median department (49.5%)">50</td><td class="c mid" title="Product and Design, Pay and recognition: 63% favourable, 1.5 points below the median department (64.5%)">63</td><td class="c mid" title="Product and Design, Workload: 69% favourable, 1.5 points above the median department (67.5%)">69</td><td class="c mid" title="Product and Design, Leadership: 73% favourable, 1.5 points above the median department (71.5%)">73</td><td class="c mid" title="Product and Design, Teamwork: 76% favourable, 0.5 points above the median department (75.5%)">76</td><td class="c mid" title="Product and Design, Tools: 77% favourable, level with the median department (77%)">77</td><td class="c mid" title="Product and Design, Purpose: 85% favourable, 1.5 points above the median department (83.5%)">85</td><td class="c mid" title="Product and Design, My manager: 88% favourable, 1.5 points below the median department (89.5%)">88</td></tr>
+<tr><th scope="row">People<span class="th">44 respondents</span></th><td class="c mid" title="People, Career growth: 54% favourable, 4.5 points above the median department (49.5%)">54</td><td class="c mid" title="People, Pay and recognition: 66% favourable, 1.5 points above the median department (64.5%)">66</td><td class="c mid" title="People, Workload: 68% favourable, 0.5 points above the median department (67.5%)">68</td><td class="c mid" title="People, Leadership: 73% favourable, 1.5 points above the median department (71.5%)">73</td><td class="c mid" title="People, Teamwork: 78% favourable, 2.5 points above the median department (75.5%)">78</td><td class="c mid" title="People, Tools: 76% favourable, 1 points below the median department (77%)">76</td><td class="c mid" title="People, Purpose: 86% favourable, 2.5 points above the median department (83.5%)">86</td><td class="c hi1" title="People, My manager: 95% favourable, 5.5 points above the median department (89.5%)">95</td></tr>
+<tr class="medrow"><th scope="row">Median department</th><td class="c">49.5</td><td class="c">64.5</td><td class="c">67.5</td><td class="c">71.5</td><td class="c">75.5</td><td class="c">77</td><td class="c">83.5</td><td class="c">89.5</td></tr>
+</tbody>
+</table>
+</div>
+<div class="legend">
+<span><i class="sw" style="background:var(--lo2)"></i>&#9660; 10 or more points below the median</span>
+<span><i class="sw" style="background:var(--lo1)"></i>More than 5 below</span>
+<span><i class="sw" style="background:var(--mid)"></i>Within 5</span>
+<span><i class="sw" style="background:var(--hi1)"></i>More than 5 above</span>
+</div>
+</figure>
+<ul class="find">
+<li><strong>Career growth in Engineering (34%) and Customer Support (31%).</strong> The other six departments sit between 48% and 54%. These two departments make up 540 respondents, 42% of everyone who answered. Career growth is the lowest-scoring theme in every department, so this is a company-wide weakness that is much worse in two places.</li>
+<li><strong>Workload in Customer Support (49%).</strong> Every other department is between 63% and 69%. Workload improved across the company this year, which makes Support the exception.</li>
+<li><strong>Tools in Operations (62%).</strong> Every other department is between 73% and 81%.</li>
+<li><strong>Customer Support is the lowest-scoring department on three themes:</strong> career growth, workload, and pay and recognition (59%). Its scores for managers (88%) and purpose (82%) are in line with everyone else.</li>
+</ul>
+<p class="note">We do not have department results for 2025, so this shows where scores are lowest now. It cannot show which departments drove the fall in career growth, or whether the workload and tools gaps are new.</p>
+</section>
+
+<section>
+<h2>What we should do first</h2>
+<p class="sub">These are the People team&rsquo;s recommendations, for the executive team to decide. The survey shows where the problems are and not why, so each one starts with finding out.</p>
+<div class="prio">
+<div class="card">
+<h3>Career growth in Engineering and Customer Support</h3>
+<p>It is the only area that got worse, it holds the lowest scores in the survey, and these two departments are 42% of respondents. Their managers score 89% and 88%, so the problem is more likely to lie in career paths and the promotion process than in the relationship with the manager.</p>
+<p class="lbl">First steps</p>
+<ul>
+<li>Run listening sessions in both departments to learn what changed since last year.</li>
+<li>Ask every manager to hold a development conversation with each person on their team. Only 52% of respondents say they have had one in the last six months, down from 60%, and it is the career question managers can change directly.</li>
+<li>Review how promotion criteria and decisions are explained. Only 44% think promotions are fair, and that result is for the whole company.</li>
+</ul>
+</div>
+<div class="card">
+<h3>Workload in Customer Support</h3>
+<p>Fewer than half of Support respondents (49%) are favourable about workload, at least 14 points behind every other department, in a year when the company as a whole improved.</p>
+<p class="lbl">First step</p>
+<ul><li>Review staffing, shift patterns and contact volumes with Support leadership, and ask the team whether the pressure is the amount of work during hours or being unable to switch off afterwards. This data does not separate the two by department.</li></ul>
+</div>
+<div class="card">
+<h3>Tools in Operations</h3>
+<p>62% of Operations respondents say they have the tools they need, 11 points behind the next-lowest department. With 284 respondents, Operations is the second-largest department.</p>
+<p class="lbl">First step</p>
+<ul><li>Ask Operations teams which tools are holding them back. The survey has one question on tools and does not name them.</li></ul>
+</div>
+</div>
+<div class="two">
+<div class="card"><h3>Keep watching</h3><ul>
+<li>Fair pay, at 55% (up 2). One in five respondents is unfavourable.</li>
+<li>Working with other teams, at 61% (up 3), against 85% for collaboration inside teams.</li>
+</ul></div>
+<div class="card"><h3>Protect</h3><ul>
+<li>Manager scores of 85% or higher in every department.</li>
+<li>The gains in leadership communication and trust, both now around 70%.</li>
+</ul></div>
+</div>
+</section>
+
+<section>
+<h2>Full results by question</h2>
+<p class="sub">All 16 questions, grouped by theme.</p>
+<figure class="card">
+<div class="legend" style="margin:0 0 10px">
+<span><i class="sw" style="background:var(--pos)"></i>Favourable</span>
+<span><i class="sw" style="background:var(--neu)"></i>Neutral</span>
+<span><i class="sw" style="background:var(--neg)"></i>Unfavourable</span>
+</div>
+<div class="scroll">
+<table class="full">
+<thead><tr><th scope="col">Question</th><th scope="col" class="stackc">2026 answers</th><th scope="col" class="n">Favourable</th><th scope="col" class="n">Neutral</th><th scope="col" class="n">Unfavourable</th><th scope="col" class="n y25">Favourable 2025</th><th scope="col" class="n">Change</th></tr></thead>
+<tbody>
+<tr class="grp"><th colspan="7" scope="colgroup">My manager</th></tr>
+<tr><th scope="row">My manager gives me useful feedback</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:86"></i><i class="sn" style="flex:8"></i><i class="su" style="flex:6"></i></span></td><td class="n"><b>86%</b></td><td class="n">8%</td><td class="n">6%</td><td class="n y25">84%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;2</td></tr>
+<tr><th scope="row">My manager cares about my wellbeing</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:88"></i><i class="sn" style="flex:7"></i><i class="su" style="flex:5"></i></span></td><td class="n"><b>88%</b></td><td class="n">7%</td><td class="n">5%</td><td class="n y25">85%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;3</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Purpose</th></tr>
+<tr><th scope="row">I understand how my work contributes to company goals</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:82"></i><i class="sn" style="flex:10"></i><i class="su" style="flex:8"></i></span></td><td class="n"><b>82%</b></td><td class="n">10%</td><td class="n">8%</td><td class="n y25">78%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr><th scope="row">I am proud to work here</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:84"></i><i class="sn" style="flex:9"></i><i class="su" style="flex:7"></i></span></td><td class="n"><b>84%</b></td><td class="n">9%</td><td class="n">7%</td><td class="n y25">80%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Teamwork</th></tr>
+<tr><th scope="row">My team collaborates well</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:85"></i><i class="sn" style="flex:8"></i><i class="su" style="flex:7"></i></span></td><td class="n"><b>85%</b></td><td class="n">8%</td><td class="n">7%</td><td class="n y25">83%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;2</td></tr>
+<tr><th scope="row">Other teams are easy to work with</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:61"></i><i class="sn" style="flex:21"></i><i class="su" style="flex:18"></i></span></td><td class="n"><b>61%</b></td><td class="n">21%</td><td class="n">18%</td><td class="n y25">58%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;3</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Career growth</th></tr>
+<tr><th scope="row">I see a path to advance my career here</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:48"></i><i class="sn" style="flex:29"></i><i class="su" style="flex:23"></i></span></td><td class="n"><b>48%</b></td><td class="n">29%</td><td class="n">23%</td><td class="n y25">59%</td><td class="n delta"><span class="dn">&#9660;</span>&nbsp;11</td></tr>
+<tr><th scope="row">I have had a meaningful development conversation in the last 6 months</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:52"></i><i class="sn" style="flex:26"></i><i class="su" style="flex:22"></i></span></td><td class="n"><b>52%</b></td><td class="n">26%</td><td class="n">22%</td><td class="n y25">60%</td><td class="n delta"><span class="dn">&#9660;</span>&nbsp;8</td></tr>
+<tr><th scope="row">Promotions here are fair</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:44"></i><i class="sn" style="flex:31"></i><i class="su" style="flex:25"></i></span></td><td class="n"><b>44%</b></td><td class="n">31%</td><td class="n">25%</td><td class="n y25">52%</td><td class="n delta"><span class="dn">&#9660;</span>&nbsp;8</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Workload</th></tr>
+<tr><th scope="row">My workload is manageable</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:63"></i><i class="sn" style="flex:20"></i><i class="su" style="flex:17"></i></span></td><td class="n"><b>63%</b></td><td class="n">20%</td><td class="n">17%</td><td class="n y25">57%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;6</td></tr>
+<tr><th scope="row">I can switch off outside working hours</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:66"></i><i class="sn" style="flex:19"></i><i class="su" style="flex:15"></i></span></td><td class="n"><b>66%</b></td><td class="n">19%</td><td class="n">15%</td><td class="n y25">62%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Leadership</th></tr>
+<tr><th scope="row">Senior leaders communicate a clear direction</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:71"></i><i class="sn" style="flex:16"></i><i class="su" style="flex:13"></i></span></td><td class="n"><b>71%</b></td><td class="n">16%</td><td class="n">13%</td><td class="n y25">64%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;7</td></tr>
+<tr><th scope="row">I trust the decisions of senior leadership</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:68"></i><i class="sn" style="flex:18"></i><i class="su" style="flex:14"></i></span></td><td class="n"><b>68%</b></td><td class="n">18%</td><td class="n">14%</td><td class="n y25">63%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;5</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Tools</th></tr>
+<tr><th scope="row">I have the tools I need to do my job well</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:74"></i><i class="sn" style="flex:14"></i><i class="su" style="flex:12"></i></span></td><td class="n"><b>74%</b></td><td class="n">14%</td><td class="n">12%</td><td class="n y25">70%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+<tr class="grp"><th colspan="7" scope="colgroup">Pay and recognition</th></tr>
+<tr><th scope="row">I am paid fairly for the work I do</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:55"></i><i class="sn" style="flex:25"></i><i class="su" style="flex:20"></i></span></td><td class="n"><b>55%</b></td><td class="n">25%</td><td class="n">20%</td><td class="n y25">53%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;2</td></tr>
+<tr><th scope="row">Good work is recognised here</th><td class="stackc" aria-hidden="true"><span class="stack"><i class="sf" style="flex:70"></i><i class="sn" style="flex:16"></i><i class="su" style="flex:14"></i></span></td><td class="n"><b>70%</b></td><td class="n">16%</td><td class="n">14%</td><td class="n y25">66%</td><td class="n delta"><span class="up">&#9650;</span>&nbsp;4</td></tr>
+</tbody>
+</table>
+</div>
+</figure>
+</section>
+
+<section>
+<h2>How to read these results</h2>
+<ul class="notes">
+<li>The survey ran from 1 to 19 September 2026. Favourable = agree or strongly agree on a five-point scale. Results for groups under 10 respondents are suppressed. The smallest department here has 44 respondents, so nothing is suppressed in this report.</li>
+<li>eNPS is the employee Net Promoter Score, which runs from &minus;100 to +100.</li>
+<li>Small departments move more on a handful of answers. For People (44 respondents), Product and Design (60) and Finance and Legal (72), a gap of several points from other departments is not meaningful on its own. The four results highlighted above are in departments of 228 to 312 respondents and are at least 11 points behind every department that is not highlighted.</li>
+<li>The &ldquo;3 points or fewer&rdquo; guide for year-on-year changes assumes a similar number of people answered in 2025.</li>
+<li>Department results are available by theme only, for 2026 only. Theme scores by department and question scores for the whole company are calculated separately and do not average to exactly the same figure, so this report uses question scores for the company picture and department scores only to compare departments with each other.</li>
+</ul>
+</section>
+</main>
+</body>
+</html>

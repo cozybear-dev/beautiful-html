@@ -1,0 +1,18 @@
+{
+  "brief": "03-survey-results",
+  "arm": "skill",
+  "exitCode": 0,
+  "minutes": 3.9,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 37,
+  "costUsd": 1.3301553000000002,
+  "isError": false,
+  "files": [
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 696858,
+  "errors": 0,
+  "warnings": 0,
+  "codes": {}
+}

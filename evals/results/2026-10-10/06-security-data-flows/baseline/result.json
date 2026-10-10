@@ -1,0 +1,25 @@
+{
+  "brief": "06-security-data-flows",
+  "arm": "baseline",
+  "exitCode": 0,
+  "minutes": 8.2,
+  "model": "claude-haiku-5-5, claude-opus-5-5",
+  "turns": 16,
+  "costUsd": 1.4744297,
+  "isError": false,
+  "files": [
+    "build_report.py",
+    "report.html"
+  ],
+  "report": true,
+  "bytes": 39920,
+  "errors": 3,
+  "warnings": 18,
+  "codes": {
+    "missing-guide": 1,
+    "missing-kit": 1,
+    "small-text": 17,
+    "long-lines": 1,
+    "horizontal-overflow": 1
+  }
+}
