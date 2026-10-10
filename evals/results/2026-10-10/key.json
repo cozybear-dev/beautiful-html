@@ -1,0 +1,29 @@
+{
+  "seed": 20261010,
+  "key": {
+    "01-customer-quarterly-review": {
+      "A": "skill",
+      "B": "baseline"
+    },
+    "02-incident-review": {
+      "A": "skill",
+      "B": "baseline"
+    },
+    "03-survey-results": {
+      "A": "baseline",
+      "B": "skill"
+    },
+    "04-experiment-readout": {
+      "A": "baseline",
+      "B": "skill"
+    },
+    "05-sales-pipeline": {
+      "A": "skill",
+      "B": "baseline"
+    },
+    "06-security-data-flows": {
+      "A": "skill",
+      "B": "baseline"
+    }
+  }
+}

@@ -1,0 +1,319 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
+  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
+  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  To apply a brand, override tokens in <style id="bh-overrides">.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill.
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The single-page checkout wins on desktop but not on mobile web: ship it to desktop and tablet, hold mobile</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides"></style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead">
+    <span class="bh-org">Growth team</span>
+    <span class="bh-doc">Experiment readout: CHK-212, single-page checkout</span>
+  </div>
+  <h1>The single-page checkout wins on desktop but not on mobile web: ship it to desktop and tablet, hold mobile</h1>
+  <p class="bh-standfirst">Over four weeks the new checkout turned 3.38% of visitors into orders, against 3.18% for the current one. That is <strong>6.3% more orders per visitor</strong>, and a gap this large is very unlikely to be chance. All of the gain came from desktop and tablet. On mobile web, where the pay button can fall below the fold, the new checkout did no better and probably slightly worse.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Product leadership, Thursday's ship decision</dd></div>
+    <div><dt>Test period</dt><dd>31 August to 27 September 2026</dd></div>
+    <div><dt>Prepared by</dt><dd>Growth team analytics</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Orders per visitor, new checkout</p>
+      <p class="bh-keyfigure-value">3.38<small>%</small></p>
+      <p class="bh-keyfigure-note">3.18% on the current checkout</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Change, all visitors</p>
+      <p class="bh-keyfigure-value">+6.3<small>%</small></p>
+      <p class="bh-keyfigure-note">Likely range +3.4% to +9.4%. Target was +3%</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Change, desktop</p>
+      <p class="bh-keyfigure-value">+11.1<small>%</small></p>
+      <p class="bh-keyfigure-note">Likely range +7.4% to +14.9%</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Change, mobile web</p>
+      <p class="bh-keyfigure-value">−2.3<small>%</small></p>
+      <p class="bh-keyfigure-note">Likely range −5.8% to +1.4%</p>
+    </div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="Did it win?">
+  <h2>The new checkout took more orders on every one of the 28 days</h2>
+  <p>Half of visitors saw the new single-page checkout and half saw the current three-step one. From almost identical traffic, the new checkout took <strong>9,596 orders against 9,029</strong>: 567 more orders and about €31,400 more revenue in four weeks.</p>
+  <aside class="bh-aside">
+    <h3>How the test ran</h3>
+    <p>Visitors were split 50/50 at random: 284,037 saw the new checkout and 284,134 the current one. The split is as even as it should be, and the test ran its full planned four weeks.</p>
+  </aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The new checkout converted better than the current one every day of the test</h3>
+    <p class="bh-figure-sub">Orders per visitor by day, %, 31 August to 27 September 2026. The weekly bumps are weekends</p>
+    <div class="bh-plot" id="fig-daily"></div>
+    <figcaption class="bh-figure-note">Source: daily.csv, CHK-212 experiment export. 568,171 visitors in total.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="How sure?">
+  <h2>We can be confident it is better, but expect about 5%, not 6%</h2>
+  <p>Three things say the win is real. If the two checkouts were truly equal, a gap this size would turn up by chance <strong>fewer than 1 time in 10,000</strong>. The new checkout was ahead on all 28 days, not just on average. And the likely range for the true effect, +3.4% to +9.4%, sits entirely above the +3% the test was designed to detect.</p>
+  <aside class="bh-aside">
+    <h3>What "likely range" means</h3>
+    <p>No test gives one exact answer. The likely range is where the true effect sits with 95% confidence: ranges built this way contain the truth 19 times in 20. A range that includes zero means we cannot tell a gain from a loss.</p>
+  </aside>
+  <p>One caution on size. The lift was 11.6% on day one, fell each day of the first week, then held between 4.4% and 6.3%. That is the usual pattern when something new gets extra attention at first. Counting weeks two to four only, the lift is <strong>+5.3%</strong> (likely range +1.9% to +8.8%). Plan on about 5%, and note that we cannot rule out a settled effect a little under the 3% target.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The lift was largest in week one, then settled at around 5%</h3>
+    <p class="bh-figure-sub">New checkout's orders per visitor relative to the current checkout, by day, % difference</p>
+    <div class="bh-plot" id="fig-lift"></div>
+    <figcaption class="bh-figure-note">Source: daily.csv, 31 August to 27 September 2026. Each of the first seven days is higher than every later day.</figcaption>
+  </figure>
+  <h3>No guardrail was broken</h3>
+  <p>Revenue rose with orders. Baskets were slightly smaller, so revenue per visitor grew a little less than orders did.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Guardrail measures over the four weeks</caption>
+      <thead><tr><th scope="col">Measure</th><th scope="col" class="bh-num">Current</th><th scope="col" class="bh-num">New</th><th scope="col" class="bh-num">Change</th><th scope="col">Reading</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Revenue per visitor</th><td class="bh-num">€2.26</td><td class="bh-num">€2.37</td><td class="bh-num">+4.9%</td><td><span class="bh-status" data-status="good">Better on all 28 days</span></td></tr>
+        <tr><th scope="row">Average order value (for context)</th><td class="bh-num">€71.00</td><td class="bh-num">€70.08</td><td class="bh-num">−1.3%</td><td><span class="bh-status" data-status="warn">Slightly smaller baskets</span></td></tr>
+        <tr><th scope="row">Payment error rate</th><td class="bh-num">1.9%</td><td class="bh-num">2.0%</td><td class="bh-num">+0.1 pt</td><td><span class="bh-status" data-status="warn">Small rise, watch</span></td></tr>
+        <tr><th scope="row">Refund rate</th><td class="bh-num">3.1%</td><td class="bh-num">3.0%</td><td class="bh-num">−0.1 pt</td><td><span class="bh-status" data-status="good">No change</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Payment errors and refunds were supplied as rates only, without the counts behind them, so we cannot say whether a 0.1 point move is real or noise. Neither is large enough to change the decision.</p>
+</section>
+
+<section class="bh-section" data-nav="For everyone?">
+  <h2>The gain is all on desktop and tablet; mobile web did not improve</h2>
+  <p>The answer is not the same for everyone, and device is what separates them. On desktop the new checkout lifted orders per visitor by 11.1%. On mobile web, which is about half of all visitors, it was 2.3% lower. Desktop and tablet together produced 757 more orders than the current checkout; mobile web produced 123 fewer.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Desktop gained clearly; mobile web is the only device where the new checkout was behind</h3>
+    <p class="bh-figure-sub">Change in orders per visitor, new against current checkout, %. Dot: measured change. Line: likely range</p>
+    <div class="bh-plot" id="fig-device"></div>
+    <figcaption class="bh-figure-note">Source: segments.csv, CHK-212 experiment export. A line that crosses zero means we cannot tell a gain from a loss.</figcaption>
+  </figure>
+  <p>How sure is this? Mobile's range runs from −5.8% to +1.4%, so we cannot say for certain that the new checkout is worse there. We can say it is not delivering the desktop gain: the gap between desktop and mobile is far too large to be chance (fewer than 1 in 100,000). Tablet points the same way as desktop, but tablets are 8% of visitors and its range is too wide to be sure alone.</p>
+  <p>The likely cause is already known. On mobile web the single page pushes the pay button below the fold on screens under 700 px tall. We have no split by screen height, so this data cannot prove that is the reason, but it is the obvious suspect and it is fixable.</p>
+  <p>New and returning customers responded alike. Within each device the two groups move in the same direction by a similar amount, so customer type does not change the decision.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Orders per visitor by device and customer type</caption>
+      <thead><tr><th scope="col">Segment</th><th scope="col" class="bh-num">Share of visitors</th><th scope="col" class="bh-num">Current</th><th scope="col" class="bh-num">New</th><th scope="col" class="bh-num">Change</th><th scope="col" class="bh-num">Likely range</th><th scope="col">Reading</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Desktop, new customers</th><td class="bh-num">23%</td><td class="bh-num">2.61%</td><td class="bh-num">2.92%</td><td class="bh-num">+11.8%</td><td class="bh-num">+6.1% to +17.9%</td><td><span class="bh-status" data-status="good">Clear gain</span></td></tr>
+        <tr><th scope="row">Desktop, returning</th><td class="bh-num">17%</td><td class="bh-num">4.95%</td><td class="bh-num">5.45%</td><td class="bh-num">+10.2%</td><td class="bh-num">+5.5% to +15.1%</td><td><span class="bh-status" data-status="good">Clear gain</span></td></tr>
+        <tr><th scope="row">Tablet, new customers</th><td class="bh-num">5%</td><td class="bh-num">2.24%</td><td class="bh-num">2.38%</td><td class="bh-num">+6.1%</td><td class="bh-num">−6.3% to +20.2%</td><td><span class="bh-status" data-status="warn">Ahead, not certain</span></td></tr>
+        <tr><th scope="row">Tablet, returning</th><td class="bh-num">3%</td><td class="bh-num">4.18%</td><td class="bh-num">4.38%</td><td class="bh-num">+4.9%</td><td class="bh-num">−6.5% to +17.6%</td><td><span class="bh-status" data-status="warn">Ahead, not certain</span></td></tr>
+        <tr data-highlight><th scope="row">Mobile web, new customers</th><td class="bh-num">33%</td><td class="bh-num">1.88%</td><td class="bh-num">1.86%</td><td class="bh-num">−1.2%</td><td class="bh-num">−6.3% to +4.2%</td><td><span class="bh-status" data-status="bad">No gain</span></td></tr>
+        <tr data-highlight><th scope="row">Mobile web, returning</th><td class="bh-num">19%</td><td class="bh-num">3.52%</td><td class="bh-num">3.41%</td><td class="bh-num">−3.1%</td><td class="bh-num">−7.9% to +2.0%</td><td><span class="bh-status" data-status="bad">No gain</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bh-notes">
+    <h3>One thing to settle: the device file does not add up to the headline file</h3>
+    <p>The device breakdown counts about 431,000 visitors and 12,800 to 13,400 orders per checkout. The daily file behind the headline counts about 284,000 visitors and 9,000 to 9,600 orders. The two exports are evidently counting differently, and we do not yet know why. Both are evenly split between the checkouts and both show the new one ahead overall (+4.9% in the device file, +6.3% in the daily file), so the device pattern stands. The exact device figures should be confirmed with the data team before they are used to size the rollout.</p>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Recommendation">
+  <h2>Recommendation: ship to desktop and tablet now, fix mobile web and test it again</h2>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Recommendation</p>
+    <h3>Ship the single-page checkout on desktop and tablet. Keep mobile web on the current checkout until the pay button is fixed and re-tested.</h3>
+    <p>Desktop is a clear win at +11.1% (likely range +7.4% to +14.9%) with no guardrail broken. Mobile web is half of our visitors and showed no gain, so shipping there now adds risk and no benefit.</p>
+  </div>
+  <div class="bh-compare">
+    <div><h3>Ship everywhere</h3><p>Captures the desktop gain, but puts half of visitors on a checkout that was 2.3% behind for them, with a known layout fault.</p></div>
+    <div><h3>Recommended: desktop and tablet only</h3><p>Captures all of the measured gain. Mobile web stays as it is today, so nothing is lost while the fix is built.</p></div>
+    <div><h3>Do not ship</h3><p>Gives up a desktop gain we are confident in. Nothing in the results supports this.</p></div>
+  </div>
+  <h3>What happens next</h3>
+  <ol class="bh-timeline">
+    <li data-key><span class="bh-when">Now</span><div><p>Roll out to desktop and tablet</p><p>Tablet is a judgement call: it was ahead but too small to be sure, and the pay button fault is specific to short mobile screens.</p></div></li>
+    <li><span class="bh-when">Before sizing</span><div><p>Reconcile the device file with the daily file</p><p>So the rollout forecast rests on confirmed device figures.</p></div></li>
+    <li><span class="bh-when">Next</span><div><p>Fix the pay button on mobile web, then run a mobile-only test</p><p>Four weeks of mobile traffic pins the effect down to within about ±3.6%.</p></div></li>
+    <li><span class="bh-when">After launch</span><div><p>Watch conversion and payment errors for four weeks</p><p>Forecast on a settled lift of about 5% overall, not the 6.3% headline. The desktop figure probably includes some first-week boost too.</p></div></li>
+  </ol>
+  <div class="bh-notes">
+    <h3>Method</h3>
+    <p>Headline figures use daily.csv: 284,134 visitors and 9,029 orders on the current checkout, 284,037 visitors and 9,596 orders on the new one. Changes are relative differences in orders per visitor. Likely ranges are 95% confidence intervals for that relative difference, and the chance figures come from a two-sided test of two proportions, at the 5% significance level set in the design. Device and customer-type figures use segments.csv. Six segments were examined; the desktop result and the desktop–mobile gap remain far beyond chance after allowing for that. The test ran its planned length and was not stopped early.</p>
+  </div>
+</section>
+
+<footer class="bh-footer">
+  <p>Prepared by the Growth team from the CHK-212 experiment export (design.json, daily.csv, segments.csv), covering 31 August to 27 September 2026. Prepared 10 October 2026.</p>
+</footer>
+
+</main>
+
+<script type="text/csv" id="d-daily">
+date,checkout,orders_per_visitor
+2026-08-31,Current checkout,3.11
+2026-08-31,New checkout,3.47
+2026-09-01,Current checkout,3.15
+2026-09-01,New checkout,3.48
+2026-09-02,Current checkout,3.06
+2026-09-02,New checkout,3.36
+2026-09-03,Current checkout,3.18
+2026-09-03,New checkout,3.47
+2026-09-04,Current checkout,3.07
+2026-09-04,New checkout,3.32
+2026-09-05,Current checkout,3.36
+2026-09-05,New checkout,3.62
+2026-09-06,Current checkout,3.34
+2026-09-06,New checkout,3.57
+2026-09-07,Current checkout,3.03
+2026-09-07,New checkout,3.18
+2026-09-08,Current checkout,3.13
+2026-09-08,New checkout,3.32
+2026-09-09,Current checkout,3.14
+2026-09-09,New checkout,3.29
+2026-09-10,Current checkout,3.07
+2026-09-10,New checkout,3.23
+2026-09-11,Current checkout,3.16
+2026-09-11,New checkout,3.35
+2026-09-12,Current checkout,3.45
+2026-09-12,New checkout,3.63
+2026-09-13,Current checkout,3.34
+2026-09-13,New checkout,3.49
+2026-09-14,Current checkout,3.13
+2026-09-14,New checkout,3.26
+2026-09-15,Current checkout,3.12
+2026-09-15,New checkout,3.28
+2026-09-16,Current checkout,3.06
+2026-09-16,New checkout,3.21
+2026-09-17,Current checkout,3.19
+2026-09-17,New checkout,3.38
+2026-09-18,Current checkout,3.18
+2026-09-18,New checkout,3.35
+2026-09-19,Current checkout,3.31
+2026-09-19,New checkout,3.49
+2026-09-20,Current checkout,3.32
+2026-09-20,New checkout,3.48
+2026-09-21,Current checkout,3.10
+2026-09-21,New checkout,3.25
+2026-09-22,Current checkout,3.10
+2026-09-22,New checkout,3.26
+2026-09-23,Current checkout,3.19
+2026-09-23,New checkout,3.38
+2026-09-24,Current checkout,3.19
+2026-09-24,New checkout,3.39
+2026-09-25,Current checkout,3.17
+2026-09-25,New checkout,3.35
+2026-09-26,Current checkout,3.40
+2026-09-26,New checkout,3.57
+2026-09-27,Current checkout,3.28
+2026-09-27,New checkout,3.45
+</script>
+<script type="text/csv" id="d-lift">
+date,lift
+2026-08-31,11.6
+2026-09-01,10.8
+2026-09-02,9.8
+2026-09-03,9.1
+2026-09-04,8.2
+2026-09-05,7.7
+2026-09-06,6.8
+2026-09-07,4.9
+2026-09-08,6.2
+2026-09-09,4.7
+2026-09-10,5.5
+2026-09-11,6.3
+2026-09-12,5.2
+2026-09-13,4.6
+2026-09-14,4.4
+2026-09-15,5.4
+2026-09-16,4.9
+2026-09-17,6.0
+2026-09-18,5.3
+2026-09-19,5.3
+2026-09-20,4.9
+2026-09-21,4.8
+2026-09-22,5.1
+2026-09-23,6.1
+2026-09-24,6.2
+2026-09-25,5.6
+2026-09-26,5.2
+2026-09-27,5.0
+</script>
+<script type="text/csv" id="d-device">
+device,change,low,high
+Desktop,11.1,7.4,14.9
+Tablet,5.7,-2.9,15.0
+Mobile web,-2.3,-5.8,1.4
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.line('#fig-daily', { data: BH.data('#d-daily'), x: 'date', y: 'orders_per_visitor', series: 'checkout', unit: '%',
+    highlight: 'New checkout', contextLabel: 'Current checkout' });
+
+  BH.line('#fig-lift', { data: BH.data('#d-lift'), x: 'date', y: 'lift', unit: '%', zero: true,
+    annotations: [{ x: '2026-09-07', text: 'Week two onwards: steady near +5%', event: true }] });
+
+  const dev = BH.data('#d-device');
+  const order = dev.map(d => d.device);
+  const isMobile = d => d.device === 'Mobile web';
+  const signed = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(1) + '%';
+  BH.plot('#fig-device', { height: 220, marginLeft: 96, marginRight: 64,
+    x: { label: null, domain: [-10, 20], grid: true, tickFormat: v => signed(v).replace('.0', '') },
+    y: { label: null, domain: order, padding: 0.6 },
+    marks: [
+      Plot.ruleX([0], { stroke: 'var(--bh-ink)' }),
+      Plot.ruleY(dev.filter(d => !isMobile(d)), { y: 'device', x1: 'low', x2: 'high', stroke: 'var(--bh-neutral)', strokeWidth: 3 }),
+      Plot.dot(dev.filter(d => !isMobile(d)), { y: 'device', x: 'change', r: 6, fill: 'var(--bh-neutral)' }),
+      Plot.ruleY(dev.filter(isMobile), { y: 'device', x1: 'low', x2: 'high', stroke: 'var(--bh-accent)', strokeWidth: 3 }),
+      Plot.dot(dev.filter(isMobile), { y: 'device', x: 'change', r: 6, fill: 'var(--bh-accent)' }),
+      Plot.text(dev, { y: 'device', x: 'high', text: d => signed(d.change), dx: 10, textAnchor: 'start', fill: 'var(--bh-ink)' })
+    ] });
+});</script>
+

@@ -1,0 +1,321 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
+  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
+  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  To apply a brand, override tokens in <style id="bh-overrides">.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill.
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engagement rose to 74, but confidence in career growth fell sharply and is lowest in Engineering and Customer Support</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides"></style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead">
+    <span class="bh-org">People team</span>
+    <span class="bh-doc">Employee engagement survey 2026</span>
+  </div>
+  <h1>Engagement rose to 74, but confidence in career growth fell sharply and is lowest in Engineering and Customer Support</h1>
+  <p class="bh-standfirst">Thirteen of the sixteen questions scored higher than last year. The three that fell are all about career growth, by 8 to 11 points, and <strong>only about a third of people in Engineering and Customer Support are favourable on career growth</strong>. We propose starting there.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Executive team, then all people managers</dd></div>
+    <div><dt>Survey dates</dt><dd>1 to 19 September 2026</dd></div>
+    <div><dt>Prepared by</dt><dd>People team</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Engagement index</p>
+      <p class="bh-keyfigure-value">74</p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="up" data-tone="good">3 points</span> from 71 in 2025</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">eNPS</p>
+      <p class="bh-keyfigure-value">24</p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="up" data-tone="good">5 points</span> from 19 in 2025</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Response rate</p>
+      <p class="bh-keyfigure-value">81<small>%</small></p>
+      <p class="bh-keyfigure-note">1,284 of 1,585 people invited</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">See a path to advance here</p>
+      <p class="bh-keyfigure-value">48<small>%</small></p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="bad">11 points</span> from 59% in 2025</p>
+    </div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="What changed">
+  <h2>Most scores improved; every question that fell is about career growth</h2>
+  <p>The largest gains are in leadership and workload. &ldquo;Senior leaders communicate a clear direction&rdquo; rose 7 points to 71%, and &ldquo;My workload is manageable&rdquo; rose 6 points to 63%. Scores for managers were already the highest in the survey and rose again, to 86% and 88%.</p>
+  <p>Career growth moved the other way. Fewer than half of respondents now see a path to advance (48%, down from 59%) or think promotions are fair (44%, down from 52%). About half (52%, down from 60%) have had a meaningful development conversation in the last six months. These are now the three lowest scores in the survey.</p>
+  <aside class="bh-aside">
+    <h3>Reading the scores</h3>
+    <p>Favourable means the person agreed or strongly agreed, on a five-point scale. Changes are in percentage points.</p>
+  </aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Thirteen questions rose by 2 to 7 points; the three career growth questions fell by 8 to 11</h3>
+    <p class="bh-figure-sub">Favourable answers to each question, % of respondents, 2025 and 2026. A filled dot to the left of its ring is a fall. Wording is shortened; the full wording is in the table below.</p>
+    <div class="bh-plot" id="fig-questions"></div>
+    <figcaption class="bh-figure-note">Source: employee engagement survey, September 2026, 1,284 respondents, and the 2025 survey.</figcaption>
+  </figure>
+  <p>On the career growth questions, the people who are not favourable are split between unsure and unhappy: 29% to 31% are neutral on the path to advance and on promotion fairness, and 23% to 25% disagree. Two other scores improved but remain low: &ldquo;I am paid fairly&rdquo; at 55% and &ldquo;Other teams are easy to work with&rdquo; at 61%.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>All sixteen questions, ordered by change since 2025. Share of respondents; change in percentage points.</caption>
+      <thead><tr><th scope="col">Question</th><th scope="col">Theme</th><th scope="col" class="bh-num">Favourable 2026</th><th scope="col" class="bh-num">2025</th><th scope="col" class="bh-num">Change</th><th scope="col" class="bh-num">Neutral</th><th scope="col" class="bh-num">Unfavourable</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Senior leaders communicate a clear direction</th><td>Leadership</td><td class="bh-num"><span class="bh-bar" style="--v:0.71"></span>71%</td><td class="bh-num">64%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">7</span></td><td class="bh-num">16%</td><td class="bh-num">13%</td></tr>
+        <tr><th scope="row">My workload is manageable</th><td>Workload</td><td class="bh-num"><span class="bh-bar" style="--v:0.63"></span>63%</td><td class="bh-num">57%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">6</span></td><td class="bh-num">20%</td><td class="bh-num">17%</td></tr>
+        <tr><th scope="row">I trust the decisions of senior leadership</th><td>Leadership</td><td class="bh-num"><span class="bh-bar" style="--v:0.68"></span>68%</td><td class="bh-num">63%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">5</span></td><td class="bh-num">18%</td><td class="bh-num">14%</td></tr>
+        <tr><th scope="row">I understand how my work contributes to company goals</th><td>Purpose</td><td class="bh-num"><span class="bh-bar" style="--v:0.82"></span>82%</td><td class="bh-num">78%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">4</span></td><td class="bh-num">10%</td><td class="bh-num">8%</td></tr>
+        <tr><th scope="row">I am proud to work here</th><td>Purpose</td><td class="bh-num"><span class="bh-bar" style="--v:0.84"></span>84%</td><td class="bh-num">80%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">4</span></td><td class="bh-num">9%</td><td class="bh-num">7%</td></tr>
+        <tr><th scope="row">I can switch off outside working hours</th><td>Workload</td><td class="bh-num"><span class="bh-bar" style="--v:0.66"></span>66%</td><td class="bh-num">62%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">4</span></td><td class="bh-num">19%</td><td class="bh-num">15%</td></tr>
+        <tr><th scope="row">I have the tools I need to do my job well</th><td>Tools</td><td class="bh-num"><span class="bh-bar" style="--v:0.74"></span>74%</td><td class="bh-num">70%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">4</span></td><td class="bh-num">14%</td><td class="bh-num">12%</td></tr>
+        <tr><th scope="row">Good work is recognised here</th><td>Pay and recognition</td><td class="bh-num"><span class="bh-bar" style="--v:0.70"></span>70%</td><td class="bh-num">66%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">4</span></td><td class="bh-num">16%</td><td class="bh-num">14%</td></tr>
+        <tr><th scope="row">My manager cares about my wellbeing</th><td>My manager</td><td class="bh-num"><span class="bh-bar" style="--v:0.88"></span>88%</td><td class="bh-num">85%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">3</span></td><td class="bh-num">7%</td><td class="bh-num">5%</td></tr>
+        <tr><th scope="row">Other teams are easy to work with</th><td>Teamwork</td><td class="bh-num"><span class="bh-bar" style="--v:0.61"></span>61%</td><td class="bh-num">58%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">3</span></td><td class="bh-num">21%</td><td class="bh-num">18%</td></tr>
+        <tr><th scope="row">My manager gives me useful feedback</th><td>My manager</td><td class="bh-num"><span class="bh-bar" style="--v:0.86"></span>86%</td><td class="bh-num">84%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">2</span></td><td class="bh-num">8%</td><td class="bh-num">6%</td></tr>
+        <tr><th scope="row">My team collaborates well</th><td>Teamwork</td><td class="bh-num"><span class="bh-bar" style="--v:0.85"></span>85%</td><td class="bh-num">83%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">2</span></td><td class="bh-num">8%</td><td class="bh-num">7%</td></tr>
+        <tr><th scope="row">I am paid fairly for the work I do</th><td>Pay and recognition</td><td class="bh-num"><span class="bh-bar" style="--v:0.55"></span>55%</td><td class="bh-num">53%</td><td class="bh-num"><span class="bh-delta" data-dir="up" data-tone="good">2</span></td><td class="bh-num">25%</td><td class="bh-num">20%</td></tr>
+        <tr data-highlight><th scope="row">I have had a meaningful development conversation in the last 6 months</th><td>Career growth</td><td class="bh-num"><span class="bh-bar" style="--v:0.52"></span>52%</td><td class="bh-num">60%</td><td class="bh-num"><span class="bh-delta" data-dir="down" data-tone="bad">8</span></td><td class="bh-num">26%</td><td class="bh-num">22%</td></tr>
+        <tr data-highlight><th scope="row">Promotions here are fair</th><td>Career growth</td><td class="bh-num"><span class="bh-bar" style="--v:0.44"></span>44%</td><td class="bh-num">52%</td><td class="bh-num"><span class="bh-delta" data-dir="down" data-tone="bad">8</span></td><td class="bh-num">31%</td><td class="bh-num">25%</td></tr>
+        <tr data-highlight><th scope="row">I see a path to advance my career here</th><td>Career growth</td><td class="bh-num"><span class="bh-bar" style="--v:0.48"></span>48%</td><td class="bh-num">59%</td><td class="bh-num"><span class="bh-delta" data-dir="down" data-tone="bad">11</span></td><td class="bh-num">29%</td><td class="bh-num">23%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Where">
+  <h2>The low scores sit in three places: career growth in Engineering and Customer Support, workload in Customer Support, tools in Operations</h2>
+  <p>On most themes the eight departments are within a few points of each other. Three results stand well apart from the rest, each in a department of more than 200 respondents.</p>
+  <p>Engineering and Customer Support are 540 of the 1,284 respondents, 42% of the total. Their career growth scores, 34% and 31%, are 14 to 23 points below every other department. No department scores above 54% on this theme, so it is weak everywhere and much weaker in these two.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">About a third of Engineering and Customer Support are favourable on career growth; elsewhere it is about half</h3>
+    <p class="bh-figure-sub">Career growth theme, favourable answers by department, % of respondents</p>
+    <div class="bh-plot" id="fig-career"></div>
+    <figcaption class="bh-figure-note">Source: employee engagement survey, September 2026. Respondents per department range from 44 to 312.</figcaption>
+  </figure>
+  <p>Workload improved across the company, but Customer Support is well behind: 49% favourable, against 63% to 69% in every other department. In Operations, 62% say they have the tools they need, against 73% to 81% elsewhere.</p>
+  <div class="bh-pair bh-wide">
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">Fewer than half of Customer Support find their workload manageable</h3>
+      <p class="bh-figure-sub">Workload theme, favourable answers by department, % of respondents</p>
+      <div class="bh-plot" id="fig-workload"></div>
+      <figcaption class="bh-figure-note">Source: employee engagement survey, September 2026.</figcaption>
+    </figure>
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">Operations is 11 points behind the next department on tools</h3>
+      <p class="bh-figure-sub">Tools theme, favourable answers by department, % of respondents</p>
+      <div class="bh-plot" id="fig-tools"></div>
+      <figcaption class="bh-figure-note">Source: employee engagement survey, September 2026.</figcaption>
+    </figure>
+  </div>
+  <p>Customer Support is the department with the most to fix: it is lowest on career growth, workload and pay and recognition (59%). Managers are a strength everywhere, at 85% to 95%, including in the departments with the lowest scores.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Favourable answers by department and theme, % of respondents, 2026. The four results discussed above are in bold.</caption>
+      <thead><tr><th scope="col">Department</th><th scope="col" class="bh-num">Respondents</th><th scope="col" class="bh-num">My manager</th><th scope="col" class="bh-num">Purpose</th><th scope="col" class="bh-num">Teamwork</th><th scope="col" class="bh-num">Career growth</th><th scope="col" class="bh-num">Workload</th><th scope="col" class="bh-num">Leadership</th><th scope="col" class="bh-num">Tools</th><th scope="col" class="bh-num">Pay and recognition</th></tr></thead>
+      <tbody>
+        <tr data-highlight><th scope="row">Engineering</th><td class="bh-num">312</td><td class="bh-num">89%</td><td class="bh-num">80%</td><td class="bh-num">70%</td><td class="bh-num"><strong>34%</strong></td><td class="bh-num">64%</td><td class="bh-num">70%</td><td class="bh-num">81%</td><td class="bh-num">62%</td></tr>
+        <tr data-highlight><th scope="row">Customer Support</th><td class="bh-num">228</td><td class="bh-num">88%</td><td class="bh-num">82%</td><td class="bh-num">72%</td><td class="bh-num"><strong>31%</strong></td><td class="bh-num"><strong>49%</strong></td><td class="bh-num">70%</td><td class="bh-num">73%</td><td class="bh-num">59%</td></tr>
+        <tr><th scope="row">Sales</th><td class="bh-num">196</td><td class="bh-num">93%</td><td class="bh-num">84%</td><td class="bh-num">76%</td><td class="bh-num">49%</td><td class="bh-num">68%</td><td class="bh-num">71%</td><td class="bh-num">78%</td><td class="bh-num">74%</td></tr>
+        <tr data-highlight><th scope="row">Operations</th><td class="bh-num">284</td><td class="bh-num">85%</td><td class="bh-num">83%</td><td class="bh-num">75%</td><td class="bh-num">48%</td><td class="bh-num">63%</td><td class="bh-num">73%</td><td class="bh-num"><strong>62%</strong></td><td class="bh-num">64%</td></tr>
+        <tr><th scope="row">Marketing</th><td class="bh-num">88</td><td class="bh-num">91%</td><td class="bh-num">85%</td><td class="bh-num">78%</td><td class="bh-num">51%</td><td class="bh-num">68%</td><td class="bh-num">72%</td><td class="bh-num">78%</td><td class="bh-num">66%</td></tr>
+        <tr><th scope="row">Finance and Legal</th><td class="bh-num">72</td><td class="bh-num">90%</td><td class="bh-num">83%</td><td class="bh-num">75%</td><td class="bh-num">50%</td><td class="bh-num">67%</td><td class="bh-num">70%</td><td class="bh-num">77%</td><td class="bh-num">65%</td></tr>
+        <tr><th scope="row">People</th><td class="bh-num">44</td><td class="bh-num">95%</td><td class="bh-num">86%</td><td class="bh-num">78%</td><td class="bh-num">54%</td><td class="bh-num">68%</td><td class="bh-num">73%</td><td class="bh-num">76%</td><td class="bh-num">66%</td></tr>
+        <tr><th scope="row">Product and Design</th><td class="bh-num">60</td><td class="bh-num">88%</td><td class="bh-num">85%</td><td class="bh-num">76%</td><td class="bh-num">50%</td><td class="bh-num">69%</td><td class="bh-num">73%</td><td class="bh-num">77%</td><td class="bh-num">63%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="What to do first">
+  <h2>What we propose to do first</h2>
+  <p>The order follows the size of the gap and the number of people affected. The survey shows where scores are low, not why, so each priority starts by asking the people concerned.</p>
+  <aside class="bh-aside">
+    <h3>For people managers</h3>
+    <p>Manager scores are the highest in the survey. The development conversation is the career growth measure managers control most directly.</p>
+  </aside>
+  <div class="bh-callout">
+    <p class="bh-callout-label">First priority</p>
+    <h3>Career growth, starting in Engineering and Customer Support</h3>
+    <p>It is the only theme that fell, it holds the three lowest scores in the survey, and the two weakest departments are 42% of respondents. The three questions point to three things to fix: whether people can see a path, whether promotion decisions are seen as fair, and whether development conversations happen.</p>
+  </div>
+  <p>For career growth, the first step is listening sessions in Engineering and Customer Support to learn what is behind the scores. Alongside that, check that career paths and promotion criteria exist and are published for every role, and ask every manager to hold a development conversation with each team member: 48% of respondents did not report a meaningful one in the last six months.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Three priorities, in order</caption>
+      <thead><tr><th scope="col">Priority</th><th scope="col">Where</th><th scope="col">Evidence</th><th scope="col">First step</th></tr></thead>
+      <tbody>
+        <tr data-highlight><th scope="row">1. Career growth</th><td>Engineering and Customer Support first, then company-wide</td><td>34% and 31% favourable; 48% to 54% elsewhere. All three questions fell 8 to 11 points.</td><td>Listening sessions; publish career paths and promotion criteria; development conversations for everyone</td></tr>
+        <tr><th scope="row">2. Workload</th><td>Customer Support</td><td>49% favourable, 14 points below the next department</td><td>Review staffing, rotas and demand with Support leaders, together with the career growth review</td></tr>
+        <tr><th scope="row">3. Tools</th><td>Operations</td><td>62% favourable, 11 points below the next department</td><td>Ask Operations teams which tools hold them back; agree fixes with the teams that own those tools</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Two things to watch rather than act on now: pay fairness (55%, up 2 points) and working across teams (61%, up 3 points). Both are low and improving slowly.</p>
+</section>
+
+<section class="bh-section" data-nav="Limits">
+  <h2>What this data cannot tell us</h2>
+  <div class="bh-notes">
+    <h3>Limits</h3>
+    <p><strong>We cannot say where career growth fell.</strong> Department results are for 2026 only. Engineering and Customer Support have the lowest scores now; whether they fell further than others since 2025 is not known from this data.</p>
+    <p><strong>Theme scores by department are not directly comparable with question scores.</strong> Weighting the department career growth scores by respondents gives 42%, while the three career growth questions average 48% company-wide. The theme calculation should be confirmed before the two are quoted side by side. This report compares departments only with each other.</p>
+    <p><strong>Small departments move easily.</strong> In People (44 respondents) or Product and Design (60), one person is about two percentage points. Differences of a few points between the smaller departments should not be read as real.</p>
+    <p><strong>Nineteen per cent did not respond.</strong> 301 of the 1,585 people invited did not answer, and we do not know how their views differ. Last year's response rate is not in the data.</p>
+    <h3>Method</h3>
+    <p>Favourable is agree or strongly agree on a five-point scale. Results for groups of fewer than 10 respondents are suppressed; every department here has at least 44 respondents.</p>
+  </div>
+</section>
+
+<footer class="bh-footer">
+  <p>Prepared by the People team from the employee engagement survey 2026, fielded 1 to 19 September 2026, with 2025 results for comparison. Prepared 10 October 2026.</p>
+</footer>
+
+</main>
+
+<script type="text/csv" id="d-questions">
+question,y2025,y2026
+Leaders communicate clear direction,64,71
+Workload is manageable,57,63
+Trust senior leadership decisions,63,68
+Understand how my work contributes,78,82
+Proud to work here,80,84
+Can switch off outside work,62,66
+Have the tools I need,70,74
+Good work is recognised,66,70
+Manager cares about my wellbeing,85,88
+Other teams easy to work with,58,61
+Manager gives useful feedback,84,86
+My team collaborates well,83,85
+Paid fairly,53,55
+Had a development conversation,60,52
+Promotions are fair,52,44
+See a path to advance my career,59,48
+</script>
+<script type="text/csv" id="d-dept">
+department,respondents,theme,favourable_pct
+Engineering,312,My manager,89
+Engineering,312,Purpose,80
+Engineering,312,Teamwork,70
+Engineering,312,Career growth,34
+Engineering,312,Workload,64
+Engineering,312,Leadership,70
+Engineering,312,Tools,81
+Engineering,312,Pay and recognition,62
+Customer Support,228,My manager,88
+Customer Support,228,Purpose,82
+Customer Support,228,Teamwork,72
+Customer Support,228,Career growth,31
+Customer Support,228,Workload,49
+Customer Support,228,Leadership,70
+Customer Support,228,Tools,73
+Customer Support,228,Pay and recognition,59
+Sales,196,My manager,93
+Sales,196,Purpose,84
+Sales,196,Teamwork,76
+Sales,196,Career growth,49
+Sales,196,Workload,68
+Sales,196,Leadership,71
+Sales,196,Tools,78
+Sales,196,Pay and recognition,74
+Operations,284,My manager,85
+Operations,284,Purpose,83
+Operations,284,Teamwork,75
+Operations,284,Career growth,48
+Operations,284,Workload,63
+Operations,284,Leadership,73
+Operations,284,Tools,62
+Operations,284,Pay and recognition,64
+Marketing,88,My manager,91
+Marketing,88,Purpose,85
+Marketing,88,Teamwork,78
+Marketing,88,Career growth,51
+Marketing,88,Workload,68
+Marketing,88,Leadership,72
+Marketing,88,Tools,78
+Marketing,88,Pay and recognition,66
+Finance and Legal,72,My manager,90
+Finance and Legal,72,Purpose,83
+Finance and Legal,72,Teamwork,75
+Finance and Legal,72,Career growth,50
+Finance and Legal,72,Workload,67
+Finance and Legal,72,Leadership,70
+Finance and Legal,72,Tools,77
+Finance and Legal,72,Pay and recognition,65
+People,44,My manager,95
+People,44,Purpose,86
+People,44,Teamwork,78
+People,44,Career growth,54
+People,44,Workload,68
+People,44,Leadership,73
+People,44,Tools,76
+People,44,Pay and recognition,66
+Product and Design,60,My manager,88
+Product and Design,60,Purpose,85
+Product and Design,60,Teamwork,76
+Product and Design,60,Career growth,50
+Product and Design,60,Workload,69
+Product and Design,60,Leadership,73
+Product and Design,60,Tools,77
+Product and Design,60,Pay and recognition,63
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.dot('#fig-questions', { data: BH.data('#d-questions'), x: 'question', y: 'y2025', y2: 'y2026', unit: '%',
+    names: { y: '2025', y2: '2026' }, sort: 'none',
+    highlight: ['See a path to advance my career', 'Had a development conversation', 'Promotions are fair'] });
+  const dept = BH.data('#d-dept');
+  const theme = t => dept.filter(r => r.theme === t);
+  BH.bar('#fig-career', { data: theme('Career growth'), x: 'department', y: 'favourable_pct', unit: '%',
+    highlight: ['Engineering', 'Customer Support'] });
+  BH.bar('#fig-workload', { data: theme('Workload'), x: 'department', y: 'favourable_pct', unit: '%',
+    highlight: ['Customer Support'] });
+  BH.bar('#fig-tools', { data: theme('Tools'), x: 'department', y: 'favourable_pct', unit: '%',
+    highlight: ['Operations'] });
+});</script>
+

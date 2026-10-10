@@ -1,0 +1,138 @@
+[
+  {
+    "brief": "01-customer-quarterly-review",
+    "arm": "skill",
+    "errors": 0,
+    "warnings": 0,
+    "minutes": 3.2,
+    "kb": 672,
+    "findings": {}
+  },
+  {
+    "brief": "01-customer-quarterly-review",
+    "arm": "baseline",
+    "errors": 1,
+    "warnings": 20,
+    "minutes": 4,
+    "kb": 34,
+    "findings": {
+      "low-contrast": 1,
+      "small-text": 15,
+      "long-lines": 1,
+      "label-overlap": 4
+    }
+  },
+  {
+    "brief": "02-incident-review",
+    "arm": "skill",
+    "errors": 0,
+    "warnings": 0,
+    "minutes": 3.8,
+    "kb": 755,
+    "findings": {}
+  },
+  {
+    "brief": "02-incident-review",
+    "arm": "baseline",
+    "errors": 0,
+    "warnings": 19,
+    "minutes": 6.8,
+    "kb": 66,
+    "findings": {
+      "small-text": 16,
+      "clipped-text": 1,
+      "long-lines": 1,
+      "heading-skip": 1
+    }
+  },
+  {
+    "brief": "03-survey-results",
+    "arm": "baseline",
+    "errors": 0,
+    "warnings": 10,
+    "minutes": 5.1,
+    "kb": 37,
+    "findings": {
+      "small-text": 8,
+      "long-lines": 1,
+      "figure-no-title": 1
+    }
+  },
+  {
+    "brief": "03-survey-results",
+    "arm": "skill",
+    "errors": 0,
+    "warnings": 0,
+    "minutes": 3.9,
+    "kb": 681,
+    "findings": {}
+  },
+  {
+    "brief": "04-experiment-readout",
+    "arm": "baseline",
+    "errors": 13,
+    "warnings": 13,
+    "minutes": 4.8,
+    "kb": 25,
+    "findings": {
+      "low-contrast": 13,
+      "small-text": 11,
+      "long-lines": 2
+    }
+  },
+  {
+    "brief": "04-experiment-readout",
+    "arm": "skill",
+    "errors": 0,
+    "warnings": 0,
+    "minutes": 4.4,
+    "kb": 676,
+    "findings": {}
+  },
+  {
+    "brief": "05-sales-pipeline",
+    "arm": "skill",
+    "errors": 0,
+    "warnings": 3,
+    "minutes": 3.8,
+    "kb": 677,
+    "findings": {
+      "small-text": 3
+    }
+  },
+  {
+    "brief": "05-sales-pipeline",
+    "arm": "baseline",
+    "errors": 6,
+    "warnings": 18,
+    "minutes": 6.5,
+    "kb": 49,
+    "findings": {
+      "low-contrast": 6,
+      "small-text": 16,
+      "long-lines": 2
+    }
+  },
+  {
+    "brief": "06-security-data-flows",
+    "arm": "skill",
+    "errors": 0,
+    "warnings": 0,
+    "minutes": 4.5,
+    "kb": 759,
+    "findings": {}
+  },
+  {
+    "brief": "06-security-data-flows",
+    "arm": "baseline",
+    "errors": 1,
+    "warnings": 18,
+    "minutes": 8.2,
+    "kb": 39,
+    "findings": {
+      "small-text": 17,
+      "long-lines": 1,
+      "horizontal-overflow": 1
+    }
+  }
+]

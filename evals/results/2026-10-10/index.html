@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>With and without the skill: a blind comparison</title><style>*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:#15181d;background:#f3f4f6}
+main{max-width:1700px;margin:0 auto;padding:28px 24px 80px}h1{font-size:24px;margin:0 0 6px}h2{font-size:19px;margin:44px 0 12px}
+p{margin:0 0 10px;max-width:80ch;color:#48515e}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.side{background:#fff;border:1px solid #d5d9e0;min-width:0}.side header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 14px;border-bottom:1px solid #d5d9e0}
+.side header b{font-size:20px}.side img{display:block;width:100%;height:auto;border-bottom:1px solid #e6e9ee}.side img.phone{width:38%;margin:12px auto;border:1px solid #e6e9ee}
+.truth{display:none;padding:10px 14px;font-size:14px;color:#15181d;border-top:1px solid #d5d9e0}body.revealed .truth{display:block}
+button{font:inherit;padding:8px 16px;border:1px solid #15181d;background:#15181d;color:#fff;border-radius:4px;cursor:pointer}a{color:#1d3cc0}
+@media(max-width:900px){.pair{grid-template-columns:1fr}}</style></head><body><main>
+<h1>With and without the skill: a blind comparison</h1>
+<p>Each brief was run twice through the same agent: once with nothing installed, once with the beautiful-html skill. The two reports are shown as A and B in a random order. Decide which you would rather send, then press Reveal.</p>
+<p>"Open the report" needs the full report file. Baseline reports are in this folder. Reports made with the skill are kept as their content part only; run <code>node evals/run.mjs --arm skill</code> to produce them again, or join a <code>content.html</code> to the kit.</p>
+<p><button type="button" onclick="document.body.classList.toggle('revealed')">Reveal which is which</button></p>
+<h2>01-customer-quarterly-review</h2><div class="pair"><div class="side"><header><b>A</b><a href="01-customer-quarterly-review/skill/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report A, first two screens" src="shots/01-customer-quarterly-review-skill.jpg">
+<div class="truth"><strong>With the skill</strong>: 0 error(s), 0 warning(s) from the checker; 672 KB; 3.2 min.</div></div><div class="side"><header><b>B</b><a href="01-customer-quarterly-review/baseline/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report B, first two screens" src="shots/01-customer-quarterly-review-baseline.jpg">
+<div class="truth"><strong>Without the skill</strong>: 1 error(s), 20 warning(s) from the checker; 34 KB; 4 min. Findings: low-contrast ×1, small-text ×15, long-lines ×1, label-overlap ×4.</div></div></div>
+<h2>02-incident-review</h2><div class="pair"><div class="side"><header><b>A</b><a href="02-incident-review/skill/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report A, first two screens" src="shots/02-incident-review-skill.jpg">
+<div class="truth"><strong>With the skill</strong>: 0 error(s), 0 warning(s) from the checker; 755 KB; 3.8 min.</div></div><div class="side"><header><b>B</b><a href="02-incident-review/baseline/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report B, first two screens" src="shots/02-incident-review-baseline.jpg">
+<div class="truth"><strong>Without the skill</strong>: 0 error(s), 19 warning(s) from the checker; 66 KB; 6.8 min. Findings: small-text ×16, clipped-text ×1, long-lines ×1, heading-skip ×1.</div></div></div>
+<h2>03-survey-results</h2><div class="pair"><div class="side"><header><b>A</b><a href="03-survey-results/baseline/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report A, first two screens" src="shots/03-survey-results-baseline.jpg">
+<div class="truth"><strong>Without the skill</strong>: 0 error(s), 10 warning(s) from the checker; 37 KB; 5.1 min. Findings: small-text ×8, long-lines ×1, figure-no-title ×1.</div></div><div class="side"><header><b>B</b><a href="03-survey-results/skill/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report B, first two screens" src="shots/03-survey-results-skill.jpg">
+<div class="truth"><strong>With the skill</strong>: 0 error(s), 0 warning(s) from the checker; 681 KB; 3.9 min.</div></div></div>
+<h2>04-experiment-readout</h2><div class="pair"><div class="side"><header><b>A</b><a href="04-experiment-readout/baseline/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report A, first two screens" src="shots/04-experiment-readout-baseline.jpg">
+<div class="truth"><strong>Without the skill</strong>: 13 error(s), 13 warning(s) from the checker; 25 KB; 4.8 min. Findings: low-contrast ×13, small-text ×11, long-lines ×2.</div></div><div class="side"><header><b>B</b><a href="04-experiment-readout/skill/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report B, first two screens" src="shots/04-experiment-readout-skill.jpg">
+<div class="truth"><strong>With the skill</strong>: 0 error(s), 0 warning(s) from the checker; 676 KB; 4.4 min.</div></div></div>
+<h2>05-sales-pipeline</h2><div class="pair"><div class="side"><header><b>A</b><a href="05-sales-pipeline/skill/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report A, first two screens" src="shots/05-sales-pipeline-skill.jpg">
+<div class="truth"><strong>With the skill</strong>: 0 error(s), 3 warning(s) from the checker; 677 KB; 3.8 min. Findings: small-text ×3.</div></div><div class="side"><header><b>B</b><a href="05-sales-pipeline/baseline/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report B, first two screens" src="shots/05-sales-pipeline-baseline.jpg">
+<div class="truth"><strong>Without the skill</strong>: 6 error(s), 18 warning(s) from the checker; 49 KB; 6.5 min. Findings: low-contrast ×6, small-text ×16, long-lines ×2.</div></div></div>
+<h2>06-security-data-flows</h2><div class="pair"><div class="side"><header><b>A</b><a href="06-security-data-flows/skill/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report A, first two screens" src="shots/06-security-data-flows-skill.jpg">
+<div class="truth"><strong>With the skill</strong>: 0 error(s), 0 warning(s) from the checker; 759 KB; 4.5 min.</div></div><div class="side"><header><b>B</b><a href="06-security-data-flows/baseline/report.html">Open the report</a></header>
+<img loading="lazy" alt="Report B, first two screens" src="shots/06-security-data-flows-baseline.jpg">
+<div class="truth"><strong>Without the skill</strong>: 1 error(s), 18 warning(s) from the checker; 39 KB; 8.2 min. Findings: small-text ×17, long-lines ×1, horizontal-overflow ×1.</div></div></div>
+</main></body></html>

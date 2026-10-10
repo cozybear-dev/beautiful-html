@@ -1,0 +1,305 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
+  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
+  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  To apply a brand, override tokens in <style id="bh-overrides">.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill.
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Q3 closed 9% under target because proposals stopped converting to negotiation</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* Brand and per-report token overrides. Usually empty. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead">
+    <span class="bh-org">Revenue Operations</span>
+    <span class="bh-doc">Quarterly pipeline review, Q3 2026</span>
+  </div>
+  <h1>Q3 closed 9% under target because proposals stopped converting to negotiation</h1>
+  <p class="bh-standfirst">Only <strong>38% of proposals reached negotiation, down from 52% in Q2</strong>, while every other stage held steady. What did close came mostly from two EMEA reps, and the largest open pipelines for Q4 sit with the lowest win rates, in North America.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Chief Revenue Officer and regional sales managers</dd></div>
+    <div><dt>Period</dt><dd>July to September 2026</dd></div>
+    <div><dt>Prepared by</dt><dd>Revenue Operations</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Closed-won bookings</p>
+      <p class="bh-keyfigure-value">€4.65<small>M</small></p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="bad">€452k</span> under the €5.10M target</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Proposal to negotiation</p>
+      <p class="bh-keyfigure-value">38<small>%</small></p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="bad">14 points</span> from 52% in Q2</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Closed-won from two reps</p>
+      <p class="bh-keyfigure-value">45<small>%</small></p>
+      <p class="bh-keyfigure-note">€2.08M of €4.60M, from two of nine reps</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">North America quota attainment</p>
+      <p class="bh-keyfigure-value">64<small>%</small></p>
+      <p class="bh-keyfigure-note">while holding 43% of open pipeline</p>
+    </div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="Bookings">
+  <h2>Bookings missed target three months running, and the gap widened each month</h2>
+  <p>Closed-won was within a few points of target in every quarter until this one: 102% in Q4 2025, 103% in Q1, 99% in Q2, then 91% in Q3. September, at 88% of target, was the weakest month of the last twelve.</p>
+  <p>The shortfall is not a shortage of pipeline. New pipeline created in Q3 was €18.2M, 7% more than in Q2, and September's €6.7M was the highest month on record in this export. More went in and less came out.</p>
+  <aside class="bh-aside">
+    <h3>Two yardsticks</h3>
+    <p>Rep quotas for Q3 add up to €4.60M. The bookings target was €5.10M. Reps as a group closed exactly 100% of quota while the company closed 91% of target.</p>
+  </aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Closed-won fell away from target in July, August and September</h3>
+    <p class="bh-figure-sub">Monthly closed-won bookings against target, € thousand, October 2025 to September 2026</p>
+    <div class="bh-plot" id="fig-bookings"></div>
+    <figcaption class="bh-figure-note">Source: monthly_bookings.csv, 12 months to September 2026.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="The leak">
+  <h2>The leak is at the proposal stage, and it is new this quarter</h2>
+  <p>Of 268 deals that reached proposal in Q3, 102 moved on to negotiation. 131 were lost and 35 have sat for more than 60 days. The proposals lost were worth €6.1M, more than the €4.6M won in the whole quarter.</p>
+  <p>Lead disqualification is the widest ribbon below, but it is not the problem: 41% of leads qualified, the same as in every recent quarter.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">More deals were lost or stalled at proposal than moved on to negotiation</h3>
+    <p class="bh-figure-sub">Number of deals moving between stages, Q3 2026</p>
+    <div class="bh-plot" id="fig-flow"></div>
+    <figcaption class="bh-figure-note">Source: stage_flow_q3.csv. "Lost" combines losses at the qualified, proposal and negotiation stages; the highlighted ribbons are the two proposal-stage exits.</figcaption>
+  </figure>
+  <p>Three of the four conversion rates have moved by no more than two points in a year. Proposal to negotiation fell 14 points in one quarter.</p>
+  <aside class="bh-aside">
+    <h3>What the drop is worth</h3>
+    <p>At Q2's 52%, 139 proposals would have reached negotiation, 37 more than did. At Q3's 70% close rate and €65k average won deal, that is about 26 wins and €1.7M. An estimate: not all would have closed inside the quarter.</p>
+  </aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Proposal-to-negotiation conversion dropped to 38% while every other stage held</h3>
+    <p class="bh-figure-sub">Stage-to-stage conversion by quarter, % of deals</p>
+    <div class="bh-plot" id="fig-conv"></div>
+    <figcaption class="bh-figure-note">Source: stage_conversion_by_quarter.csv, Q4 2025 to Q3 2026.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Why">
+  <h2>Price and silence account for two-thirds of the proposals we lost</h2>
+  <p>47 of the 131 lost proposals were priced above the buyer's approved budget, and 38 ended with no decision. Add the 35 deals stalled for more than 60 days and 73 proposals simply stopped moving, more than were lost on price.</p>
+  <p>Losses to Corvid (21) and security reviews that did not finish in time (14) are smaller, but both are specific and addressable.</p>
+  <aside class="bh-aside">
+    <h3>What we cannot say yet</h3>
+    <p>Loss reasons were exported for Q3 only. We cannot show which reason grew when conversion fell; that needs the same export for Q2.</p>
+  </aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Budget and no-decision losses outnumber every other reason combined</h3>
+    <p class="bh-figure-sub">Deals lost at the proposal stage by recorded reason, Q3 2026</p>
+    <div class="bh-plot" id="fig-loss"></div>
+    <figcaption class="bh-figure-note">Source: loss_reasons_proposal_stage_q3.csv, 131 deals. Stalled deals are not included.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Concentration">
+  <h2>Two EMEA reps closed 45% of the quarter, and Q4 pipeline sits where win rates are lowest</h2>
+  <p>L. Brandt and A. Okafor closed €2.08M between them, at 244% and 156% of quota. EMEA as a whole delivered 58% of closed-won from 43% of the quota. Without those two reps, the other seven closed 71% of their combined quota.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Two of nine reps closed almost half of Q3 bookings</h3>
+    <p class="bh-figure-sub">Closed-won by rep, € thousand, Q3 2026</p>
+    <div class="bh-plot" id="fig-reps"></div>
+    <figcaption class="bh-figure-note">Source: by_rep_q3.csv. Total closed-won across reps: €4.60M.</figcaption>
+  </figure>
+  <p>Open pipeline is concentrated the other way. North America's three reps hold €4.6M of the €10.7M open, the three largest books on the team, with win rates of 15% to 25% and the longest sales cycles, 59 to 71 days. Weighted by each rep's Q3 win rate, North America's 43% of open pipeline is closer to 30% of what is likely to close.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The three largest open pipelines belong to reps who win one deal in four or fewer</h3>
+    <p class="bh-figure-sub">Each dot is one rep: Q3 win rate against open pipeline at quarter end. North America highlighted</p>
+    <div class="bh-plot" id="fig-scatter"></div>
+    <figcaption class="bh-figure-note">Source: by_rep_q3.csv, Q3 2026.</figcaption>
+  </figure>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Quota, closed-won and open pipeline by region, Q3 2026, € thousand</caption>
+      <thead><tr><th scope="col">Region</th><th scope="col" class="bh-num">Reps</th><th scope="col" class="bh-num">Quota</th><th scope="col" class="bh-num">Closed-won</th><th scope="col" class="bh-num">Attainment</th><th scope="col" class="bh-num">Open pipeline</th><th scope="col" class="bh-num">Share of open pipeline</th><th scope="col" class="bh-num">Win rate, range</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">EMEA</th><td class="bh-num">4</td><td class="bh-num">2,000</td><td class="bh-num">2,685</td><td class="bh-num">134%</td><td class="bh-num">4,325</td><td class="bh-num">41%</td><td class="bh-num">14–48%</td></tr>
+        <tr data-highlight><th scope="row">North America</th><td class="bh-num">3</td><td class="bh-num">1,760</td><td class="bh-num">1,125</td><td class="bh-num">64%</td><td class="bh-num">4,594</td><td class="bh-num">43%</td><td class="bh-num">15–25%</td></tr>
+        <tr><th scope="row">APAC</th><td class="bh-num">2</td><td class="bh-num">840</td><td class="bh-num">790</td><td class="bh-num">94%</td><td class="bh-num">1,744</td><td class="bh-num">16%</td><td class="bh-num">28–29%</td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">All regions</th><td class="bh-num">9</td><td class="bh-num">4,600</td><td class="bh-num">4,600</td><td class="bh-num">100%</td><td class="bh-num">10,663</td><td class="bh-num">100%</td><td class="bh-num">14–48%</td></tr></tfoot>
+    </table>
+  </div>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Each rep's quarter, ordered by quota attainment, Q3 2026, € thousand</caption>
+      <thead><tr><th scope="col">Rep</th><th scope="col">Region</th><th scope="col" class="bh-num">Quota</th><th scope="col" class="bh-num">Closed-won</th><th scope="col" class="bh-num">Attainment</th><th scope="col" class="bh-num">Open pipeline</th><th scope="col" class="bh-num">Win rate</th><th scope="col" class="bh-num">Cycle, days</th><th scope="col">Against quota</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">L. Brandt</th><td>EMEA</td><td class="bh-num">520</td><td class="bh-num">1,268</td><td class="bh-num"><span class="bh-bar" style="--v:.976"></span>244%</td><td class="bh-num">1,191</td><td class="bh-num">48%</td><td class="bh-num">36</td><td><span class="bh-status" data-status="good">Over</span></td></tr>
+        <tr><th scope="row">A. Okafor</th><td>EMEA</td><td class="bh-num">520</td><td class="bh-num">812</td><td class="bh-num"><span class="bh-bar" style="--v:.624"></span>156%</td><td class="bh-num">1,121</td><td class="bh-num">47%</td><td class="bh-num">41</td><td><span class="bh-status" data-status="good">Over</span></td></tr>
+        <tr><th scope="row">S. Marchetti</th><td>EMEA</td><td class="bh-num">480</td><td class="bh-num">505</td><td class="bh-num"><span class="bh-bar" style="--v:.42"></span>105%</td><td class="bh-num">1,010</td><td class="bh-num">32%</td><td class="bh-num">52</td><td><span class="bh-status" data-status="good">Over</span></td></tr>
+        <tr><th scope="row">K. Tanaka</th><td>APAC</td><td class="bh-num">420</td><td class="bh-num">402</td><td class="bh-num"><span class="bh-bar" style="--v:.384"></span>96%</td><td class="bh-num">885</td><td class="bh-num">29%</td><td class="bh-num">47</td><td><span class="bh-status" data-status="warn">Just under</span></td></tr>
+        <tr><th scope="row">P. Iyer</th><td>APAC</td><td class="bh-num">420</td><td class="bh-num">388</td><td class="bh-num"><span class="bh-bar" style="--v:.368"></span>92%</td><td class="bh-num">859</td><td class="bh-num">28%</td><td class="bh-num">49</td><td><span class="bh-status" data-status="warn">Just under</span></td></tr>
+        <tr><th scope="row">T. Nguyen</th><td>North America</td><td class="bh-num">560</td><td class="bh-num">471</td><td class="bh-num"><span class="bh-bar" style="--v:.336"></span>84%</td><td class="bh-num">1,478</td><td class="bh-num">25%</td><td class="bh-num">59</td><td><span class="bh-status" data-status="warn">Just under</span></td></tr>
+        <tr><th scope="row">J. Castillo</th><td>North America</td><td class="bh-num">600</td><td class="bh-num">356</td><td class="bh-num"><span class="bh-bar" style="--v:.236"></span>59%</td><td class="bh-num">1,649</td><td class="bh-num">18%</td><td class="bh-num">71</td><td><span class="bh-status" data-status="bad">Well under</span></td></tr>
+        <tr><th scope="row">M. Reyes</th><td>North America</td><td class="bh-num">600</td><td class="bh-num">298</td><td class="bh-num"><span class="bh-bar" style="--v:.2"></span>50%</td><td class="bh-num">1,467</td><td class="bh-num">15%</td><td class="bh-num">68</td><td><span class="bh-status" data-status="bad">Well under</span></td></tr>
+        <tr><th scope="row">D. Hughes</th><td>EMEA</td><td class="bh-num">480</td><td class="bh-num">100</td><td class="bh-num"><span class="bh-bar" style="--v:.084"></span>21%</td><td class="bh-num">1,003</td><td class="bh-num">14%</td><td class="bh-num">44</td><td><span class="bh-status" data-status="bad">Well under</span></td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">All reps</th><td></td><td class="bh-num">4,600</td><td class="bh-num">4,600</td><td class="bh-num">100%</td><td class="bh-num">10,663</td><td></td><td></td><td></td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Q4 fixes">
+  <h2>What to fix in Q4: the proposal stage first, then where the pipeline sits</h2>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Priority</p>
+    <h3>Get proposal-to-negotiation back towards 52%</h3>
+    <p>It is the only stage that moved, and it moved 14 points. Recovering it is worth roughly 37 more deals in negotiation a quarter, several times the €452k Q3 shortfall. The three actions below are proposals for discussion in the review.</p>
+  </div>
+  <div class="bh-compare">
+    <div><h3>Confirm budget before the proposal</h3><p>47 proposals were priced above an approved budget the buyer already had. Make a confirmed budget figure a condition of moving a deal to proposal, and route exceptions through pricing approval.</p></div>
+    <div><h3>Work the deals that went quiet</h3><p>35 proposals worth €1.7M are stalled past 60 days and still open. Review each in October: re-engage or close out. Then inspect every proposal with no buyer activity at 30 days.</p></div>
+    <div><h3>Inspect North America's €4.6M</h3><p>The largest books carry the lowest win rates. Go through open pipeline deal by deal with the regional manager before it is counted in the Q4 forecast.</p></div>
+  </div>
+  <p>To reduce reliance on two reps, find out what Brandt and Okafor do differently at proposal (they win 47–48% of deals in 36–41 days) and apply it elsewhere. Rep quotas and the bookings target should also be aligned: they differ by €500k, so the team can hit quota and the company still miss.</p>
+  <p>Two smaller items: start security reviews before the proposal goes out (14 deals were lost because the review did not finish in time), and give reps a position against Corvid (21 losses).</p>
+  <div class="bh-notes">
+    <h3>Method and open questions</h3>
+    <p>All figures come from the five Q3 exports and are in euros. Conversion rates are by deal count. Regional and per-rep attainment is closed-won divided by quota. The win-rate-weighted view of open pipeline multiplies each rep's open pipeline by their Q3 win rate; it is a rough comparison, not a forecast.</p>
+    <p>The monthly bookings export gives Q3 closed-won as €4,648k; the rep export and the stage flow give €4,600k. The €48k difference is not explained by these files. Loss reasons for earlier quarters and the reason D. Hughes is at 21% of quota (ramping, territory or performance) are not in the data.</p>
+  </div>
+</section>
+
+<footer class="bh-footer">
+  <p>Prepared by Revenue Operations from the Q3 2026 pipeline exports for the quarterly sales review, October 2026. The data behind each chart is under "Show the data".</p>
+</footer>
+
+</main>
+
+<script type="text/csv" id="d-bookings">
+month,target_eur_k,closed_won_eur_k,new_pipeline_eur_k
+2025-10,1500,1529,5478
+2025-11,1520,1506,5659
+2025-12,1540,1606,5457
+2026-01,1560,1646,5603
+2026-02,1580,1548,5722
+2026-03,1600,1689,5959
+2026-04,1620,1555,5663
+2026-05,1640,1550,5842
+2026-06,1660,1766,5550
+2026-07,1680,1632,5592
+2026-08,1700,1509,5999
+2026-09,1720,1507,6655
+</script>
+<script type="text/csv" id="d-flow">
+from_stage,to_stage,deals,value_eur_m
+Lead,Qualified,412,18.6
+Lead,Disqualified,596,21.4
+Qualified,Proposal,268,14.1
+Qualified,Lost,144,4.5
+Proposal,Negotiation,102,6.3
+Proposal,Lost,131,6.1
+Proposal,Stalled over 60 days,35,1.7
+Negotiation,Won,71,4.6
+Negotiation,Lost,31,1.7
+</script>
+<script type="text/csv" id="d-conv">
+quarter,lead_to_qualified_pct,qualified_to_proposal_pct,proposal_to_negotiation_pct,negotiation_to_won_pct
+2025-Q4,40,64,51,68
+2026-Q1,41,66,53,70
+2026-Q2,42,65,52,69
+2026-Q3,41,65,38,70
+</script>
+<script type="text/csv" id="d-loss">
+reason,deals
+Price above approved budget,47
+No decision / went quiet,38
+Lost to competitor (Corvid),21
+Security review not passed in time,14
+Champion left the company,7
+Other,4
+</script>
+<script type="text/csv" id="d-reps">
+rep,region,quota_eur_k,closed_won_eur_k,open_pipeline_eur_k,win_rate_pct,avg_sales_cycle_days
+A. Okafor,EMEA,520,812,1121,47,41
+L. Brandt,EMEA,520,1268,1191,48,36
+S. Marchetti,EMEA,480,505,1010,32,52
+J. Castillo,North America,600,356,1649,18,71
+M. Reyes,North America,600,298,1467,15,68
+T. Nguyen,North America,560,471,1478,25,59
+P. Iyer,APAC,420,388,859,28,49
+K. Tanaka,APAC,420,402,885,29,47
+D. Hughes,EMEA,480,100,1003,14,44
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  const bookings = BH.data('#d-bookings').flatMap(r => [
+    { month: r.month, measure: 'Target', eur_k: r.target_eur_k },
+    { month: r.month, measure: 'Closed-won', eur_k: r.closed_won_eur_k },
+  ]);
+  BH.line('#fig-bookings', { data: bookings, x: 'month', y: 'eur_k', series: 'measure', unit: 'k',
+    highlight: 'Closed-won', contextLabel: 'Target' });
+
+  BH.sankey('#fig-flow', { unit: 'deals', height: 340, highlight: ['Proposal>Lost', 'Proposal>Stalled over 60 days'],
+    links: BH.data('#d-flow').map(r => ({ source: r.from_stage, target: r.to_stage, value: r.deals })) });
+
+  const stages = { lead_to_qualified_pct: 'Lead to qualified', qualified_to_proposal_pct: 'Qualified to proposal',
+    proposal_to_negotiation_pct: 'Proposal to negotiation', negotiation_to_won_pct: 'Negotiation to won' };
+  const conv = BH.data('#d-conv').flatMap(r => Object.keys(stages).map(k => (
+    { quarter: String(r.quarter).replace('-', ' '), stage: stages[k], pct: r[k] })));
+  BH.line('#fig-conv', { data: conv, x: 'quarter', y: 'pct', series: 'stage', unit: '%',
+    highlight: 'Proposal to negotiation', contextLabel: 'Other stages', zero: true });
+
+  BH.bar('#fig-loss', { data: BH.data('#d-loss'), x: 'reason', y: 'deals', unit: 'deals', sort: 'none',
+    highlight: ['Price above approved budget', 'No decision / went quiet'] });
+
+  const reps = BH.data('#d-reps');
+  BH.bar('#fig-reps', { data: reps, x: 'rep', y: 'closed_won_eur_k', unit: 'k', highlight: ['L. Brandt', 'A. Okafor'] });
+  BH.scatter('#fig-scatter', { data: reps, x: 'win_rate_pct', y: 'open_pipeline_eur_k', label: 'rep',
+    xLabel: 'Win rate', xUnit: '%', yLabel: 'Open pipeline', unit: 'k',
+    highlight: ['J. Castillo', 'M. Reyes', 'T. Nguyen'] });
+});</script>
+

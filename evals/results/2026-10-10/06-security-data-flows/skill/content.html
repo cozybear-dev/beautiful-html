@@ -1,0 +1,222 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
+  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
+  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  To apply a brand, override tokens in <style id="bh-overrides">.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill.
+-->
+<html lang="en-GB" data-bh-direction="narrative" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer data is encrypted in transit on 16 of 17 connections; the one exception is internal and is due to be closed by 30 November 2026</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* Brand and per-report token overrides. Usually empty. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead"><span class="bh-org">Vendor security review</span><span class="bh-doc">Customer data flows, October 2026</span></div>
+  <h1>Customer data is encrypted in transit on 16 of 17 connections; the one exception is internal and is due to be closed by 30 November 2026</h1>
+  <p class="bh-standfirst">Fourteen systems touch customer data and seventeen connections join them. Sixteen of those connections use TLS 1.2 or 1.3. <strong>One, a nightly export of pseudonymised data from the primary database to the reporting warehouse, uses unencrypted FTP with a shared password</strong> inside the private network. This document shows every system, every connection and that gap in full.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Customer security review team</dd></div>
+    <div><dt>Position as at</dt><dd>10 October 2026</dd></div>
+    <div><dt>Prepared by</dt><dd>Solutions engineering</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Connections encrypted in transit</p><p class="bh-keyfigure-value">16<small>of 17</small></p><p class="bh-keyfigure-note">7 on TLS 1.3, 9 on TLS 1.2, 1 unencrypted</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Known gaps</p><p class="bh-keyfigure-value">1</p><p class="bh-keyfigure-note">Medium risk; fix due 30 November 2026</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Data stores encrypted at rest</p><p class="bh-keyfigure-value">4<small>of 4</small></p><p class="bh-keyfigure-note">AES-256, keys in a managed KMS</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Subprocessors</p><p class="bh-keyfigure-value">2</p><p class="bh-keyfigure-note">Both process in the EU</p></div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="The whole path">
+  <h2>Inside our network, customer data is stored only in the data zone, and one connection there is not encrypted</h2>
+  <p>A request leaves the customer’s browser, passes the CDN and web application firewall and then the load balancer at the edge, and reaches the web application or the API service. The API service writes customer records to the primary database and uploaded documents to document storage. Both are in the data zone.</p>
+  <aside class="bh-aside"><h3>How to read the figure</h3><p>Each frame is a network zone. Shape shows what a system is: a cylinder stores data, cut corners mark a gateway. The label on each arrow is the encryption on that connection. Use the arrow buttons to follow the data one stage at a time.</p></aside>
+  <p>Work that does not have to finish within the request, such as sending email and updating the search index, goes through a job queue to background workers. The search index and the reporting warehouse hold pseudonymised data only. Three systems are outside our network: the identity provider used for single sign-on, the email provider and the log platform. Figure 2 shows what is sent to each.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">From the browser to storage, every connection but the nightly reporting export is encrypted</h3>
+    <p class="bh-figure-sub">The 11 systems in the path from the browser to storage, by network zone, and the 13 connections between them, labelled with encryption in transit</p>
+    <div class="bh-plot" id="fig-all"></div>
+    <figcaption class="bh-figure-note">Source: system inventory and connection register, as at 10 October 2026. The line under a system’s name is the data it holds; systems without one store no customer data. Dashed arrows are queued work. The four connections to third parties are in Figure 2.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="The known gap">
+  <h2>One internal connection is not encrypted, and it is scheduled for replacement</h2>
+  <p>Each night the primary database exports data to the reporting warehouse. That export runs over FTP on port 21, with no encryption in transit, and authenticates with a shared password. It is the only one of the seventeen connections that is not encrypted, and the only one that uses a shared password.</p>
+  <p>Two things limit the exposure. The export contains pseudonymised data, not the customer records themselves. And both systems are in the data zone, so the connection stays inside the private network. We rate the risk as medium. The connection does not meet the standard of the other sixteen, and we are replacing it.</p>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Known gap</p>
+    <h3>The nightly export from the primary database to the reporting warehouse uses unencrypted FTP with a shared password</h3>
+    <p>Risk: medium. Remediation: replace the export with TLS-encrypted managed replication. Due: 30 November 2026. Owner: Analytics team.</p>
+  </div>
+  <div class="bh-compare">
+    <div><h3>Today</h3><p>FTP on port 21. No encryption in transit. Shared password. One export a night of pseudonymised data, inside the private network.</p></div>
+    <div><h3>Planned, due 30 November 2026</h3><p>Managed replication encrypted with TLS, in place of the FTP export. The Analytics team owns the work.</p></div>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Each connection">
+  <h2>Each of the other sixteen connections is encrypted with TLS and authenticated</h2>
+  <p>The table lists all seventeen connections in the order data travels. Seven use TLS 1.3 on port 443: the two edge connections, single sign-on, document storage, email and both log connections. The other nine, into and within the application and data zones, use TLS 1.2.</p>
+  <aside class="bh-aside"><h3>Authentication</h3><p>Connections from the CDN to the load balancer and from the load balancer into the application zone use mutual TLS. Access to the primary database and document storage is by IAM role. The search index, the email provider and the log platform are called with API keys.</p></aside>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>All 17 connections that carry customer data: zones crossed, data, protocol, protection and daily volume</caption>
+      <thead><tr><th scope="col">Connection</th><th scope="col">Zones</th><th scope="col">Data carried</th><th scope="col">Protocol</th><th scope="col">Encryption in transit</th><th scope="col">Authentication</th><th scope="col" class="bh-num">Requests a day</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">Customer browser → CDN and WAF</th><td>Internet → Edge</td><td>Page requests, form data</td><td>HTTPS, port 443</td><td><span class="bh-status" data-status="good">TLS 1.3</span></td><td>Session cookie</td><td class="bh-num"><span class="bh-bar" style="--v:0.462"></span>2,400,000</td></tr>
+      <tr><th scope="row">CDN and WAF → Load balancer</th><td>Edge</td><td>Filtered requests</td><td>HTTPS, port 443</td><td><span class="bh-status" data-status="good">TLS 1.3</span></td><td>mTLS</td><td class="bh-num"><span class="bh-bar" style="--v:0.404"></span>2,100,000</td></tr>
+      <tr><th scope="row">Load balancer → Web application</th><td>Edge → Application</td><td>Page requests</td><td>HTTPS, port 8443</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>mTLS</td><td class="bh-num"><span class="bh-bar" style="--v:0.173"></span>900,000</td></tr>
+      <tr><th scope="row">Load balancer → API service</th><td>Edge → Application</td><td>API requests</td><td>HTTPS, port 8443</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>mTLS + JWT</td><td class="bh-num"><span class="bh-bar" style="--v:0.231"></span>1,200,000</td></tr>
+      <tr><th scope="row">Web application → Identity provider (SSO)</th><td>Application → Third party</td><td>SAML / OIDC sign-in</td><td>HTTPS, port 443</td><td><span class="bh-status" data-status="good">TLS 1.3</span></td><td>Signed assertions</td><td class="bh-num"><span class="bh-bar" style="--v:0.008"></span>42,000</td></tr>
+      <tr><th scope="row">Web application → API service</th><td>Application</td><td>API requests</td><td>HTTPS, port 8443</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>JWT</td><td class="bh-num"><span class="bh-bar" style="--v:0.146"></span>760,000</td></tr>
+      <tr><th scope="row">API service → Primary database</th><td>Application → Data</td><td>Customer records</td><td>PostgreSQL, port 5432</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>IAM role</td><td class="bh-num"><span class="bh-bar" style="--v:0.750"></span>3,900,000</td></tr>
+      <tr><th scope="row">API service → Document storage</th><td>Application → Data</td><td>Uploaded documents</td><td>HTTPS, port 443</td><td><span class="bh-status" data-status="good">TLS 1.3</span></td><td>IAM role</td><td class="bh-num"><span class="bh-bar" style="--v:0.012"></span>61,000</td></tr>
+      <tr><th scope="row">API service → Search index</th><td>Application → Data</td><td>Search queries</td><td>HTTPS, port 9243</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>API key</td><td class="bh-num"><span class="bh-bar" style="--v:0.104"></span>540,000</td></tr>
+      <tr><th scope="row">API service → Job queue</th><td>Application</td><td>Job messages</td><td>AMQPS, port 5671</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>Service account</td><td class="bh-num"><span class="bh-bar" style="--v:0.073"></span>380,000</td></tr>
+      <tr><th scope="row">Job queue → Background workers</th><td>Application</td><td>Job messages</td><td>AMQPS, port 5671</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>Service account</td><td class="bh-num"><span class="bh-bar" style="--v:0.073"></span>380,000</td></tr>
+      <tr><th scope="row">Background workers → Primary database</th><td>Application → Data</td><td>Customer records</td><td>PostgreSQL, port 5432</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>IAM role</td><td class="bh-num"><span class="bh-bar" style="--v:0.158"></span>820,000</td></tr>
+      <tr><th scope="row">Background workers → Email provider</th><td>Application → Third party</td><td>Recipient email address, message body</td><td>HTTPS, port 443</td><td><span class="bh-status" data-status="good">TLS 1.3</span></td><td>API key</td><td class="bh-num"><span class="bh-bar" style="--v:0.018"></span>96,000</td></tr>
+      <tr><th scope="row">Background workers → Search index</th><td>Application → Data</td><td>Index updates (pseudonymised)</td><td>HTTPS, port 9243</td><td><span class="bh-status" data-status="good">TLS 1.2</span></td><td>API key</td><td class="bh-num"><span class="bh-bar" style="--v:0.040"></span>210,000</td></tr>
+      <tr data-highlight><th scope="row">Primary database → Reporting warehouse</th><td>Data</td><td>Nightly export (pseudonymised)</td><td>FTP, port 21</td><td><span class="bh-status" data-status="bad">None</span></td><td>Shared password</td><td class="bh-num"><span class="bh-bar" style="--v:0.000"></span>1</td></tr>
+      <tr><th scope="row">API service → Log platform</th><td>Application → Third party</td><td>Application logs (scrubbed)</td><td>HTTPS, port 443</td><td><span class="bh-status" data-status="good">TLS 1.3</span></td><td>API key</td><td class="bh-num"><span class="bh-bar" style="--v:1.000"></span>5,200,000</td></tr>
+      <tr><th scope="row">Background workers → Log platform</th><td>Application → Third party</td><td>Application logs (scrubbed)</td><td>HTTPS, port 443</td><td><span class="bh-status" data-status="good">TLS 1.3</span></td><td>API key</td><td class="bh-num"><span class="bh-bar" style="--v:0.212"></span>1,100,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Third parties">
+  <h2>Four connections leave our network, and one of them carries personal data to a subprocessor</h2>
+  <p>Background workers send the recipient’s email address and the message body to the email provider, Sendwell Inc., which delivers transactional email. The API service and the workers send application logs to the log platform, Logline Ltd.; the logs are scrubbed and contain no personal data. Both subprocessors process in the EU.</p>
+  <p>The fourth connection is sign-in. The web application exchanges SAML or OIDC messages with the identity provider, which is either the customer’s own or Okta. Credentials are held by the identity provider; none of our systems is recorded as storing them.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">All four connections to third parties use TLS 1.3</h3>
+    <p class="bh-figure-sub">Systems that send data outside our network, the third party that receives it, and what is sent</p>
+    <div class="bh-plot" id="fig-ext"></div>
+    <figcaption class="bh-figure-note">Source: connection register and subprocessor list, as at 10 October 2026. Authentication: signed assertions to the identity provider; API keys to the email provider and the log platform.</figcaption>
+  </figure>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Subprocessors</caption>
+      <thead><tr><th scope="col">Subprocessor</th><th scope="col">Purpose</th><th scope="col">Data it receives</th><th scope="col">Where it processes</th><th scope="col" class="bh-num">Requests a day</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Sendwell Inc.</th><td>Transactional email</td><td>Email address, message body</td><td>EU</td><td class="bh-num">96,000</td></tr>
+        <tr><th scope="row">Logline Ltd.</th><td>Log storage</td><td>Scrubbed application logs</td><td>EU</td><td class="bh-num">6,300,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Storage">
+  <h2>Stored customer data is encrypted with AES-256 and kept in the EU</h2>
+  <p>Four systems of ours store customer data: the primary database, document storage, the search index and the reporting warehouse. All four are encrypted at rest with AES-256. Keys are held in a managed key management service and rotated yearly.</p>
+  <p>All production systems run in the EU, in Frankfurt and Dublin. The edge systems and the web application store no customer data; the API service, the background workers and the job queue handle personal data only while it is in transit.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>All 14 systems that touch customer data, by zone</caption>
+      <thead><tr><th scope="col">System</th><th scope="col">Zone</th><th scope="col">Type</th><th scope="col">Operated by</th><th scope="col">Data held</th><th scope="col">Encryption at rest</th></tr></thead>
+      <tbody>
+      <tr><th scope="row">Customer browser</th><td>Internet</td><td>Client</td><td>Customer</td><td>Personal data</td><td>–</td></tr>
+      <tr><th scope="row">CDN and WAF</th><td>Edge</td><td>Gateway</td><td>Platform team</td><td>None stored</td><td>–</td></tr>
+      <tr><th scope="row">Load balancer</th><td>Edge</td><td>Gateway</td><td>Platform team</td><td>None stored</td><td>–</td></tr>
+      <tr><th scope="row">API service</th><td>Application</td><td>Service</td><td>Core team</td><td>Personal data in transit</td><td>–</td></tr>
+      <tr><th scope="row">Web application</th><td>Application</td><td>Service</td><td>Core team</td><td>None stored</td><td>–</td></tr>
+      <tr><th scope="row">Background workers</th><td>Application</td><td>Service</td><td>Core team</td><td>Personal data in transit</td><td>–</td></tr>
+      <tr><th scope="row">Job queue</th><td>Application</td><td>Queue</td><td>Platform team</td><td>Personal data in transit</td><td>–</td></tr>
+      <tr><th scope="row">Primary database</th><td>Data</td><td>Data store</td><td>Data team</td><td>Personal data</td><td>AES-256</td></tr>
+      <tr><th scope="row">Document storage</th><td>Data</td><td>Data store</td><td>Data team</td><td>Customer documents</td><td>AES-256</td></tr>
+      <tr><th scope="row">Search index</th><td>Data</td><td>Data store</td><td>Data team</td><td>Pseudonymised</td><td>AES-256</td></tr>
+      <tr><th scope="row">Reporting warehouse</th><td>Data</td><td>Data store</td><td>Analytics team</td><td>Pseudonymised</td><td>AES-256</td></tr>
+      <tr><th scope="row">Identity provider (SSO)</th><td>Third party</td><td>External service</td><td>Customer or Okta</td><td>Credentials</td><td>–</td></tr>
+      <tr><th scope="row">Email provider</th><td>Third party</td><td>External service</td><td>Sendwell Inc.</td><td>Email addresses</td><td>–</td></tr>
+      <tr><th scope="row">Log platform</th><td>Third party</td><td>External service</td><td>Logline Ltd.</td><td>No personal data (scrubbed)</td><td>–</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bh-notes">
+    <h3>What the encryption-at-rest column covers</h3>
+    <p>The AES-256 statement applies to the four data stores we operate. A dash means the system is not one of them: it stores no customer data, handles it only in transit, or is operated by a third party under its own controls.</p>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Assurance">
+  <h2>ISO 27001 and SOC 2 Type II are in place, and no critical or high penetration test findings are open</h2>
+  <p>We hold two certifications and commission penetration testing. The most recent results are below.</p>
+  <div class="bh-compare">
+    <div><h3>ISO 27001</h3><p>Certified in 2025.</p></div>
+    <div><h3>SOC 2 Type II</h3><p>Report for the period ending 30 June 2026.</p></div>
+    <div><h3>Penetration test</h3><p>Last performed on 14 July 2026. No critical or high findings are open.</p></div>
+  </div>
+</section>
+
+<footer class="bh-footer">
+  <p>Prepared by Solutions engineering from the system inventory, the connection register and the security controls record, as at 10 October 2026. Daily volumes are as recorded in the connection register.</p>
+</footer>
+
+</main>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.flow('#fig-all', {
+    zones: [{"id": "internet", "label": "Internet"}, {"id": "edge", "label": "Edge"}, {"id": "app", "label": "Application"}, {"id": "data", "label": "Data"}],
+    nodes: [{"id": "browser", "label": "Customer browser", "kind": "person", "zone": "internet", "sub": "personal data"}, {"id": "cdn", "label": "CDN and WAF", "kind": "gateway", "zone": "edge"}, {"id": "lb", "label": "Load balancer", "kind": "gateway", "zone": "edge"}, {"id": "api", "label": "API service", "kind": "service", "zone": "app"}, {"id": "web", "label": "Web application", "kind": "service", "zone": "app"}, {"id": "worker", "label": "Background workers", "kind": "service", "zone": "app"}, {"id": "queue", "label": "Job queue", "kind": "queue", "zone": "app"}, {"id": "db", "label": "Primary database", "kind": "store", "zone": "data", "sub": "personal data"}, {"id": "files", "label": "Document storage", "kind": "store", "zone": "data", "sub": "customer documents"}, {"id": "search", "label": "Search index", "kind": "store", "zone": "data", "sub": "pseudonymised"}, {"id": "warehouse", "label": "Reporting warehouse", "kind": "store", "zone": "data", "sub": "pseudonymised"}],
+    edges: [{"from": "browser", "to": "cdn", "label": "TLS 1.3"}, {"from": "cdn", "to": "lb", "label": "TLS 1.3"}, {"from": "lb", "to": "web", "label": "TLS 1.2"}, {"from": "lb", "to": "api", "label": "TLS 1.2"}, {"from": "web", "to": "api", "label": "TLS 1.2"}, {"from": "api", "to": "db", "label": "TLS 1.2"}, {"from": "api", "to": "files", "label": "TLS 1.3"}, {"from": "api", "to": "search", "label": "TLS 1.2"}, {"from": "api", "to": "queue", "label": "TLS 1.2", "kind": "async"}, {"from": "queue", "to": "worker", "label": "TLS 1.2", "kind": "async"}, {"from": "worker", "to": "db", "label": "TLS 1.2"}, {"from": "worker", "to": "search", "label": "TLS 1.2"}, {"from": "db", "to": "warehouse", "label": "FTP, not encrypted", "kind": "risk"}],
+    overview: 'The whole path. The connection marked at risk is the one that is not encrypted. Step through to follow the data from the browser.',
+    steps: [
+      { title: '1. A request reaches the application.', text: 'TLS 1.3 from the browser to the CDN and WAF and on to the load balancer. TLS 1.2 with mutual TLS into the application zone; API calls also carry a JWT.', nodes: ['browser', 'cdn', 'lb', 'web', 'api'], edges: ['browser>cdn', 'cdn>lb', 'lb>web', 'lb>api', 'web>api'] },
+      { title: '2. Data is stored.', text: 'The API service writes customer records to the primary database and documents to document storage, both by IAM role, and queries the search index with an API key.', nodes: ['api', 'db', 'files', 'search'], edges: ['api>db', 'api>files', 'api>search'] },
+      { title: '3. Background work.', text: 'Jobs pass through the queue to the workers over AMQPS with service accounts. Workers read and write customer records and send pseudonymised updates to the search index.', nodes: ['api', 'queue', 'worker', 'db', 'search'], edges: ['api>queue', 'queue>worker', 'worker>db', 'worker>search'] },
+      { title: '4. The nightly reporting export.', text: 'Pseudonymised data goes from the primary database to the reporting warehouse by FTP, unencrypted, with a shared password. This is the known gap.', nodes: ['db', 'warehouse'], edges: ['db>warehouse'] },
+    ],
+  });
+  BH.flow('#fig-ext', {
+    zones: [{ id: 'app', label: 'Application' }, { id: 'third', label: 'Third party' }],
+    nodes: [{"id": "web", "label": "Web application", "kind": "service", "zone": "app"}, {"id": "api", "label": "API service", "kind": "service", "zone": "app"}, {"id": "worker", "label": "Background workers", "kind": "service", "zone": "app"}, {"id": "idp", "label": "Identity provider", "kind": "external", "zone": "third", "sub": "customer’s own, or Okta"}, {"id": "mail", "label": "Email provider", "kind": "external", "zone": "third", "sub": "Sendwell Inc., EU"}, {"id": "logs", "label": "Log platform", "kind": "external", "zone": "third", "sub": "Logline Ltd., EU"}],
+    edges: [{"from": "web", "to": "idp", "label": "sign-in, SAML / OIDC"}, {"from": "worker", "to": "mail", "label": "email address, message body"}, {"from": "api", "to": "logs", "label": "scrubbed logs"}, {"from": "worker", "to": "logs", "label": "scrubbed logs"}],
+    highlight: ['worker>mail'], highlightLabel: 'Personal data to a subprocessor',
+  });
+});</script>
+

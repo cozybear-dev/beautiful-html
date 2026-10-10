@@ -1,0 +1,260 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
+  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
+  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  To apply a brand, override tokens in <style id="bh-overrides">.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill.
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active use rose 21% in Q3, and two teams hold most of the seats still unused</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides"></style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead">
+    <span class="bh-org">Routewise</span>
+    <span class="bh-doc">Quarterly business review, Q3 2026</span>
+  </div>
+  <h1>Active use rose 21% in Q3, and two teams hold most of the seats still unused</h1>
+  <p class="bh-standfirst">Northwind had <strong>538 people using Routewise in September</strong>, up from 446 in June and 332 in April, before the onboarding programme. Warehouse Ops and Finance use fewer than half of their seats each week, and we propose to onboard both before the December renewal.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Northwind Logistics</dd></div>
+    <div><dt>Period</dt><dd>July to September 2026</dd></div>
+    <div><dt>Prepared by</dt><dd>Routewise Customer Success</dd></div>
+    <div><dt>Review meeting</dt><dd>21 October 2026</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Monthly active users</p>
+      <p class="bh-keyfigure-value">538 <span id="spark-users"></span></p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="up" data-tone="good">21%</span> since June (446)</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Seats used in the month</p>
+      <p class="bh-keyfigure-value">83<small>%</small></p>
+      <p class="bh-keyfigure-note">538 of 650 seats; 69% in June</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">First response, median</p>
+      <p class="bh-keyfigure-value">2.6<small>hours</small></p>
+      <p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="good">2.5 hours</span> since June (5.1)</p>
+    </div>
+    <div class="bh-keyfigure">
+      <p class="bh-keyfigure-label">Support satisfaction</p>
+      <p class="bh-keyfigure-value">95<small>%</small></p>
+      <p class="bh-keyfigure-note">from 90% in June</p>
+    </div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="Usage">
+  <h2>More of your people use Routewise, and they use it more often</h2>
+  <p>Monthly active users were flat at 300 to 330 from October to April. The onboarding programme ran in May 2026, and active use has risen every month since: 474 in July, 514 in August, 538 in September. That is 206 more people than in April.</p>
+  <aside class="bh-aside">
+    <h3>Monthly and weekly</h3>
+    <p>This section counts people active at least once in a calendar month. The team figures further down count people active in a week, which is a stricter test and gives lower numbers.</p>
+  </aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Active users have risen every month since the May onboarding programme</h3>
+    <p class="bh-figure-sub">Monthly active users, October 2025 to September 2026</p>
+    <div class="bh-plot" id="fig-users"></div>
+    <figcaption class="bh-figure-note">Source: Routewise product analytics. Licensed seats: 650 throughout.</figcaption>
+  </figure>
+  <p>The new users are not signing in once and leaving. Sessions per active user rose from 17 a month in April to 21 in June and stayed there through the quarter, so total sessions grew 36% on Q2, to 32,394. API calls reached 962,000 in the quarter, up 16% on Q2. They were already growing before May, so we do not credit that rise to onboarding.</p>
+  <div class="bh-pair bh-wide">
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">Sessions per user rose from 17 to 21</h3>
+      <p class="bh-figure-sub">Sessions per monthly active user</p>
+      <div class="bh-plot" id="fig-sessions"></div>
+      <figcaption class="bh-figure-note">Source: Routewise product analytics, October 2025 to September 2026.</figcaption>
+    </figure>
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">API calls have nearly doubled in a year</h3>
+      <p class="bh-figure-sub">API calls per month, thousands</p>
+      <div class="bh-plot" id="fig-api"></div>
+      <figcaption class="bh-figure-note">Source: Routewise product analytics, October 2025 to September 2026.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Teams">
+  <h2>Warehouse Ops and Finance are not yet getting value from their seats</h2>
+  <p>Five of the seven teams have more than 70% of their seats in use each week. Warehouse Ops and Finance do not. Together they hold 214 seats, a third of the contract, and use 85 of them in a typical week. That is 129 of the 199 seats that go unused each week.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Two teams use fewer than half of their seats each week</h3>
+    <p class="bh-figure-sub">Weekly active users as a share of the team's seats, %</p>
+    <div class="bh-plot" id="fig-teams"></div>
+    <figcaption class="bh-figure-note">Source: Routewise product analytics, September 2026.</figcaption>
+  </figure>
+  <p>The same two teams have barely started with Route Planner: 18% adoption in Warehouse Ops and 11% in Finance, against 78% in Dispatch. Customer Service is a second, smaller gap. Its seats are well used, but only about half the team has adopted Route Planner.</p>
+  <aside class="bh-aside">
+    <h3>What we cannot show</h3>
+    <p>We hold team figures for September only, so this report cannot say how each team moved after the May programme. We will track teams monthly from October.</p>
+  </aside>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Seats, weekly use and Route Planner adoption by team, September 2026</caption>
+      <thead><tr><th scope="col">Team</th><th scope="col" class="bh-num">Seats</th><th scope="col" class="bh-num">Weekly active</th><th scope="col" class="bh-num">Seats unused</th><th scope="col" class="bh-num">Share in use</th><th scope="col" class="bh-num">Route Planner</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Dispatch</th><td class="bh-num">140</td><td class="bh-num">127</td><td class="bh-num">13</td><td class="bh-num"><span class="bh-bar" style="--v:.91"></span>91%</td><td class="bh-num">78%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr><th scope="row">Management</th><td class="bh-num">32</td><td class="bh-num">28</td><td class="bh-num">4</td><td class="bh-num"><span class="bh-bar" style="--v:.88"></span>88%</td><td class="bh-num">35%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr><th scope="row">Fleet Planning</th><td class="bh-num">96</td><td class="bh-num">81</td><td class="bh-num">15</td><td class="bh-num"><span class="bh-bar" style="--v:.84"></span>84%</td><td class="bh-num">71%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr><th scope="row">Customer Service</th><td class="bh-num">120</td><td class="bh-num">95</td><td class="bh-num">25</td><td class="bh-num"><span class="bh-bar" style="--v:.79"></span>79%</td><td class="bh-num">52%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr><th scope="row">Procurement</th><td class="bh-num">48</td><td class="bh-num">35</td><td class="bh-num">13</td><td class="bh-num"><span class="bh-bar" style="--v:.73"></span>73%</td><td class="bh-num">44%</td><td><span class="bh-status" data-status="good">On track</span></td></tr>
+        <tr data-highlight><th scope="row">Warehouse Ops</th><td class="bh-num">150</td><td class="bh-num">61</td><td class="bh-num">89</td><td class="bh-num"><span class="bh-bar" style="--v:.41"></span>41%</td><td class="bh-num">18%</td><td><span class="bh-status" data-status="warn">Needs onboarding</span></td></tr>
+        <tr data-highlight><th scope="row">Finance</th><td class="bh-num">64</td><td class="bh-num">24</td><td class="bh-num">40</td><td class="bh-num"><span class="bh-bar" style="--v:.38"></span>38%</td><td class="bh-num">11%</td><td><span class="bh-status" data-status="warn">Needs onboarding</span></td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">All teams</th><td class="bh-num">650</td><td class="bh-num">451</td><td class="bh-num">199</td><td class="bh-num">69%</td><td class="bh-num"></td><td></td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Support">
+  <h2>Support answers in under three hours, and satisfaction has followed</h2>
+  <p>Median first response fell from 9.0 hours in March to 5.1 in June and 2.6 in September. Satisfaction rose from 83% to 90% to 95% over the same months.</p>
+  <p>Your teams opened 194 tickets in Q3, against 174 in Q2, and we resolved 201. More people using the product means more questions, but fewer per person: about 13 tickets per 100 active users a month in Q3, down from 15 in Q1.</p>
+  <div class="bh-pair bh-wide">
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">First response is more than three times faster than in the spring</h3>
+      <p class="bh-figure-sub">Median time to first response, hours</p>
+      <div class="bh-plot" id="fig-response"></div>
+      <figcaption class="bh-figure-note">Source: Routewise support desk, October 2025 to September 2026.</figcaption>
+    </figure>
+    <figure class="bh-figure">
+      <h3 class="bh-figure-title">Satisfaction with support reached 95% in September</h3>
+      <p class="bh-figure-sub">Customer satisfaction with support tickets, %</p>
+      <div class="bh-plot" id="fig-csat"></div>
+      <figcaption class="bh-figure-note">Source: Routewise support desk, October 2025 to September 2026.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="Proposal">
+  <h2>We propose to onboard Warehouse Ops and Finance before the renewal</h2>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Proposal</p>
+    <h3>Run the onboarding programme for Warehouse Ops and Finance in November</h3>
+    <p>The May programme was followed by 206 more monthly active users in five months. If these two teams reached 73% weekly use, the level of the lowest of the other five teams, about 70 more seats would be in use each week.</p>
+  </div>
+  <div class="bh-compare">
+    <div><h3>Onboard two teams</h3><p>The May programme, adapted to warehouse shifts and to finance tasks. We need a sponsor in each team to make it stick.</p></div>
+    <div><h3>Check the seats fit the roles</h3><p>Before training, agree with each team lead which of the 214 seats belong to people who need Routewise for their work.</p></div>
+    <div><h3>Extend Route Planner</h3><p>A short Route Planner session for Customer Service, where 52% have adopted it.</p></div>  </div>
+  <ol class="bh-timeline">
+    <li data-key><span class="bh-when">21 Oct</span><div><p>Review meeting</p><p>Agree the proposal and name a sponsor in Warehouse Ops and in Finance.</p></div></li>
+    <li><span class="bh-when">Late Oct</span><div><p>Seat check with both team leads</p></div></li>
+    <li><span class="bh-when">November</span><div><p>Onboarding for Warehouse Ops and Finance</p><p>Route Planner session for Customer Service.</p></div></li>
+    <li><span class="bh-when">Early Dec</span><div><p>Results by team, shared with you</p><p>Weekly use and Route Planner adoption against the September figures in this report.</p></div></li>
+    <li data-key><span class="bh-when">December</span><div><p>Contract renewal</p><p>650 seats.</p></div></li>
+  </ol>
+  <div class="bh-notes">
+    <h3>For discussion on 21 October</h3>
+    <p>Which roles in Warehouse Ops and Finance should be using Routewise each week, and for what? The answer decides what the November sessions cover.</p>
+  </div>
+</section>
+
+<footer class="bh-footer">
+  <p>Prepared by Routewise Customer Success for Northwind Logistics, October 2026. Figures are from Routewise product analytics and the support desk, October 2025 to September 2026. Quarters are calendar quarters.</p>
+</footer>
+
+</main>
+
+<script type="text/csv" id="d-usage">
+month,licensed_seats,active_users,sessions,api_calls
+2025-10,650,301,5168,177420
+2025-11,650,301,5354,202468
+2025-12,650,309,5333,202371
+2026-01,650,312,5440,211716
+2026-02,650,327,5332,240073
+2026-03,650,330,5406,244262
+2026-04,650,332,5665,263171
+2026-05,650,415,8473,287091
+2026-06,650,446,9668,282859
+2026-07,650,474,10096,322648
+2026-08,650,514,10937,306495
+2026-09,650,538,11361,333316
+</script>
+<script type="text/csv" id="d-teams">
+team,seats,weekly_active_users,route_planner_adoption_pct
+Dispatch,140,127,78
+Fleet Planning,96,81,71
+Customer Service,120,95,52
+Warehouse Ops,150,61,18
+Finance,64,24,11
+Procurement,48,35,44
+Management,32,28,35
+</script>
+<script type="text/csv" id="d-support">
+month,tickets_opened,tickets_resolved,median_first_response_hours,csat_pct
+2025-10,46,50,9.3,83
+2025-11,49,42,9.8,83
+2025-12,49,47,9.2,83
+2026-01,45,50,9.7,82
+2026-02,51,48,9.7,83
+2026-03,52,40,9,83
+2026-04,46,43,7.7,87
+2026-05,60,65,6.4,88
+2026-06,68,69,5.1,90
+2026-07,67,74,3.8,91
+2026-08,66,65,2.6,93
+2026-09,61,62,2.6,95
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  const usage = BH.data('#d-usage').map(r => ({ ...r,
+    sessions_per_user: Math.round(r.sessions / r.active_users * 10) / 10,
+    api_calls_thousands: Math.round(r.api_calls / 1000) }));
+  BH.spark('#spark-users', { data: usage, y: 'active_users' });
+  BH.line('#fig-users', { data: usage, x: 'month', y: 'active_users', zero: true,
+    annotations: [{ x: '2026-05', text: 'Onboarding programme', event: true }] });
+  BH.line('#fig-sessions', { data: usage, x: 'month', y: 'sessions_per_user', zero: true,
+    annotations: [{ x: '2026-05', text: 'Onboarding', event: true }] });
+  BH.line('#fig-api', { data: usage, x: 'month', y: 'api_calls_thousands', zero: true });
+  const teams = BH.data('#d-teams').map(r => ({ ...r, share: Math.round(r.weekly_active_users / r.seats * 100) }));
+  BH.bar('#fig-teams', { data: teams, x: 'team', y: 'share', unit: '%', highlight: ['Warehouse Ops', 'Finance'] });
+  const support = BH.data('#d-support');
+  BH.line('#fig-response', { data: support, x: 'month', y: 'median_first_response_hours', unit: 'h', zero: true });
+  BH.line('#fig-csat', { data: support, x: 'month', y: 'csat_pct', unit: '%' });
+});</script>
+

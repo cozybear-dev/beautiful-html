@@ -1,0 +1,362 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
+  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
+  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  To apply a brand, override tokens in <style id="bh-overrides">.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill.
+-->
+<html lang="en-GB" data-bh-direction="narrative" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One cache configuration change took checkout down for 47 minutes, and most of that time went on finding it</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* Brand and per-report token overrides. Usually empty. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead">
+    <span class="bh-org">Engineering</span>
+    <span class="bh-doc">Post-incident review: checkout outage, 17 September 2026</span>
+  </div>
+  <h1>One cache configuration change took checkout down for 47 minutes, and most of that time went on finding it</h1>
+  <p class="bh-standfirst">At 13:52 UTC the memory limit on the feature cache was lowered from 24 GB to 8 GB. Fourteen minutes later checkout began to fail, three systems away from the change, and <strong>18,420 checkouts failed</strong> before the change was rolled back. Four follow-up actions are agreed; the first stops a slow fraud check from blocking payments at all.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Engineering leadership and customer success</dd></div>
+    <div><dt>Incident</dt><dd>SEV-1, change CHG-4471</dd></div>
+    <div><dt>Times</dt><dd>All in UTC</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Checkout outage</p><p class="bh-keyfigure-value">47<small>minutes</small></p><p class="bh-keyfigure-note">14:06 to 14:53, against a normal error rate of 0.4%</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Failed checkouts</p><p class="bh-keyfigure-value">18,420</p><p class="bh-keyfigure-note">15,890 customers affected</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Lost revenue, estimate</p><p class="bh-keyfigure-value">412<small>k€</small></p><p class="bh-keyfigure-note">plus 38 k€ in SLA credits</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Time to find the cause</p><p class="bh-keyfigure-value">29<small>minutes</small></p><p class="bh-keyfigure-note">of the 47, from page to diagnosis</p></div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="What happened">
+  <h2>More than nine in ten checkouts failed for over half an hour</h2>
+  <p>Before the change, 0.4% of checkouts failed. After it, the error rate crept up to 6.7% over thirteen minutes, then jumped to 29.7% at 14:06 and passed 90% by 14:10. It stayed between 87% and 99% until the change was rolled back at 14:46, and was back at 0.4% by 14:57.</p>
+  <aside class="bh-aside"><h3>What kept working</h3><p>The orders database, the token vault and the card processor all behaved normally throughout. The fault was in how long fraud scoring took, not in taking or storing card payments.</p></aside>
+  <p>Checkout itself was never changed and never broken. It was waiting on a chain of services behind it, and the last link in that chain was the feature cache.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Checkout errors stayed above 87% until the cache change was rolled back</h3>
+    <p class="bh-figure-sub">Checkout error rate by minute, %, 13:30 to 15:30 UTC, 17 September 2026</p>
+    <div class="bh-plot" id="fig-errors"></div>
+    <figcaption class="bh-figure-note">Source: metrics_by_minute.csv, checkout service. Event times from the incident timeline.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="How it spread">
+  <h2>The failure travelled from the cache to checkout through two services that were working correctly</h2>
+  <p>A card checkout passes through Checkout, Payments and Fraud before it reaches the feature cache. Fraud reads precomputed features from the cache to score each transaction. When the cache has them, a score takes about 45 ms.</p>
+  <p>Cutting the cache to a third of its memory forced it to evict most of what it held: its hit rate fell from 97% to 12% within a minute. Fraud then had to recompute features from the feature store for nearly every transaction, and its scoring time rose from 45 ms to more than 1,200 ms.</p>
+  <aside class="bh-aside"><h3>Why slow became down</h3><p>Payments keeps a pool of 200 connections to Fraud and holds one for as long as a score takes. With scores taking about 27 times longer, all 200 were in use by 14:06. From then on, payment requests had nothing to wait on but each other.</p></aside>
+  <p>Payments kept waiting for each fraud score, with no fallback when scores were slow, so a slowdown in one service became a full stop in the next. Step through the diagram to follow the order.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The cache was changed; checkout, three calls upstream, is where customers saw it</h3>
+    <p class="bh-figure-sub">Request path for a card checkout, with the path the failure travelled</p>
+    <div class="bh-plot" id="fig-path"></div>
+    <figcaption class="bh-figure-note">Source: systems.json (request path and what failed) and the incident timeline.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Finding it">
+  <h2>We were paged on the symptom, so we started three systems from the cause</h2>
+  <p>The only alert that fired was on the checkout error rate, at 14:09. By then fraud scoring had been slowing for sixteen minutes and was already 35 times slower than normal. Nothing was watching it, or the cache hit rate.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Fraud scoring had been slowing for sixteen minutes when the first page fired</h3>
+    <p class="bh-figure-sub">Fraud scoring latency by minute, 95th percentile, ms, 13:30 to 15:30 UTC</p>
+    <div class="bh-plot" id="fig-fraud"></div>
+    <figcaption class="bh-figure-note">Source: metrics_by_minute.csv, fraud service. Normal is 42 to 48 ms.</figcaption>
+  </figure>
+  <p>The page pointed at checkout, and the visible fault was in Payments, whose connection pool was full. So the first response was to restart Payments at 14:21. The pool filled again within 90 seconds, because Payments was a victim, not the cause. It took until 14:38 to work back through Fraud to the cache and find change CHG-4471, which by then was 46 minutes old.</p>
+  <aside class="bh-aside"><h3>Once found, it was quick</h3><p>Rolling back took 8 minutes and the cache needed 7 more to warm. Diagnosis took longer than detection, rollback and recovery together.</p></aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Finding the cause took 29 of the 47 minutes</h3>
+    <p class="bh-figure-sub">Minutes in each phase, from the first customer errors at 14:06 to mitigation at 14:53</p>
+    <div class="bh-plot" id="fig-phases"></div>
+    <figcaption class="bh-figure-note">Source: timeline.csv. Paged 14:09, cause found 14:38, rolled back 14:46, mitigated 14:53.</figcaption>
+  </figure>
+  <h3>The full timeline</h3>
+  <ol class="bh-timeline">
+    <li data-key><span class="bh-when">13:52</span><div><p>Cache memory limit lowered from 24 GB to 8 GB</p><p>Feature cache, change CHG-4471.</p></div></li>
+    <li><span class="bh-when">13:53</span><div><p>Mass eviction begins</p><p>Cache hit rate falls from 97% to 12%.</p></div></li>
+    <li><span class="bh-when">13:55</span><div><p>Fraud scoring slows</p><p>Features are recomputed from the feature store.</p></div></li>
+    <li data-key><span class="bh-when">14:06</span><div><p>Checkout starts failing for customers</p><p>Payments has all 200 connections to Fraud in use. First customer reports.</p></div></li>
+    <li><span class="bh-when">14:09</span><div><p>On-call paged on checkout error rate</p><p>Incident declared SEV-1.</p></div></li>
+    <li><span class="bh-when">14:21</span><div><p>Payments restarted, with no effect</p><p>The pool is exhausted again within 90 seconds.</p></div></li>
+    <li data-key><span class="bh-when">14:38</span><div><p>Cause found</p><p>Fraud latency traced to the cache configuration change.</p></div></li>
+    <li><span class="bh-when">14:46</span><div><p>Configuration rolled back to 24 GB</p><p>The cache begins to warm.</p></div></li>
+    <li data-key><span class="bh-when">14:53</span><div><p>Incident mitigated</p><p>47 minutes after checkout started failing.</p></div></li>
+    <li><span class="bh-when">15:10</span><div><p>Incident closed</p><p>Error rate confirmed back at baseline.</p></div></li>
+  </ol>
+</section>
+
+<section class="bh-section" data-nav="What changes">
+  <h2>Four changes: one for each thing that let a cache setting reach customers</h2>
+  <p>The incident needed four things to go wrong in a row. The change went to the whole cache at once. Nothing alerted on the cache or on Fraud. Payments kept waiting on a slow dependency, with no fallback. And nobody had seen how checkout behaves with a cold cache. Each action closes one of them.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Agreed follow-up actions, with the gap each one closes</caption>
+      <thead><tr><th scope="col">Change</th><th scope="col">Gap it closes</th><th scope="col">Owner</th><th scope="col">Due</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr data-highlight><th scope="row">Circuit breaker and 300 ms timeout on Payments to Fraud, falling back to rules-based scoring</th><td>A slow fraud check stopped every payment</td><td>Payments team</td><td>9 Oct 2026</td><td><span class="bh-status" data-status="warn">Due date passed, to confirm</span></td></tr>
+        <tr><th scope="row">Alert on fraud scoring latency and cache hit rate, not only on checkout errors</th><td>The page pointed at the symptom, sixteen minutes late</td><td>SRE</td><td>2 Oct 2026</td><td><span class="bh-status" data-status="warn">Due date passed, to confirm</span></td></tr>
+        <tr><th scope="row">Canary and automatic rollback for cache configuration changes</th><td>The change reached the whole cache in one step</td><td>Platform team</td><td>23 Oct 2026</td><td>Not yet due</td></tr>
+        <tr><th scope="row">Load-test the checkout path with a cold feature cache each quarter</th><td>Cold-cache behaviour was unknown until it happened</td><td>SRE</td><td>13 Nov 2026</td><td>Not yet due</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bh-callout">
+    <p class="bh-callout-label">The one that matters most</p>
+    <h3>The timeout and fallback are what turn a repeat of this fault into slower fraud checks instead of an outage</h3>
+    <p>The other three make a bad cache change less likely and faster to catch. Only this one removes the dependency: if Fraud has not answered in 300 ms, Payments scores by rules and carries on.</p>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="For merchants">
+  <h2>For merchants: a change on our side stopped checkout; payment and card systems were not at fault</h2>
+  <p>Customer success can use the account below as it stands. It uses no internal system names.</p>
+  <h3>What happened</h3><p>On 17 September 2026, from 14:06 to 14:53 UTC, most card checkouts failed. We had made a configuration change to an internal system that our fraud checks rely on. It made those checks very slow, and payments queued behind them until checkout stopped responding.</p>
+  <h3>What it was not</h3><p>It was not an attack, and not a fault at the card processor. The systems that store orders and card tokens and that charge cards worked normally throughout. The cause was our own change, and reversing it ended the outage.</p>
+  <h3>What we are changing</h3><p>Checkout will no longer wait on a slow fraud check: after a fraction of a second it will fall back to a simpler check and continue. Changes of this kind will be tried on a small part of the system first and reversed automatically, and we now watch for the early signs.</p>
+  <div class="bh-notes">
+    <h3>Open points to settle before this goes to merchants</h3>
+    <p><strong>When the outage ended.</strong> The timeline records the error rate as below 5% at 14:53, which gives the agreed 47 minutes. The minute-by-minute metrics show 20.2% at 14:53 and the first reading below 5% at 14:57, which would make it 51 minutes. This report uses 47 throughout; the difference matters if SLA credits depend on duration.</p>
+    <p><strong>Status of the two actions already due.</strong> The alerting action was due on 2 October and the timeout and fallback on 9 October. The source data gives due dates only, so this report does not say whether they are done. The merchant wording above assumes they are or soon will be.</p>
+    <p><strong>What a failed checkout left behind.</strong> Checkout writes the order as well as asking Payments to authorise, and order writes kept working. The data does not say whether failed checkouts left unpaid orders that merchants can see. Merchants are likely to ask.</p>
+  </div>
+</section>
+
+<footer class="bh-footer">
+  <p>Prepared on 10 October 2026 from the incident timeline, minute-by-minute service metrics for 13:30 to 15:30 UTC on 17 September 2026, and the checkout system map with its impact figures and agreed actions. Lost revenue is an estimate.</p>
+</footer>
+
+</main>
+
+<script type="text/csv" id="d-metrics">
+time_utc,checkout_error_rate_pct,checkout_p95_latency_ms,fraud_score_p95_latency_ms
+13:30,0.4,313,44
+13:31,0.4,310,45
+13:32,0.4,298,46
+13:33,0.4,323,42
+13:34,0.4,310,46
+13:35,0.4,296,44
+13:36,0.4,322,45
+13:37,0.4,298,42
+13:38,0.4,320,47
+13:39,0.4,304,44
+13:40,0.4,325,44
+13:41,0.4,316,43
+13:42,0.4,319,45
+13:43,0.4,310,43
+13:44,0.4,325,43
+13:45,0.4,307,45
+13:46,0.4,323,45
+13:47,0.4,319,46
+13:48,0.4,300,48
+13:49,0.4,320,44
+13:50,0.4,295,45
+13:51,0.4,300,47
+13:52,0.4,295,43
+13:53,0.9,452,142
+13:54,1.3,628,246
+13:55,2,781,311
+13:56,2.4,990,397
+13:57,3.1,1090,496
+13:58,3.5,1211,616
+13:59,4.1,1471,696
+14:00,4.4,1642,812
+14:01,4.9,1740,878
+14:02,5.6,1836,1060
+14:03,6.1,2105,1166
+14:04,6.6,2289,1125
+14:05,6.7,2275,1205
+14:06,29.7,9802,1181
+14:07,43.6,10145,1263
+14:08,63.4,10219,1442
+14:09,76.2,10004,1597
+14:10,94.4,9729,1584
+14:11,91.2,9335,1325
+14:12,88.6,9895,1316
+14:13,95.1,9363,1318
+14:14,93.3,10080,1344
+14:15,97.4,9413,1550
+14:16,88.4,9325,1636
+14:17,97.4,9559,1463
+14:18,89.2,10157,1330
+14:19,98.9,10166,1178
+14:20,97.9,9624,1294
+14:21,88.8,9846,1500
+14:22,89.5,9502,1654
+14:23,98.6,9783,1488
+14:24,94.9,9642,1347
+14:25,93.9,9565,1265
+14:26,96.2,9399,1252
+14:27,89.6,10105,1450
+14:28,92.9,9449,1580
+14:29,96.8,9916,1591
+14:30,94,10145,1316
+14:31,96.7,9350,1325
+14:32,95.9,10122,1331
+14:33,98.8,9331,1387
+14:34,97.9,10114,1599
+14:35,93.4,9760,1456
+14:36,92.5,9605,1440
+14:37,93,9942,1308
+14:38,93.3,9602,1242
+14:39,96,9853,1343
+14:40,92.9,10079,1506
+14:41,91.5,9899,1594
+14:42,95.8,9478,1463
+14:43,93.2,10193,1280
+14:44,89.7,9385,1293
+14:45,97.8,9601,1424
+14:46,88.9,9745,1432
+14:47,87.3,9693,1521
+14:48,73.4,9967,1403
+14:49,69.2,10098,1414
+14:50,60.3,10256,1244
+14:51,49.2,9461,1238
+14:52,41.8,9576,1479
+14:53,20.2,2463,595
+14:54,15.8,2105,526
+14:55,9.6,1789,453
+14:56,5.2,1546,408
+14:57,0.4,1215,347
+14:58,0.4,886,312
+14:59,0.4,570,251
+15:00,0.4,318,178
+15:01,0.4,315,128
+15:02,0.4,311,61
+15:03,0.4,305,43
+15:04,0.4,304,47
+15:05,0.4,311,48
+15:06,0.4,314,48
+15:07,0.4,322,46
+15:08,0.4,324,46
+15:09,0.4,320,43
+15:10,0.4,312,43
+15:11,0.4,298,46
+15:12,0.4,311,43
+15:13,0.4,311,42
+15:14,0.4,322,42
+15:15,0.4,298,45
+15:16,0.4,306,43
+15:17,0.4,318,48
+15:18,0.4,321,43
+15:19,0.4,313,48
+15:20,0.4,301,47
+15:21,0.4,314,46
+15:22,0.4,324,47
+15:23,0.4,306,44
+15:24,0.4,299,46
+15:25,0.4,305,45
+15:26,0.4,316,44
+15:27,0.4,323,43
+15:28,0.4,317,44
+15:29,0.4,316,46
+15:30,0.4,311,48
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  const metrics = BH.data('#d-metrics');
+
+  BH.line('#fig-errors', { data: metrics, x: 'time_utc', y: 'checkout_error_rate_pct', unit: '%',
+    annotations: [
+      { x: '13:52', text: 'Cache memory lowered', event: true },
+      { x: '14:46', text: 'Rolled back', event: true },
+    ] });
+
+  BH.flow('#fig-path', {
+    flow: true,
+    zones: [{ id: 'edge', label: 'Edge' }, { id: 'app', label: 'Application' }, { id: 'data', label: 'Data' }, { id: 'third', label: 'Third party' }],
+    nodes: [
+      { id: 'web', label: 'Web and mobile apps', kind: 'person' },
+      { id: 'gateway', label: 'API gateway', kind: 'gateway', zone: 'edge' },
+      { id: 'checkout', label: 'Checkout service', zone: 'app' },
+      { id: 'payments', label: 'Payments service', sub: 'pool of 200 connections', zone: 'app' },
+      { id: 'fraud', label: 'Fraud service', zone: 'app' },
+      { id: 'cache', label: 'Feature cache', sub: '24 GB cut to 8 GB', kind: 'store', zone: 'data' },
+      { id: 'features', label: 'Feature store', kind: 'store', zone: 'data' },
+      { id: 'orders', label: 'Orders database', kind: 'store', zone: 'data' },
+      { id: 'vault', label: 'Token vault', kind: 'store', zone: 'data' },
+      { id: 'processor', label: 'Card processor', kind: 'external', zone: 'third' },
+    ],
+    edges: [
+      { from: 'web', to: 'gateway', label: 'POST /checkout' },
+      { from: 'gateway', to: 'checkout', label: 'routes request' },
+      { from: 'checkout', to: 'orders', label: 'writes order' },
+      { from: 'checkout', to: 'payments', label: 'authorises payment' },
+      { from: 'payments', to: 'fraud', label: 'scores transaction' },
+      { from: 'fraud', to: 'cache', label: 'reads features' },
+      { from: 'fraud', to: 'features', label: 'recomputes on miss' },
+      { from: 'payments', to: 'vault', label: 'reads card token' },
+      { from: 'payments', to: 'processor', label: 'charges card' },
+    ],
+    highlight: ['web', 'gateway', 'checkout', 'payments', 'fraud', 'cache'],
+    highlightLabel: 'The path the failure travelled',
+    overview: 'The whole request path for a card checkout. Step through to follow the failure from the cache back to the customer, or press Play.',
+    steps: [
+      { title: '13:52. The cache is resized.', text: 'Its memory limit is cut from 24 GB to 8 GB. Within a minute it evicts most of what it holds and its hit rate falls from 97% to 12%.', nodes: ['cache'] },
+      { title: '13:55. Fraud scoring slows.', text: 'With little left in the cache, Fraud recomputes features from the feature store. Scoring goes from 45 ms to over 1,200 ms.', nodes: ['fraud', 'cache', 'features'], edges: ['fraud>cache', 'fraud>features'] },
+      { title: '14:06. Payments runs out of connections.', text: 'All 200 connections to Fraud are held open, waiting for scores. New payment requests have nowhere to go.', nodes: ['payments', 'fraud'], edges: ['payments>fraud'] },
+      { title: '14:06. Checkout fails for customers.', text: 'Checkout waits on Payments. Its response time reaches about 10 seconds and the error rate passes 90% by 14:10.', nodes: ['web', 'gateway', 'checkout', 'payments'], edges: ['web>gateway', 'gateway>checkout', 'checkout>payments'] },
+    ],
+  });
+
+  BH.line('#fig-fraud', { data: metrics, x: 'time_utc', y: 'fraud_score_p95_latency_ms', unit: 'ms',
+    annotations: [
+      { x: '13:52', text: 'Cache memory lowered', event: true },
+      { x: '14:09', text: 'First page, on checkout errors', event: true },
+    ] });
+
+  BH.bar('#fig-phases', { unit: 'min', sort: 'none', highlight: 'Finding the cause',
+    data: [
+      { phase: 'Noticing', minutes: 3 },
+      { phase: 'Finding the cause', minutes: 29 },
+      { phase: 'Rolling back', minutes: 8 },
+      { phase: 'Recovering', minutes: 7 },
+    ], x: 'phase', y: 'minutes' });
+});</script>
+
