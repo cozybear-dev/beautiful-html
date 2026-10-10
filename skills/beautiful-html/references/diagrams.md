@@ -68,7 +68,7 @@ A zone is a named group drawn as a tinted frame: a network segment, a trust boun
 |---|---|
 | `highlight` | The path the figure is about: a list of node ids (edges between consecutive ids are lit too) and/or edges written `'from>to'` |
 | `highlightLabel` | What the highlighted path is, for the key |
-| `steps` | A walkthrough: `[{ title, text, nodes: [ids], edges: ['from>to'] }]`. Adds Previous, Play and Next, and arrow-key control |
+| `steps` | A walkthrough: `[{ title, text, nodes: [ids], edges: ['from>to'] }]`. Adds Previous, Play and Next above the diagram, and arrow-key control |
 | `overview` | The caption shown before the first step |
 | `flow: true` | Dots travel along the edges (the highlighted ones, if any) with a Pause button |
 | `direction` | `'auto'` (default): left to right when it fits, otherwise top to bottom. `'right'` or `'down'` forces it |
@@ -97,6 +97,7 @@ A zone is a named group drawn as a tinted frame: a network segment, a trust boun
 
 - Two zones that cover the same step of the flow sit side by side, across the flow. If that makes the diagram too wide, give the zones separate steps or split the figure.
 - On a phone, a diagram wider than the screen scrolls sideways inside its figure.
+- A long chain (six or more steps) is drawn top to bottom even on a wide screen. In a `presentation`, put it in a `bh-split` section so it fits one screen beside its text.
 - Edges between two nodes in the same rank are not drawn level; one of the nodes moves a rank on.
 
 ## `BH.sankey`: volumes between stages

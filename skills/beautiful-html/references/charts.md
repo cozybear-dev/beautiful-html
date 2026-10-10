@@ -55,7 +55,7 @@ BH.line('#fig-churn', { data, x: 'month', y: 'churn', series: 'segment', unit: '
 ```
 
 - Highlighted series are labelled at their last point with name and value. A legend replaces the labels on narrow screens.
-- `annotations`: `{ x, text }` plus `series` (or `y`) marks a point; `{ x, text, event: true }` draws a vertical line for an event. In a single-series chart `{ x, text }` marks the point. One or two per chart.
+- `annotations`: `{ x, text }` plus `series` (or `y`) marks a point; `{ x, text, event: true }` draws a vertical line for an event, with its note above the plot. In a single-series chart `{ x, text }` marks the point. One or two per chart.
 - The value axis starts at zero when the data is near it. `zero: true` forces it; `yDomain: [lo, hi]` sets it.
 
 ## `BH.bar`

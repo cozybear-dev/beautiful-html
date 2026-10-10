@@ -99,6 +99,8 @@ export function drawFlow(target, o, width, entry) {
   if (wanted === 'down' || (wanted === 'auto' && layout.width > width)) {
     sized = sizeNodes(narrow ? 118 : 150);
     layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: narrow ? { node: 14, band: 20, rank: 54, labelPad: 18 } : { rank: 58, labelPad: 20 } });
+    // If it is taller than most of the screen, close up the gaps so it can be seen whole.
+    if (!narrow && layout.height > innerHeight * 0.72) layout = layoutFlow(graph, { direction: 'down', measure: n => sized.get(n.id), measureLabel, gaps: { rank: 40, labelPad: 12, pad: 11, zoneLabel: 19, zoneGap: 6, band: 22 } });
   }
   const routes = routeEdges(layout);
   const routeById = new Map(routes.map(r => [r.id, r]));
@@ -249,7 +251,7 @@ export function drawFlow(target, o, width, entry) {
     stage.setAttribute('aria-label', 'Diagram walkthrough. Use the arrow keys to step.');
     if (entry) { current = Math.min(entry.step || 0, steps.length); entry.cleanup = () => { entry.step = current; clearInterval(timer); }; }
     paint();
-    out.push(controls);
+    out.unshift(controls);
   }
   if (entry) entry.api = api;
 

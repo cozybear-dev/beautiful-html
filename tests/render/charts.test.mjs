@@ -117,3 +117,9 @@ test('small multiples share one scale', { skip }, async () => {
     assert.equal(new Set(tops).size, 1, tops.join(' / '));
   });
 });
+
+test('two event notes close together on a narrow chart do not collide', { skip }, async () => {
+  const html = page(fig('f'), `const d = Array.from({ length: 60 }, (_, i) => ({ t: new Date(Date.UTC(1970, 0, 1, 13, 30 + i)), v: i < 20 ? 1 : i < 45 ? 90 : 2 }));
+    BH.line('#f', { data: d, x: 't', y: 'v', unit: '%', annotations: [{ x: '13:52', text: 'Cache memory lowered', event: true }, { x: '14:16', text: 'Change rolled back', event: true }] });`);
+  for (const mode of [DESKTOP, PHONE]) assert.ok(!(await audit(html, mode)).findings.some(f => f.code === 'label-overlap'), mode.name);
+});

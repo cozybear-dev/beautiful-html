@@ -47,7 +47,7 @@
 .bh-plot [aria-label="tip"] { font-family: var(--bh-font-data); font-size: var(--bh-size-micro); }
 
 /* Diagram stage and controls are styled with the flow engine (see flow rules below). */
-.bh-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--bh-space-2) var(--bh-space-3); margin-top: var(--bh-space-3); font-family: var(--bh-font-data); font-size: var(--bh-size-small); }
+.bh-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--bh-space-2) var(--bh-space-3); margin-block: var(--bh-space-3); font-family: var(--bh-font-data); font-size: var(--bh-size-small); }
 .bh-controls-count { color: var(--bh-ink-2); font-variant-numeric: tabular-nums; min-width: 3.2em; }
 .bh-caption-live { flex: 1 1 16rem; color: var(--bh-ink); line-height: 1.4; }
 .bh-caption-live strong { font-weight: var(--bh-weight-strong); }

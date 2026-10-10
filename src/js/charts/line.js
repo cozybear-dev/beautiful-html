@@ -29,16 +29,24 @@ function resolveAnnotation(a, o, rows, kind) {
 }
 
 // `which` is 'event' or 'point', so events can sit under the data and points over it.
-export function annotationMarks(o, rows, kind, frac, which) {
+export function annotationMarks(o, rows, kind, frac, which, geom) {
   const marks = [];
+  const levels = [];                                   // event notes already placed, by row, so two never collide
   for (const a of o.annotations || []) {
     const r = resolveAnnotation(a, o, rows, kind);
     if ((which === 'event') !== !!r.event) continue;
     const right = frac(r.x) > 0.62;
     const text = { text: [a.text], fill: v('ink'), stroke: v('ground'), strokeWidth: 5, lineWidth: a.width || 15, textAnchor: right ? 'end' : 'start' };
     if (r.event) {
+      let level = 0;
+      if (geom) {
+        const size = geom.size, w = Math.min(textWidth(a.text, size), (a.width || 15) * size);
+        const at = geom.left + frac(r.x) * geom.width, span = right ? [at + 3 - w, at + 3] : [at - 3, at - 3 + w];
+        while ((levels[level] || []).some(s => s[0] < span[1] + 8 && span[0] < s[1] + 8)) level++;
+        (levels[level] = levels[level] || []).push(span);
+      }
       marks.push(P().ruleX([r.x], { stroke: v('ink-3'), strokeWidth: 1 }));
-      marks.push(P().text([r.x], { ...text, x: d => d, frameAnchor: 'top', lineAnchor: 'top', dx: right ? -6 : 6, dy: 2 }));
+      marks.push(P().text([r.x], { ...text, x: d => d, frameAnchor: 'top', lineAnchor: 'bottom', dx: right ? 3 : -3, dy: -5 - level * Math.round((geom ? geom.size : 12) * 1.35) }));
     } else {
       marks.push(P().dot([r], { x: 'x', y: 'y', r: 5.5, fill: 'none', stroke: v('ink'), strokeWidth: 1.5 }));
       marks.push(P().text([r], { ...text, x: 'x', y: 'y', lineAnchor: a.below ? 'top' : 'bottom', dx: (a.dx || 0) + (right ? 2 : -2), dy: a.dy ?? (a.below ? 12 : -12) }));
@@ -83,7 +91,7 @@ export function drawLine(el, o, width) {
   const useLegend = wantLabels && named && (widest + 22 > width * 0.34 || o.labels === 'legend');
   const endLabels = wantLabels && !useLegend;
 
-  const height = o.height || Math.round(Math.min(compact ? 190 : 420, Math.max(compact ? 132 : 232, width * (compact ? 0.6 : 0.44))));
+  const baseHeight = o.height || Math.round(Math.min(compact ? 190 : 420, Math.max(compact ? 132 : 232, width * (compact ? 0.6 : 0.44))));
   const xValues = rows.map(d => d[o.x]);
   let xAxis, span;
   if (kind === 'time') ({ mark: xAxis, span } = timeAxisX(o.xDomain || xValues, width));
@@ -97,18 +105,23 @@ export function drawLine(el, o, width) {
   const frac = x => (kind === 'category' ? [...new Set(xValues)].indexOf(x) / Math.max(1, new Set(xValues).size - 1) : (x - lo) / Math.max(1e-9, hi - lo));
   const title = d => `${o.series ? `${d[o.series]}\n` : ''}${fmtX(d[o.x], kind, span)}: ${fmtY(d[o.y], o.unit)}`;
   const hasValue = d => present(d[o.y]);
+  // Event notes get rows of their own above the plot, so they never sit on the data.
+  const events = (o.annotations || []).filter(a => a && (a.event === true || (a.y === undefined && a.series === undefined && !!o.series))).length;
+  const eventRows = Math.min(events, 3);
+  const inset = tickLabelWidth(ticks, o.unit) + 8;       // data starts clear of the value-axis labels
 
+  const height = baseHeight + eventRows * Math.round(size * 1.35);
   const svg = P().plot({
     width, height,
-    marginTop: 18, marginBottom: 34, marginLeft: 1, marginRight: endLabels ? Math.ceil(widest) + 22 : 12,
+    marginTop: 18 + eventRows * Math.round(size * 1.35), marginBottom: 34, marginLeft: 1, marginRight: endLabels ? Math.ceil(widest) + 22 : 12,
     style: plotStyle(),
-    x: { type: kind === 'time' ? 'utc' : kind === 'category' ? 'point' : 'linear', domain: kind === 'category' ? undefined : o.xDomain, insetLeft: tickLabelWidth(ticks, o.unit) + 8, insetRight: kind === 'category' ? 8 : 0 },
+    x: { type: kind === 'time' ? 'utc' : kind === 'category' ? 'point' : 'linear', domain: kind === 'category' ? undefined : o.xDomain, insetLeft: inset, insetRight: kind === 'category' ? 8 : 0 },
     y: { domain },
     marks: [
       ...valueAxisY({ ticks, unit: o.unit, width }),
       xAxis,
       P().ruleY([domain[0]], { stroke: domain[0] === 0 ? v('ink') : v('rule-strong') }),
-      ...annotationMarks(o, rows, kind, frac, 'event'),
+      ...annotationMarks(o, rows, kind, frac, 'event', { left: inset, width: width - inset - (endLabels ? Math.ceil(widest) + 22 : 12), size }),
       context.length ? P().line(rows.filter(d => !of(d).on), { x: o.x, y: o.y, z: o.series, stroke: v('neutral'), strokeWidth: 1.25, strokeLinejoin: 'round', className: 'bh-line bh-line-context' }) : null,
       ...lit.flatMap(e => {
         const own = rows.filter(d => (o.series ? d[o.series] === e.name : true));

@@ -97,6 +97,24 @@ hr { border: 0; border-top: 1px solid var(--bh-rule); margin: var(--bh-space-6) 
 @media (min-width: 62rem) {
   .bh-report .bh-aside { grid-column: side; }
 }
+/* A split section: text on the left, one figure on the right for the full
+   height. For a tall figure, such as a top-to-bottom diagram, that should stay
+   on screen beside the words about it. Stacks on narrow screens and in print. */
+@media screen and (min-width: 62rem) {
+  .bh-report > .bh-section.bh-split {
+    grid-template-columns:
+      [full-start] minmax(var(--bh-gutter), 1fr)
+      [wide-start text-start] minmax(0, calc((var(--bh-measure) + var(--bh-column-gap) + var(--bh-side)) * 0.4))
+      [text-end] var(--bh-column-gap)
+      [side-start] minmax(0, calc((var(--bh-measure) + var(--bh-column-gap) + var(--bh-side)) * 0.6 - var(--bh-column-gap)))
+      [side-end wide-end] minmax(var(--bh-gutter), 1fr)
+      [full-end];
+    grid-auto-flow: row dense;
+  }
+  .bh-section.bh-split > * { grid-column: text; }
+  .bh-section.bh-split > .bh-figure { grid-column: side; grid-row: 1 / span 12; margin-top: 0; align-self: center; }
+}
+
 /* Browsers without subgrid get a plain centred column. */
 @supports not (grid-template-columns: subgrid) {
   .bh-report > .bh-header, .bh-report > .bh-section, .bh-report > .bh-footer {

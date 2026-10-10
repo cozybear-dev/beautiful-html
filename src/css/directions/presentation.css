@@ -127,7 +127,7 @@
   --bh-size-h1: clamp(2.5rem, 1rem + 6.4vw, 5.5rem);
   --bh-size-figure: clamp(2.75rem, 1.6rem + 4vw, 4.5rem);
   --bh-measure: 44ch;
-  --bh-side: 23rem;
+  --bh-side: clamp(18rem, 42vw, 40rem);
   --bh-leading-body: 1.45;
   --bh-weight-display: 700;
   --bh-weight-figure: 700;

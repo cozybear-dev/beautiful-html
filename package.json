@@ -14,7 +14,8 @@
     "test": "node --test tests/unit/ tests/render/",
     "test:unit": "node --test tests/unit/",
     "zip": "node scripts/package-zip.mjs",
-    "directions": "node scripts/make-directions.mjs"
+    "directions": "node scripts/make-directions.mjs",
+    "examples": "node scripts/build-examples.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.0"

@@ -10,6 +10,8 @@ Everything goes inside `<main class="bh-report">`. The page is a grid with a **t
 | `bh-aside` | The side column, beside the element before it; below it on small screens |
 | `bh-full` | Edge to edge. Rarely right |
 
+A section with `class="bh-section bh-split"` puts its text on the left and its one figure on the right, for the full height. Use it for a tall figure, such as a top-to-bottom diagram, that should stay on screen beside the words about it. It stacks on small screens and in print.
+
 ## Header
 
 ```html
