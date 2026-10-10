@@ -42,7 +42,7 @@ test('the zip holds the skill, and only the skill, under one folder', () => {
   const entries = readZip(buildZip());
   const names = entries.map(e => e.name);
   assert.ok(names.every(n => n.startsWith('beautiful-html/')), names.filter(n => !n.startsWith('beautiful-html/')).join(', '));
-  for (const needed of ['SKILL.md', 'kit/analytical.kit.html', 'kit/narrative.kit.html', 'kit/presentation.kit.html', 'kit/content-template.html', 'tools/check.mjs', 'tools/audit.js', 'tools/rekit.mjs', 'tools/brand.mjs', 'tools/palette.mjs', 'references/charts.md', 'brand/DESIGN.md', 'examples/presentation/content.html', 'licenses/README.md'])
+  for (const needed of ['SKILL.md', 'kit/analytical.kit.html', 'kit/narrative.kit.html', 'kit/presentation.kit.html', 'kit/content-template.html', 'tools/check.mjs', 'tools/audit.js', 'tools/rekit.mjs', 'tools/brand.mjs', 'tools/palette.mjs', 'references/charts.md', 'brand/DESIGN.md', 'examples/incident-review/content.html', 'examples/research-note/content.html', 'licenses/README.md'])
     assert.ok(names.includes(`beautiful-html/${needed}`), `${needed} is not in the zip`);
   assert.ok(!names.some(n => /(^|\/)(src|tests|evals|node_modules|\.git)\//.test(n.replace(/^beautiful-html\//, ''))));
   assert.ok(!names.some(n => n.endsWith('/')), 'no directory entries');

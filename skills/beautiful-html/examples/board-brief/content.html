@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remote access is now the weakest edge of the estate</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* Leave empty: the Hunt & Hackett look is built into the kit. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<!-- Front page: findings in words. A board wants the verdicts first, and the brief is not about measures. -->
+<header class="bh-header">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Board brief, October 2026</span></div>
+  <h1>Remote access is now the weakest edge of the estate</h1>
+  <p class="bh-standfirst">The perimeter review found the office network in good order and the routes around it neglected. <strong>We recommend retiring the legacy VPN before year end.</strong></p>
+  <ol class="bh-findings">
+    <li><h2>The legacy VPN still accepts passwords alone</h2><p>It predates single sign-on and was left running for two suppliers.</p></li>
+    <li><h2>Patching is fast wherever it is automated</h2><p>The servers that lag are the ones still patched by hand.</p></li>
+    <li><h2>Backups exist, and have never been restored in a test</h2><p>Nobody can say how long a recovery would take.</p></li>
+  </ol>
+</header>
+
+<section class="bh-section" data-nav="Exposure">
+  <h2>Exposure fell everywhere except remote access</h2>
+  <p>We compared what an outsider can reach today with what they could reach at the last review. Four of five categories shrank. Remote access grew, because two supplier connections were added to the old gateway.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Remote access is the only category that grew</h3>
+    <p class="bh-figure-sub">Services reachable from the internet, April and October 2026</p>
+    <div class="bh-plot" id="fig-exposure"></div>
+    <figcaption class="bh-figure-note">Source: external scans of 4 April and 3 October 2026. Illustrative figures.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Decision">
+  <h2>Three ways to close it</h2>
+  <div class="bh-compare">
+    <div><h3>Retire the VPN</h3><p>Move both suppliers to the access broker. Six weeks, no new licences. Closes the finding.</p></div>
+    <div><h3>Add a second factor</h3><p>Two weeks. Keeps an unpatched gateway on the internet.</p></div>
+    <div><h3>Accept the risk</h3><p>No cost now. The gateway leaves vendor support in March.</p></div>
+  </div>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Recommendation</p>
+    <h3>Retire the legacy VPN by 15 December</h3>
+    <p>It is the only option that removes the gateway. The suppliers have both confirmed they can move.</p>
+  </div>
+</section>
+
+<footer class="bh-footer"><p>Prepared for the board by Hunt &amp; Hackett, 10 October 2026. An illustrative brief: the organisation and its figures are invented.</p></footer>
+</main>
+
+<script type="text/csv" id="d-exposure">
+category,april,october
+Web applications,31,24
+Mail and collaboration,12,9
+Remote access,6,9
+Administrative interfaces,8,2
+File transfer,5,1
+</script>
+<script id="bh-figures">BH.ready(() => {
+  BH.dot('#fig-exposure', { data: BH.data('#d-exposure'), x: 'category', y: 'april', y2: 'october', sort: 'none', zero: true,
+    names: { y: 'April', y2: 'October' } });
+});</script>

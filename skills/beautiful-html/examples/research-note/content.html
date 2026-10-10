@@ -1,0 +1,180 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
+-->
+<html lang="en-GB" data-bh-direction="narrative" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>In-process COM still starts in LPAC when lpacCom is absent</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* Leave empty: the Hunt & Hackett look is built into the kit. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<!-- Front page: a cover and a byline. A note that is sent out and read from start to end; it is not about measures, so it shows none. -->
+<header class="bh-header bh-cover">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Research note</span></div>
+  <h1>In-process COM still starts in LPAC when lpacCom is absent</h1>
+  <p class="bh-standfirst">The capability check that guards COM runs inside the sandboxed process itself. <strong>Official startup is refused; a known in-process server can still be loaded.</strong> No out-of-process server was reached.</p>
+  <p class="bh-byline">A reading of part 1 by Denis Nagayuk and Francisco Dominguez, published 13 August 2026.</p>
+</header>
+
+<section class="bh-section" data-nav="Check">
+  <h2>The check runs on the calling thread, before any object exists</h2>
+  <p class="bh-lead">CoInitializeEx and RoInitialize share one internal function, combase!_CoInitialize. On a Less Privileged AppContainer it calls RtlCheckTokenCapability with the lpacCom capability. The access check runs in the kernel; the request to perform it comes from the sandboxed process.</p>
+  <aside class="bh-aside">
+    <h3>Two capabilities, two gates</h3>
+    <p>lpacCom gates this startup call. registryRead gates most registry keys, including COM class registration. This part assumes registryRead is present and sets it aside.</p>
+  </aside>
+  <figure class="bh-figure" data-bh-table="off">
+    <h3 class="bh-figure-title">lpacCom stops official startup, not a DLL the process already knows</h3>
+    <p class="bh-figure-sub">Call path inside one LPAC process with no lpacCom capability</p>
+    <div class="bh-plot" id="fig-gate"></div>
+    <figcaption class="bh-figure-note">Source: Hunt &amp; Hackett, “On COM/WinRT initialization, apartments, and lpacCom capability bypasses, Part 1”, 13 August 2026.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Calls">
+  <h2>Startup fails closed, and four activation calls never begin</h2>
+  <p>Without lpacCom the first call returns access denied. Ignoring that error does not leave a half-initialized thread: every activation call that follows reports that COM was never initialized.</p>
+  <pre class="bh-code"><code><mark>CoInitializeEx(…)          <i>// access denied: the gate</i></mark>
+<mark>RoInitialize(…)            <i>// access denied: same gate</i></mark>
+CoCreateInstance(…)        <i>// CO_E_NOTINITIALIZED</i>
+CoGetClassObject(…)        <i>// CO_E_NOTINITIALIZED</i>
+RoActivateInstance(…)      <i>// CO_E_NOTINITIALIZED</i>
+RoGetActivationFactory(…)  <i>// CO_E_NOTINITIALIZED</i></code></pre>
+  <p>The two highlighted calls are the gate. The other four fail only because the gate already refused the thread, which is a weaker signal: any other way of getting an object past initialization will not hit that error.</p>
+  <blockquote class="bh-quote">
+    <p>COM initialization is self-sufficient. It doesn't require any external entity (such as the kernel) to maintain or generate state.</p>
+    <footer>Denis Nagayuk and Francisco Dominguez</footer>
+  </blockquote>
+</section>
+
+<section class="bh-section" data-nav="Routes">
+  <h2>Both routes the authors tried stop at the process boundary</h2>
+  <p>The post tests two ways around the refusal. Neither reached an out-of-process server. They differ in what they need inside the process, and in how brittle the result is.</p>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Whether the LPAC boundary held, by route</caption>
+      <thead><tr><th scope="col">Route</th><th scope="col">In-process</th><th scope="col">Out-of-process</th><th scope="col">Condition the authors state</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Official startup</th><td><span class="bh-status" data-status="good">Holds</span></td><td><span class="bh-status" data-status="good">Holds</span></td><td>First call returns access denied</td></tr>
+        <tr data-highlight><th scope="row">Manual class factory</th><td><span class="bh-status" data-status="bad">Fails</span></td><td><span class="bh-status" data-status="good">Holds</span></td><td>Known DLL. Many objects run; some expect an apartment and then break</td></tr>
+        <tr data-highlight><th scope="row">Forced check result</th><td><span class="bh-status" data-status="bad">Fails</span></td><td><span class="bh-status" data-status="good">Holds</span></td><td>Needs registryRead so class lookup can succeed</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>“Holds” means the authors observed access denied. For out-of-process activation they record the denial and do not show the check that enforced it.</p>
+</section>
+
+<section class="bh-section" data-nav="Open">
+  <h2>Three claims stay outside the evidence of this part</h2>
+  <div class="bh-compare">
+    <div><h3>Out-of-process denial</h3><p>Activation stayed access denied with registryRead present. The enforcing check is not in this part.</p></div>
+    <div><h3>No registry lookup</h3><p>Class keys require registryRead. Instantiation without that capability is deferred.</p></div>
+    <div><h3>A built-in skip</h3><p>The authors say an existing feature skips the check with no patch. They do not name it.</p></div>
+  </div>
+  <div class="bh-callout">
+    <p class="bh-callout-label">For reviewers</p>
+    <h3>Do not accept a missing lpacCom capability as proof that COM is unavailable</h3>
+    <p>In this part the in-process boundary failed by two routes, and the out-of-process boundary held only as an observed denial. Review registryRead as a separate gate.</p>
+  </div>
+  <div class="bh-notes"><h3>Method</h3><p>Every result above is an observation reported by Nagayuk and Dominguez. This note does not re-run the tests and adds no measurements.</p></div>
+</section>
+
+<footer class="bh-footer"><p>Prepared 10 October 2026. Source: Hunt &amp; Hackett, part 1, 13 August 2026.</p></footer>
+</main>
+
+<script id="bh-figures">BH.ready(() => {
+  BH.flow('#fig-gate', { ...{
+    zones: [
+      { id: 'caller', label: 'LPAC process' },
+      { id: 'runtime', label: 'combase.dll' },
+      { id: 'server', label: 'In-process server' }
+    ],
+    nodes: [
+      { id: 'thread', label: 'Sandboxed thread', sub: 'no lpacCom', kind: 'person', zone: 'caller', rank: 0 },
+      { id: 'coinit', label: 'CoInitializeEx', sub: 'shared with RoInitialize', zone: 'runtime', rank: 1 },
+      { id: 'check', label: 'lpacCom check', sub: 'RtlCheckTokenCapability', kind: 'gateway', zone: 'runtime', rank: 2 },
+      { id: 'refused', label: 'Access denied', zone: 'runtime', rank: 3 },
+      { id: 'export', label: 'Class factory export', sub: 'known DLL path', zone: 'server', rank: 1 },
+      { id: 'object', label: 'In-process object', sub: 'same process', zone: 'server', rank: 2 }
+    ],
+    edges: [
+      { from: 'thread', to: 'coinit', label: 'calls' },
+      { from: 'coinit', to: 'check', label: 'detects LPAC' },
+      { from: 'check', to: 'refused', label: 'no lpacCom', kind: 'blocked' },
+      { from: 'thread', to: 'export', label: 'loads DLL', kind: 'risk' },
+      { from: 'export', to: 'object', label: 'creates object', kind: 'risk' }
+    ],
+    highlight: ['thread', 'coinit', 'check', 'refused'],
+    highlightLabel: 'What lpacCom stops',
+    overview: 'Official startup is refused. A known in-process server can still be loaded.',
+    steps: [
+      {
+        title: 'The check runs in combase',
+        text: 'CoInitializeEx and RoInitialize share one internal function. On an LPAC process it tests the token for lpacCom.',
+        nodes: ['thread', 'coinit', 'check'],
+        edges: ['thread>coinit', 'coinit>check']
+      },
+      {
+        title: 'Startup is refused',
+        text: 'Without the capability the call fails with access denied, and the usual activation calls then fail as not initialized.',
+        nodes: ['check', 'refused'],
+        edges: ['check>refused']
+      },
+      {
+        title: 'The DLL can still load',
+        text: 'If the server DLL is already known, the process can call its class-factory export and create an in-process object.',
+        nodes: ['thread', 'export', 'object'],
+        edges: ['thread>export', 'export>object']
+      }
+    ]
+  }, flow: true });
+});</script>

@@ -14,7 +14,7 @@ A report is **one self-contained HTML file**: your content on top, a prebuilt ki
 
 1. **Brief.** Before writing, state in one line each: the reader, the one thing they should take away, the decision it supports, and how it will be shared. If the takeaway cannot be worked out from the request and the data, ask one question. See [references/brief-and-story.md](references/brief-and-story.md).
 2. **Shape.** Choose one art direction and one front page from the tables below, and list the sections. Each section is one finding.
-3. **Write.** Copy `<skill>/kit/content-template.html` to `content.html` in the working folder and fill it in. Page parts are in [references/components.md](references/components.md), charts in [references/charts.md](references/charts.md), system and flow diagrams in [references/diagrams.md](references/diagrams.md). A complete worked report for each direction is in [examples/](examples/README.md); read the one for your direction before you write.
+3. **Write.** Copy `<skill>/kit/content-template.html` to `content.html` in the working folder and fill it in. Page parts are in [references/components.md](references/components.md), charts in [references/charts.md](references/charts.md), system and flow diagrams in [references/diagrams.md](references/diagrams.md). Seven worked reports are in [examples/](examples/README.md); read the one closest to yours before you write.
 4. **Assemble.** Join your content to the kit:
    `cat content.html <skill>/kit/<direction>.kit.html > report.html`
    (Windows: `copy /b content.html+<skill>\kit\<direction>.kit.html report.html`)

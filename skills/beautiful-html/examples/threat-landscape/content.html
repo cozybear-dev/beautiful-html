@@ -1,0 +1,159 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
+-->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intruders now act within days, not weeks</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* Leave empty: the Hunt & Hackett look is built into the kit. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<!-- Front page: the figure. One chart is the finding, so it takes the place of a standfirst. -->
+<header class="bh-header">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Threat landscape, third quarter 2026</span></div>
+  <h1>Intruders now act within days, not weeks</h1>
+  <figure class="bh-figure">
+    <h2 class="bh-figure-title">The time between break-in and impact has fallen from three weeks to four days</h2>
+    <p class="bh-figure-sub">Median days from first access to encryption or theft, by quarter</p>
+    <div class="bh-plot" id="fig-dwell"></div>
+    <figcaption class="bh-figure-note">Source: incident response cases. Illustrative figures.</figcaption>
+  </figure>
+</header>
+
+<section class="bh-section" data-nav="By sector">
+  <h2>Every sector shortened, and logistics is still the slowest to be hit</h2>
+  <p>The fall is not one group changing tactics. It shows in every sector we respond in, on the same scale.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The same decline in four sectors</h3>
+    <p class="bh-figure-sub">Median days from first access to impact, half-years</p>
+    <div class="bh-plot" id="fig-sectors"></div>
+    <figcaption class="bh-figure-note">Source: incident response cases. Illustrative figures.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section" data-nav="Triage">
+  <h2>Four days is shorter than most alert queues</h2>
+  <p>A detection only helps if someone reads it in time. Most alerts close without a person looking; the ones that matter are a thin stream.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Of a thousand alerts, nine become incidents</h3>
+    <p class="bh-figure-sub">Where 1,000 alerts go in a typical month</p>
+    <div class="bh-plot" id="fig-triage"></div>
+    <figcaption class="bh-figure-note">Source: illustrative figures.</figcaption>
+  </figure>
+</section>
+
+<section class="bh-section bh-band">
+  <p class="bh-statement">If the queue takes longer than four days to reach an alert, the alert arrives after the damage.</p>
+</section>
+
+<footer class="bh-footer"><p>Hunt &amp; Hackett, 10 October 2026. An example: every figure in it is invented.</p></footer>
+</main>
+
+<script type="text/csv" id="d-dwell">
+quarter,days
+2023-01,21
+2023-04,19
+2023-07,20
+2023-10,17
+2024-01,15
+2024-04,14
+2024-07,11
+2024-10,9
+2025-01,8
+2025-04,7
+2025-07,6
+2025-10,5
+2026-01,5
+2026-04,4
+2026-07,4
+</script>
+<script type="text/csv" id="d-sectors">
+half,sector,days
+2023-07,Manufacturing,24
+2024-01,Manufacturing,20
+2024-07,Manufacturing,15
+2025-01,Manufacturing,10
+2025-07,Manufacturing,7
+2026-01,Manufacturing,5
+2023-07,Healthcare,18
+2024-01,Healthcare,16
+2024-07,Healthcare,12
+2025-01,Healthcare,9
+2025-07,Healthcare,6
+2026-01,Healthcare,4
+2023-07,Logistics,26
+2024-01,Logistics,22
+2024-07,Logistics,19
+2025-01,Logistics,15
+2025-07,Logistics,11
+2026-01,Logistics,8
+2023-07,Finance,12
+2024-01,Finance,10
+2024-07,Finance,8
+2025-01,Finance,6
+2025-07,Finance,4
+2026-01,Finance,3
+</script>
+<script id="bh-figures">BH.ready(() => {
+  BH.line('#fig-dwell', { data: BH.data('#d-dwell'), x: 'quarter', y: 'days', unit: 'days', zero: true,
+    annotations: [{ x: '2024-07', text: 'Access brokers start selling ready-made footholds', event: true }] });
+  BH.line('#fig-sectors', { data: BH.data('#d-sectors'), x: 'half', y: 'days', facet: 'sector', zero: true });
+  BH.sankey('#fig-triage', { unit: 'alerts', highlight: ['Investigated>Incident'],
+    links: [
+      { source: 'Alerts', target: 'Closed automatically', value: 780 },
+      { source: 'Alerts', target: 'Queued for a person', value: 220 },
+      { source: 'Queued for a person', target: 'Dismissed', value: 164 },
+      { source: 'Queued for a person', target: 'Investigated', value: 56 },
+      { source: 'Investigated', target: 'Benign', value: 47 },
+      { source: 'Investigated', target: 'Incident', value: 9 },
+    ] });
+});</script>

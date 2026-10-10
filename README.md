@@ -6,14 +6,18 @@ Hunt & Hackett's skill for reports. It lets any coding agent turn data into a we
 
 Left alone, an agent picks the most common fonts, colours and chart settings it saw in training, and never looks at what it made. This skill replaces those defaults with a prebuilt kit the agent composes from, a short procedure, and a checker that renders the result and reports what is wrong with it.
 
-| Analytical | Narrative | Presentation |
+| | | |
 |---|---|---|
-| ![A customer quarterly review](skills/beautiful-html/examples/analytical/preview.png) | ![A retention review](skills/beautiful-html/examples/narrative/preview.png) | ![An incident review](skills/beautiful-html/examples/presentation/preview.png) |
-| Metrics and reviews, opening on key figures | Findings read start to end, behind a cover | Shown in a meeting, from a title screen |
+| ![A research note that opens on a navy cover](skills/beautiful-html/examples/research-note/preview.png) | ![A board brief that opens on three findings](skills/beautiful-html/examples/board-brief/preview.png) | ![A threat landscape that opens on its chart](skills/beautiful-html/examples/threat-landscape/preview.png) |
+| A research note: cover and byline | A board brief: findings in words | A trend: the chart is the front page |
+| ![A quarterly review that opens on key figures](skills/beautiful-html/examples/quarterly-review/preview.png) | ![An incident debrief that opens on a title screen](skills/beautiful-html/examples/attack-path/preview.png) | ![A retention review behind a cover](skills/beautiful-html/examples/retention-review/preview.png) |
+| A quarterly review: key figures | A debrief for a meeting: a title screen | An argument with a recommendation |
+
+Seven worked examples ship with the skill; these are the first screens of six. They are listed in [skills/beautiful-html/examples/README.md](skills/beautiful-html/examples/README.md).
 
 ## What you get
 
-- **One file.** Fonts, styles, charts and data are embedded. It opens offline, makes no network requests, and weighs about 0.7 MB.
+- **One file.** Fonts, styles, charts and data are embedded. It opens offline, makes no network requests, and weighs about 0.8 MB.
 - **Three art directions**: three layouts of the one Hunt & Hackett look, for reports that are scanned, read, or shown on a screen.
 - **A front page chosen for the content**: a navy cover, a byline, findings in words, the one figure that matters, or key figures. Numbers open a report only when the report is about them.
 - **Charts that follow the evidence**: direct labels, one highlighted series, titles that state the finding, bars from zero, palettes checked for colour-blind readers.
@@ -97,7 +101,7 @@ Only needed if you change the kit itself.
 npm install              # esbuild, for bundling
 npm run build            # regenerate directions and build the three kits
 npm test                 # 180+ tests; browser tests skip if no browser is found
-npm run examples         # check the examples and refresh their previews
+npm run examples         # check the seven examples and refresh their previews
 ```
 
 - **A different typeface or accent:** edit `src/directions.mjs`, add the family to `scripts/fetch-fonts.mjs` and run `node scripts/fetch-fonts.mjs`, then `npm run build`. Use fonts whose licence allows embedding; the shipped ones are under the SIL Open Font License.
