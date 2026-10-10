@@ -19,7 +19,7 @@ Task 2: complete (commits 3246540..72c20d2, tests: node --test tests/unit/ tests
 Task 3: Ruling: the skill arm installs the skill as a project skill (.claude/skills/beautiful-html in the temp dir) instead of --plugin-dir — mirrors `npx skills add`, needs no plugin manifest — cost if wrong: plugin packaging is not exercised by the evals (Task 12 verifies it separately). Supersedes the pre-flight ruling about an early plugin.json.
 Task 3: Ruling: data comes from a seeded generator evals/make-data.mjs, committed with its output — stories are reproducible — cost if wrong: none.
 Task 3: Ruling: evals/results/ is git-ignored for now; Task 11 decides what to commit — screenshots are large — cost if wrong: results not in history until then.
-Task 3: baseline arm launched in background (task bgqlmt20v), output evals/results/2026-10-10/, log /tmp/bh-eval-baseline.log.
+Task 3: baseline arm launched in the background; output in evals/results/2026-10-10/.
 Task 3: complete (commits 72c20d2..b2deefc, tests: node --test tests/unit/ → # duration_ms 652.641907)
 Task 4: Ruling: the chart modules (line, bar, dot, scatter, small) were written before tests/render/charts.test.mjs, then the tests were written and failed on real bugs (7 of 16) before passing — not strict red-green for those files; pure modules (labels, format, data, palette) were test-first — cost if wrong: chart behaviour not covered by a test may be untested by design.
 Task 4: Ruling: dumbbell uses y2, not x2 — "x is the category, y is the value" holds for bar and dot alike — cost if wrong: one option name differs from the plan.
@@ -80,3 +80,4 @@ Final: minor (deferred): git history holds about 4 MB of with-skill reports that
 Final: minor (deferred): on a phone, a three-zone diagram scrolls sideways; zones are not restacked.
 Task 11: complete (commits 5341b83..f21b07b, tests: node --test tests/unit/ → # duration_ms 2903.266789)
 Task 12: complete (commits 5341b83..f21b07b, tests: node --test tests/unit/ tests/render/ → # duration_ms 26568.29744)
+Published: repository created at https://github.com/cozybear-dev/beautiful-html on 2026-10-10. The "<owner>" stand-ins in the README, the spec and the manifests were replaced with the real name, and the editing guide now links to the repository.

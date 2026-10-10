@@ -29,26 +29,26 @@ Pick the route that fits how your people work. All three install the same skill.
 **Any agent that reads Agent Skills** (Claude Code, Codex, Cursor and others):
 
 ```
-npx skills add <owner>/beautiful-html
+npx skills add cozybear-dev/beautiful-html
 ```
 
-The current `skills` installer needs Node 22.20 or later. On an older Node, `npx skills@1.5.0 add <owner>/beautiful-html` works.
+The current `skills` installer needs Node 22.20 or later. On an older Node, `npx skills@1.5.0 add cozybear-dev/beautiful-html` works.
 
 **Claude Code, as a plugin:**
 
 ```
-/plugin marketplace add <owner>/beautiful-html
+/plugin marketplace add cozybear-dev/beautiful-html
 /plugin install beautiful-html@beautiful-html
 ```
 
 **Claude for a whole organisation** (Team or Enterprise): an Owner builds the zip and uploads it once under Organization settings > Plugins & skills > Add > Upload a skill. It then appears for everyone, including in Claude Code for people signed in with their Claude account.
 
 ```
-git clone https://github.com/<owner>/beautiful-html && cd beautiful-html
+git clone https://github.com/cozybear-dev/beautiful-html && cd beautiful-html
 node scripts/package-zip.mjs        # writes dist/beautiful-html.zip
 ```
 
-Replace `<owner>` with wherever this repository lives. A private repository works with all three routes; each person needs read access.
+All three routes work with a private repository; each person needs read access to it. If you fork the repository to set your own brand, use your fork's name in these commands.
 
 ## Use
 

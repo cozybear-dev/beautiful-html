@@ -6,5 +6,14 @@
     "name": "cozybear-dev"
   },
   "license": "MIT",
-  "keywords": ["report", "html", "charts", "diagrams", "data-visualisation", "design"]
+  "keywords": [
+    "report",
+    "html",
+    "charts",
+    "diagrams",
+    "data-visualisation",
+    "design"
+  ],
+  "homepage": "https://github.com/cozybear-dev/beautiful-html",
+  "repository": "https://github.com/cozybear-dev/beautiful-html"
 }

@@ -383,7 +383,7 @@ and read by other tools.
 
 ## Distribution
 
-- `npx skills add <owner>/beautiful-html` for Claude Code, Codex, Cursor and
+- `npx skills add cozybear-dev/beautiful-html` for Claude Code, Codex, Cursor and
   other agents that read the Agent Skills format.
 - Claude Code plugin: the repository is its own marketplace.
 - claude.ai: `scripts/package-zip.mjs` builds a zip an Owner uploads once under

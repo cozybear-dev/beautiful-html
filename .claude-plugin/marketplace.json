@@ -16,7 +16,9 @@
         "name": "cozybear-dev"
       },
       "license": "MIT",
-      "category": "productivity"
+      "category": "productivity",
+      "homepage": "https://github.com/cozybear-dev/beautiful-html",
+      "repository": "https://github.com/cozybear-dev/beautiful-html"
     }
   ]
 }
