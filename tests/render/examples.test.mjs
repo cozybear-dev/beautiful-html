@@ -12,6 +12,7 @@ const skip = findBrowser() ? false : 'no Chromium-based browser found';
 const skill = fileURLToPath(new URL('../../skills/beautiful-html/', import.meta.url));
 const template = readFileSync(join(skill, 'kit', 'content-template.html'), 'utf8');
 const guide = template.match(/<!--\s*EDITING GUIDE[\s\S]*?-->/)[0];
+const headLines = template.slice(template.indexOf('<style>html{visibility:hidden}</style>'), template.indexOf('<style id="bh-overrides">', template.indexOf('<title>')));
 
 const all = examples();
 const read = e => readFileSync(e.path, 'utf8');
@@ -23,6 +24,7 @@ for (const example of all) {
   test(`${name} example: complete, clean and previewed`, { skip }, async () => {
     const content = read(example);
     assert.ok(content.includes(guide), 'the example must carry the same editing guide as the template');
+    assert.ok(content.includes(headLines), 'the example must carry the template\'s head lines: the guard, the BH stub and the note for a file opened without a kit');
     assert.ok(!/\{\{[A-Z]/.test(content), 'placeholders left in');
     assert.match(content, /<style id="bh-overrides">\s*(\/\*[^*]*\*\/)?\s*<\/style>/, 'an example styles nothing itself');
     assert.ok(existsSync(join(dir, 'preview.png')) && statSync(join(dir, 'preview.png')).size > 20000, 'preview.png is missing');

@@ -50,6 +50,9 @@ are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
 <title>In-process COM still starts in LPAC when lpacCom is absent</title>
 <style>html{visibility:hidden}</style>
 <script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<!-- Opened without a kit, this file says so instead of showing a blank page. -->
+<script>addEventListener('DOMContentLoaded',()=>{const d=document.documentElement;if(document.getElementById('bh-kit-css'))return;d.style.visibility='visible';
+document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-space:pre-wrap;max-width:36em;margin:18vh auto;padding:0 1.5rem">This is the content of a report without its kit, so there is nothing to see yet.\nTo read it, join it to a kit from the beautiful-html skill:\n\ncat content.html kit/'+d.dataset.bhDirection+'.kit.html > report.html</pre>'})</script>
 <style id="bh-overrides">
 /* Leave empty: the Hunt & Hackett look is built into the kit. */
 </style>

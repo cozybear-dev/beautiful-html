@@ -59,3 +59,28 @@ test('the part of a report an editor reads is small', () => {
   assert.ok(content.length < 8000, `content is ${content.length} characters`);
   assert.ok(content.split('\n').every(l => l.length < 400), 'content lines are ordinary length');
 });
+
+// A content file is half a report. Opened by itself it used to be a blank
+// page, because the kit is what makes the page visible.
+test('a content file opened without its kit says what it is; a report never shows that note', { skip }, async () => {
+  const { closeBrowser, withPage, DESKTOP } = await import('../helpers/browser.mjs');
+  const note = `(async () => { await new Promise(r => setTimeout(r, 300)); const b = document.body; return { visible: getComputedStyle(document.documentElement).visibility, text: b.innerText.trim(), sections: document.querySelectorAll('.bh-section').length }; })()`;
+  try {
+    for (const name of ['content-template.html']) {
+      const content = fill(readFileSync(join(skill, 'kit', name), 'utf8')).replace('data-bh-direction="analytical"', 'data-bh-direction="narrative"');
+      await withPage(content, DESKTOP, async p => {
+        const r = await p.evaluate(note);
+        assert.equal(r.visible, 'visible');
+        assert.match(r.text, /content of a report without its kit/);
+        assert.match(r.text, /cat content\.html kit\/narrative\.kit\.html > report\.html/, 'it names the kit for this file\'s direction');
+        assert.equal(r.sections, 0, 'and shows only the note');
+      });
+      await withPage(content + kit('narrative'), { ...DESKTOP, reducedMotion: true }, async p => {
+        const r = await p.evaluate(note);
+        assert.equal(r.visible, 'visible');
+        assert.doesNotMatch(r.text, /without its kit/);
+        assert.equal(r.sections, 1);
+      });
+    }
+  } finally { await closeBrowser(); }
+});

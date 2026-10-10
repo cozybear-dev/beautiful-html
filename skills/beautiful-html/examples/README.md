@@ -16,10 +16,12 @@ Each front page is that report's choice, not its direction's: any front page wor
 
 `preview.png` in each folder is the first screen.
 
-To open one as a report, join it to the kit of its direction:
+A content file is half a report: opened in a browser by itself it shows only a note saying so. To see an example as a report, join it to the kit of its direction and open the result:
 
 ```
 cat examples/board-brief/content.html kit/analytical.kit.html > example.html
 ```
+
+In a clone of the repository, `npm run examples` does this for all seven and writes them to `dist/examples/`.
 
 The examples carry the Hunt & Hackett masthead to show the house look. `research-note` summarises a post Hunt & Hackett published and names its authors. The subjects of the other six are not Hunt & Hackett work: all names, companies and figures in them are invented.

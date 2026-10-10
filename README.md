@@ -13,7 +13,7 @@ Left alone, an agent picks the most common fonts, colours and chart settings it 
 | ![A quarterly review that opens on key figures](skills/beautiful-html/examples/quarterly-review/preview.png) | ![An incident debrief that opens on a title screen](skills/beautiful-html/examples/attack-path/preview.png) | ![A retention review behind a cover](skills/beautiful-html/examples/retention-review/preview.png) |
 | A quarterly review: key figures | A debrief for a meeting: a title screen | An argument with a recommendation |
 
-Seven worked examples ship with the skill; these are the first screens of six. They are listed in [skills/beautiful-html/examples/README.md](skills/beautiful-html/examples/README.md).
+Seven worked examples ship with the skill; these are the first screens of six. To open them as reports, run `npm run examples` and look in `dist/examples/`. They are listed in [skills/beautiful-html/examples/README.md](skills/beautiful-html/examples/README.md).
 
 ## What you get
 
@@ -101,7 +101,7 @@ Only needed if you change the kit itself.
 npm install              # esbuild, for bundling
 npm run build            # regenerate directions and build the three kits
 npm test                 # 180+ tests; browser tests skip if no browser is found
-npm run examples         # check the seven examples and refresh their previews
+npm run examples         # check the seven examples, refresh their previews, write them to dist/examples/
 ```
 
 - **A different typeface or accent:** edit `src/directions.mjs`, add the family to `scripts/fetch-fonts.mjs` and run `node scripts/fetch-fonts.mjs`, then `npm run build`. Use fonts whose licence allows embedding; the shipped ones are under the SIL Open Font License.

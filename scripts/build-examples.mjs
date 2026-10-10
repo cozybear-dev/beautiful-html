@@ -1,7 +1,8 @@
-// Assembles each shipped example, runs the checker on it, and saves the first
-// screen as examples/<name>/preview.png. Dev-only. Fails if an example is
-// not clean.
-import { copyFileSync, existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+// Assembles each shipped example, runs the checker on it, saves the first
+// screen as examples/<name>/preview.png, and writes the assembled report to
+// dist/examples/<name>.html so a person can open it. Dev-only. Fails if an
+// example is not clean.
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -25,6 +26,9 @@ export function examples() {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   // Every example carries the template's editing guide, word for word.
   const guide = readFileSync(join(skill, 'kit', 'content-template.html'), 'utf8').match(/<!--\s*EDITING GUIDE[\s\S]*?-->/)[0];
+  // A content file is half a report; these are the whole ones, to look at. Not committed.
+  const open = join(skill, '..', '..', 'dist', 'examples');
+  mkdirSync(open, { recursive: true });
   let failed = false;
   for (const { name, dir, path, direction } of examples()) {
     const text = readFileSync(path, 'utf8'), synced = text.replace(/<!--\s*EDITING GUIDE[\s\S]*?-->/, () => guide);
@@ -35,8 +39,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const report = await checkReport(file, { out: join(work, 'check') });
     const first = report.screenshots.find(s => s.endsWith('desktop-01.png'));
     if (first) copyFileSync(first, join(dir, 'preview.png'));
+    copyFileSync(file, join(open, `${name}.html`));
     console.log(`${name.padEnd(17)} ${direction.padEnd(13)} ${(report.bytes / 1024).toFixed(0)} KB, ${report.findings.length} finding(s)${first ? '' : ', no screenshot (no browser?)'}`);
     for (const f of report.findings) { failed = true; console.log(`  ${f.level} ${f.code}: ${f.message}`); }
   }
+  console.log(`Open them from ${open}`);
   process.exit(failed ? 1 : 0);
 }
