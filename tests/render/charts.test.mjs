@@ -123,3 +123,17 @@ test('two event notes close together on a narrow chart do not collide', { skip }
     BH.line('#f', { data: d, x: 't', y: 'v', unit: '%', annotations: [{ x: '13:52', text: 'Cache memory lowered', event: true }, { x: '14:16', text: 'Change rolled back', event: true }] });`);
   for (const mode of [DESKTOP, PHONE]) assert.ok(!(await audit(html, mode)).findings.some(f => f.code === 'label-overlap'), mode.name);
 });
+
+test('printing from a browser redraws charts at the paper width, then restores them', { skip }, async () => {
+  const html = page(fig('f'), `BH.line('#f', { data: [1,2,3,4].map(i => ({ m: new Date(Date.UTC(2026, i, 1)), v: i })), x: 'm', y: 'v' });`);
+  await withPage(html, DESKTOP, async p => {
+    const w = () => p.evaluate(`Number(document.querySelector('#f svg').getAttribute('width'))`);
+    const screen = await w();
+    assert.ok(screen > 800, `on screen the chart is ${screen}px wide`);
+    await p.evaluate(`window.dispatchEvent(new Event('beforeprint'))`);
+    const paper = await w();
+    assert.ok(paper > 600 && paper < 720, `for paper the chart is ${paper}px wide; an A4 page holds about 673px`);
+    await p.evaluate(`window.dispatchEvent(new Event('afterprint'))`);
+    assert.equal(await w(), screen);
+  });
+});

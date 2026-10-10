@@ -79,8 +79,11 @@ export function figure(kind, target, options, draw, { table, inline, after } = {
   const entry = { el, kind, options: { ...options }, width: 0, cleanup: null };
   entry.render = () => {
     if (entry.cleanup) { try { entry.cleanup(); } catch { /* ignore */ } entry.cleanup = null; }
-    const width = Math.max(240, Math.floor(el.getBoundingClientRect().width) || 640);
-    entry.width = width;
+    // `scale` is set while printing: the page is still laid out for the screen, so the
+    // figure is drawn at the width it will have on paper.
+    const measured = Math.floor(el.getBoundingClientRect().width) || 640;
+    const width = Math.max(240, Math.round(measured * (entry.scale || 1)));
+    entry.width = entry.scale ? measured : width;
     try {
       const out = draw(el, entry.options, width, entry);
       const nodes = Array.isArray(out) ? out : [out];
@@ -112,9 +115,21 @@ const resizeWatch = new ResizeObserver(entries => {
   resizeTimer = setTimeout(() => changed.forEach(e => e.render()), 120);
 });
 export const rerenderAll = () => live.forEach(e => e.render());
-// Paper shows the final state: finish all motion, then redraw at the print width.
-addEventListener('beforeprint', () => { settle(); rerenderAll(); });
-addEventListener('afterprint', rerenderAll);
+// Paper shows the final state: finish all motion, then redraw every figure at
+// the width it will have on the page. A4 with the kit's margins holds 178 mm.
+const PAPER_WIDTH = 178 / 25.4 * 96;
+function paperScale() {
+  const main = document.querySelector('main.bh-report');
+  if (!main || matchMedia('print').matches) return 1;         // already laid out for print
+  const probe = document.createElement('div');
+  probe.className = 'bh-wide';
+  (main.querySelector(':scope > .bh-section') || main).appendChild(probe);
+  const wide = probe.getBoundingClientRect().width;
+  probe.remove();
+  return wide > 0 ? Math.min(1.5, Math.max(0.4, PAPER_WIDTH / wide)) : 1;
+}
+addEventListener('beforeprint', () => { settle(); const scale = paperScale(); live.forEach(e => { e.scale = scale; e.render(); }); });
+addEventListener('afterprint', () => live.forEach(e => { e.scale = 0; e.render(); }));
 
 // --------------------------------------------------------------- data table
 

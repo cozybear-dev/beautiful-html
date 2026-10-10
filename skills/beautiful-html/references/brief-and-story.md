@@ -11,7 +11,7 @@ Write these four lines before any HTML. They decide everything else.
 | Decision | What will they decide or do with it? | Approve onboarding for two more teams |
 | Sharing | Email, print, screen in a meeting? | Emailed first, then shown in the meeting |
 
-The takeaway becomes the `<title>` and the `<h1>`. If you cannot write it, you have not finished the analysis: look at the data again, or ask one question.
+The takeaway becomes the `<title>` and the `<h1>`. Write it as a headline: one sentence of about a dozen words, so it sets in two lines. Detail and the second point go in the standfirst. If you cannot write it, you have not finished the analysis: look at the data again, or ask one question.
 
 ## Report shapes
 
