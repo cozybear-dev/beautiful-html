@@ -9,12 +9,13 @@ Left alone, an agent picks the most common fonts, colours and chart settings it 
 | Analytical | Narrative | Presentation |
 |---|---|---|
 | ![A customer quarterly review](skills/beautiful-html/examples/analytical/preview.png) | ![A retention review](skills/beautiful-html/examples/narrative/preview.png) | ![An incident review](skills/beautiful-html/examples/presentation/preview.png) |
-| Metrics and reviews | Findings read start to end | Shown in a meeting |
+| Metrics and reviews, opening on key figures | Findings read start to end, behind a cover | Shown in a meeting, from a title screen |
 
 ## What you get
 
 - **One file.** Fonts, styles, charts and data are embedded. It opens offline, makes no network requests, and weighs about 0.7 MB.
 - **Three art directions**: three layouts of the one Hunt & Hackett look, for reports that are scanned, read, or shown on a screen.
+- **A front page chosen for the content**: a navy cover, a byline, findings in words, the one figure that matters, or key figures. Numbers open a report only when the report is about them.
 - **Charts that follow the evidence**: direct labels, one highlighted series, titles that state the finding, bars from zero, palettes checked for colour-blind readers.
 - **Flow diagrams** of how systems connect, laid out automatically to minimise crossings, with zones, a highlighted path, hover tracing and step-by-step walkthroughs.
 - **Motion with a purpose**: figures draw in once, dots show the direction of flow, and readers who ask for reduced motion, or print, get the final state.

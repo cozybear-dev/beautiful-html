@@ -32,6 +32,21 @@ test('presentation shows where you are and moves with the arrow keys', { skip },
     assert.equal(await p.evaluate(`!!document.querySelector('.bh-nav')`), false);
   });
 });
+test('the navigator marks the section being read, and none above the first', { skip }, async () => {
+  const more = ['Third', 'Fourth'].map(n => `<section class="bh-section" data-nav="${n}"><h2>One more section, so the navigator appears</h2><p>Text.</p></section>`).join('\n');
+  const four = fixture('specimen.content.html').replace('</main>', `${more}\n</main>`);
+  await withPage(assemble(four), { ...DESKTOP, reducedMotion: true }, async p => {
+    const current = `(async () => { await new Promise(r => setTimeout(r, 200)); return [...document.querySelectorAll('.bh-nav a[aria-current]')].map(a => a.textContent); })()`;
+    assert.equal(await p.evaluate(`document.querySelectorAll('.bh-nav a').length`), 4);
+    assert.deepEqual(await p.evaluate(current), [], 'at the top, in the header');
+    await p.evaluate(`document.querySelectorAll('.bh-section')[1].scrollIntoView()`);
+    assert.equal((await p.evaluate(current)).length, 1);
+    await p.evaluate(`scrollTo(0, document.documentElement.scrollHeight)`);
+    assert.deepEqual(await p.evaluate(current), ['Fourth']);
+    await p.evaluate(`scrollTo(0, 0)`);
+    assert.deepEqual(await p.evaluate(current), [], 'back at the top');
+  });
+});
 test('narrative numbers its figures', { skip }, async () => {
   await withPage(specimen('narrative', 'light'), DESKTOP, async p => {
     const labels = await p.evaluate(`[...document.querySelectorAll('.bh-figure-title')].map(t => getComputedStyle(t, '::before').content)`);

@@ -37,6 +37,49 @@
 @media (max-width: 61.99rem) {
   .bh-meta { grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); padding-top: var(--bh-space-4); border-top: 1px solid var(--bh-rule); }
 }
+/* One line under the standfirst: who it is from, who it is for, and when. */
+.bh-byline { margin-top: var(--bh-space-5); font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
+/* What follows the headline is the report's choice: findings, a figure, key figures, or nothing. */
+.bh-header > .bh-figure, .bh-header > .bh-findings { grid-column: wide; }
+.bh-header > .bh-figure { margin-top: var(--bh-space-6); }
+
+/* -------------------------------------------------------------------- cover
+   The header as a title page: a band the width of the page in the dark
+   scheme's colours, which the direction sets on .bh-cover. On a dark page it
+   is the page; on paper it is light, like everything else. */
+.bh-report > .bh-header.bh-cover { background: var(--bh-ground); color: var(--bh-ink); }
+@media screen {
+  .bh-report > .bh-header.bh-cover { margin-top: calc(-1 * var(--bh-space-6)); padding-block: var(--bh-space-6) var(--bh-space-8); }
+}
+/* The band's edge already marks the start; the first section needs no rule. */
+.bh-report > .bh-cover ~ section.bh-section:first-of-type { padding-top: var(--bh-space-7); }
+.bh-report > .bh-cover ~ section.bh-section:first-of-type > h2 { border-top: 0; padding-top: 0; }
+
+/* ----------------------------------------------------------------- findings
+   What the report concludes, in words, where numbers would be filler. An <ol>
+   numbers them, so they can be referred to; a <ul> does not. */
+.bh-findings {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--bh-space-6);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0 var(--bh-space-6);
+  counter-reset: bh-finding;
+}
+.bh-section > .bh-findings { grid-column: wide; }
+.bh-findings > li { counter-increment: bh-finding; margin: 0; padding: var(--bh-space-3) 0 var(--bh-space-5); border-top: 1px solid var(--bh-ink); min-width: 0; }
+ol.bh-findings > li::before {
+  content: counter(bh-finding);
+  display: block;
+  margin-bottom: var(--bh-space-2);
+  font-family: var(--bh-font-display);
+  font-size: var(--bh-size-h2);
+  line-height: 1;
+  color: var(--bh-accent-ink);
+}
+.bh-findings :is(h2, h3, h4) { font-size: var(--bh-size-h3); line-height: var(--bh-leading-snug); letter-spacing: 0; }
+.bh-findings p { margin-top: var(--bh-space-2); font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
 
 /* ----------------------------------------------------------------- section */
 .bh-section { padding-top: var(--bh-space-8); }
@@ -46,6 +89,22 @@
   border-top: 1px solid var(--bh-ink);
 }
 .bh-section > h2 + * { margin-top: var(--bh-space-5); }
+/* A band sets one section apart on the surface colour, edge to edge. The
+   direction swaps ground and surface inside it. */
+.bh-report > .bh-section.bh-band { background: var(--bh-ground); margin-top: var(--bh-space-8); padding-block: var(--bh-space-7); }
+.bh-section.bh-band > h2 { border-top: 0; padding-top: 0; }
+/* One sentence set large: the point a section, or the report, comes down to. */
+.bh-report .bh-statement {
+  grid-column: wide;
+  max-width: 22em;
+  margin-block: var(--bh-space-6) var(--bh-space-4);
+  font-family: var(--bh-font-display);
+  font-size: var(--bh-size-h1);
+  font-weight: var(--bh-weight-display);
+  line-height: var(--bh-leading-tight);
+  letter-spacing: var(--bh-tracking-display);
+  text-wrap: balance;
+}
 .bh-lead { font-size: var(--bh-size-lead); font-weight: var(--bh-weight-lead); line-height: 1.4; }
 
 /* -------------------------------------------------------------- key figures
@@ -102,6 +161,40 @@
 .bh-callout > * + * { margin-top: var(--bh-space-3); }
 .bh-callout > h3, .bh-callout > h4 { font-size: var(--bh-size-h3); }
 .bh-callout-label { font-family: var(--bh-font-data); font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); color: var(--bh-accent-ink); }
+
+/* --------------------------------------------------------- code and terms
+   Commands, calls, log lines and configuration, as written. <mark> is the
+   line that matters; <i> is a comment beside it. */
+.bh-code {
+  margin: var(--bh-space-5) 0 0;
+  padding: var(--bh-space-4) var(--bh-space-5);
+  background: var(--bh-surface);
+  overflow-x: auto;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: var(--bh-size-small);
+  line-height: 1.7;
+  color: var(--bh-ink);
+  tab-size: 2;
+}
+.bh-code code { font-size: inherit; }
+.bh-code mark { background: var(--bh-accent-soft); color: var(--bh-ink); }
+.bh-code i { font-style: normal; color: var(--bh-ink-3); }
+/* Terms and what they mean, or settings and their values. */
+.bh-terms {
+  display: grid;
+  grid-template-columns: minmax(6rem, max-content) minmax(0, 1fr);
+  gap: var(--bh-space-2) var(--bh-space-5);
+  margin-top: var(--bh-space-5);
+  font-family: var(--bh-font-data);
+  font-size: var(--bh-size-small);
+  line-height: 1.5;
+}
+.bh-terms dt { font-weight: var(--bh-weight-strong); color: var(--bh-ink); }
+.bh-terms dd { color: var(--bh-ink-2); overflow-wrap: anywhere; }
+@media (max-width: 40rem) {
+  .bh-terms { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .bh-terms dd + dt { margin-top: var(--bh-space-3); }
+}
 
 /* Status: a shape and a word, so it never depends on colour. */
 .bh-status { font-family: var(--bh-font-data); display: inline-flex; align-items: baseline; gap: 0.4em; font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); white-space: nowrap; color: var(--bh-ink); }

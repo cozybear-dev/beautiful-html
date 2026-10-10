@@ -122,6 +122,7 @@ hr { border: 0; border-top: 1px solid var(--bh-rule); margin: var(--bh-space-6) 
     display: block;
     grid-column: wide;
   }
+  .bh-report > .bh-header.bh-cover, .bh-report > .bh-section.bh-band { padding-inline: var(--bh-space-5); }
 }
 
 /* Vertical rhythm inside a section: related things sit closer. */

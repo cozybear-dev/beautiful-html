@@ -17,22 +17,24 @@ The takeaway becomes the `<title>` and the `<h1>`. Write it as a headline: one s
 
 Pick the shape the content has. Drop or merge sections that would be empty.
 
-| Report | Order of sections |
-|---|---|
-| Performance or business review | Headline and key figures → what changed and why → where it is not working → what we propose |
-| Incident or problem review | What happened and the impact → how it unfolded (timeline, diagram) → why → what changes |
-| Experiment or analysis readout | The answer → how sure we are → where it differs → recommendation |
-| Survey or research findings | What got better and worse → where it is concentrated → what to do first |
-| System or data-flow overview | The whole picture → each zone or path → risks and controls → open items |
-| Proposal | The recommendation → the evidence → options compared → cost, timing, next step |
+| Report | Front page | Order of sections |
+|---|---|---|
+| Performance or business review | Key figures | What changed and why → where it is not working → what we propose |
+| Incident or problem review | Byline, or key figures for the impact | What happened → how it unfolded (timeline, diagram) → why → what changes |
+| Experiment or analysis readout | The figure that gives the answer | How sure we are → where it differs → recommendation |
+| Research or technical note | Cover and byline | How it works (diagram, code) → what was tested → what holds and what is open |
+| Assessment, audit or board brief | Findings | The evidence for each → options compared → recommendation |
+| System or data-flow overview | The diagram | Each zone or path → risks and controls → open items |
+| Proposal | Findings, or a byline | The evidence → options compared → cost, timing, next step |
 
-The first screen answers the reader's question. Do not open with background.
+The first screen answers the reader's question. Do not open with background. The front-page column is the usual choice, not a rule: open with whatever this reader needs first, and see "Front page" in `components.md` for the parts.
 
 ## Writing
 
 - **Headings and figure titles state findings.** "Enterprise churn halved after April", not "Churn by segment". If a heading works for any report, rewrite it.
 - **One claim per figure.** If a figure makes two points, it is two figures.
 - **Every number has a unit and a comparison**: against last period, a target, or another group. "536 users, up from 389 in June."
+- **A number earns its place by being a measure.** Do not count sections, steps or findings to have something to show large.
 - **Say where data comes from** in each figure's source note, with the period.
 - **Short sentences, plain words, active voice.** One term for one thing, the same every time.
 - **Be straight about what is bad or unknown.** A report that hides a problem loses the reader on the next page.

@@ -21,7 +21,7 @@ export const REQUIRED_TOKENS = ['ground', 'surface', 'ink', 'ink-2', 'ink-3', 'r
 // Read the colour tokens for one scheme out of a CSS file.
 export function parseTokens(css, scheme = 'light') {
   const block = scheme === 'dark'
-    ? css.match(/:root\[data-scheme=["']dark["']\]\s*\{([^}]*)\}/)
+    ? css.match(/:root\[data-scheme=["']dark["']\](?:\s*,[^{]*)?\s*\{([^}]*)\}/)
     : css.match(/:root\s*,\s*:root\[data-scheme=["']light["']\]\s*\{([^}]*)\}/) || css.match(/:root\[data-scheme=["']light["']\]\s*\{([^}]*)\}/);
   const out = {};
   if (block) for (const m of block[1].matchAll(/--bh-([\w-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/g)) out[m[1]] = m[2].toLowerCase();
@@ -37,7 +37,7 @@ export function checkTokens(t) {
     if (c < min) out.push(`--bh-${name} (${t[name]}) is ${c.toFixed(2)}:1 on --bh-${on} (${t[on]}); ${what} needs ${min}:1.`);
   };
   for (const name of ['ink', 'ink-2', 'ink-3', 'accent-ink', 'good', 'warn', 'bad']) { need(name, 'ground', 4.5, 'text'); need(name, 'surface', 4.5, 'text'); }
-  for (const name of ['rule-strong', 'neutral', 'accent']) need(name, 'ground', 3, 'a line or mark');
+  for (const name of ['rule-strong', 'neutral', 'accent']) { need(name, 'ground', 3, 'a line or mark'); need(name, 'surface', 3, 'a line or mark in a band'); }
   need('on-accent', 'accent', 4.5, 'text on the accent');
   need('ink', 'accent-soft', 4.5, 'text on the soft accent');
   if (t['cat-1'] && t.accent && t['cat-1'] !== t.accent) out.push(`--bh-cat-1 (${t['cat-1']}) must be the accent (${t.accent}), so a single highlighted series and the accent agree.`);
@@ -81,12 +81,12 @@ export function brandTokens({ accent, ground = '#ffffff', base } = {}) {
     // On a brand's own dark ground the quiet lines keep its hue, or they read as grey on colour.
     const own = (L, k) => hex(L, solid.C * k, solid.h);
     t.rule = dark ? (solid ? own(0.3, 0.6) : n(0.3, 1.2)) : n(0.9, 0.8);
-    t['rule-strong'] = until(dark ? n(0.56, 1.2) : n(0.65, 1.6), [t.ground], 3.1, dir);
+    t['rule-strong'] = until(dark ? n(0.56, 1.2) : n(0.65, 1.6), grounds, 3.1, dir);
     t.neutral = t['rule-strong'];
     t['neutral-soft'] = dark ? (solid ? own(0.4, 0.5) : n(0.38, 1.2)) : n(0.84);
     // The accent must be strong enough to draw lines and bars with.
     let acc = dark && !(solid && a.L >= 0.74) ? hex(Math.max(a.L, 0.74), a.C * 0.9, a.h) : accent;
-    const drawn = until(acc, [t.ground], 3.2, dir);
+    const drawn = until(until(acc, [t.ground], 3.2, dir), [t.surface], 3, dir);     // a band puts it on the surface
     if (!dark && drawn !== accent) notes.push(`The accent ${accent} is too light to draw with on ${t.ground}; lines, bars and rules use the darker ${drawn}. Keep ${accent} for large fills such as a cover band.`);
     acc = drawn;
     t.accent = acc;
@@ -115,8 +115,14 @@ export function brandTokens({ accent, ground = '#ffffff', base } = {}) {
 
 export function tokensToCss({ light, dark }) {
   const block = t => REQUIRED_TOKENS.map(k => `  --bh-${k}: ${t[k]};`).join('\n');
-  // Paper is always light: a report set to the dark scheme still prints with the light tokens.
-  return `:root, :root[data-scheme="light"] {\n${block(light)}\n}\n:root[data-scheme="dark"] {\n${block(dark)}\n}\n@media print {\n:root[data-scheme="dark"] {\n${block(light)}\n}\n}\n`;
+  // A cover (.bh-cover) is the header in the dark scheme's colours, whatever the page's scheme.
+  // A band (.bh-band) is a section on the surface colour: inside it ground and surface swap,
+  // so whatever is drawn "on the ground" still is.
+  const band = t => `  --bh-ground: ${t.surface};\n  --bh-surface: ${t.ground};`;
+  // Paper is always light: a dark report, and a cover, print with the light tokens.
+  return `:root, :root[data-scheme="light"] {\n${block(light)}\n}\n:root[data-scheme="dark"], .bh-cover {\n${block(dark)}\n}\n`
+    + `.bh-band {\n${band(light)}\n}\n:root[data-scheme="dark"] .bh-band {\n${band(dark)}\n}\n`
+    + `@media print {\n:root[data-scheme="dark"], .bh-cover {\n${block(light)}\n}\n:root[data-scheme="dark"] .bh-band {\n${band(light)}\n}\n}\n`;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

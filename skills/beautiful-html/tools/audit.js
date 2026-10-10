@@ -364,11 +364,17 @@
       const probe = document.createElement('span');
       probe.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none';
       scope.appendChild(probe);
-      const sizes = [], colors = new Set(['rgba(0, 0, 0, 0)']);
+      const sizes = [], colors = new Set(['rgba(0, 0, 0, 0)']), colorNames = [];
       for (const name of tokenNames) {
         if (/^--bh-size-/.test(name)) { probe.style.fontSize = `var(${name})`; sizes.push(parseFloat(getComputedStyle(probe).fontSize)); probe.style.fontSize = ''; }
         const raw = rootStyle.getPropertyValue(name).trim();
-        if (raw && CSS.supports('color', raw)) { probe.style.color = `var(${name})`; colors.add(getComputedStyle(probe).color); probe.style.color = ''; }
+        if (raw && CSS.supports('color', raw)) colorNames.push(name);
+      }
+      // A cover and a band give the colour tokens other values; those are token colours too.
+      for (const place of [scope, ...scope.querySelectorAll('.bh-cover, .bh-band')]) {
+        place.appendChild(probe);
+        for (const name of colorNames) { probe.style.color = `var(${name})`; colors.add(getComputedStyle(probe).color); }
+        probe.style.color = '';
       }
       probe.remove();
       const offSize = [], offColor = [];

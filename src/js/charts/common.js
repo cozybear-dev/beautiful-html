@@ -111,7 +111,9 @@ export function timeAxisX(values, width, { anchor = 'bottom' } = {}) {
   const lo = new Date(Math.min(...dates)), hi = new Date(Math.max(...dates));
   const span = hi - lo;
   const count = Math.max(2, Math.min(10, Math.floor(width / 96)));
-  const ticks = D3().utcTicks(lo, hi, count);
+  // Past two years the labels are years, so the ticks are whole years too: one label each.
+  const years = hi.getUTCFullYear() - lo.getUTCFullYear() + 1;
+  const ticks = D3().utcTicks(lo, hi, span > 730 * DAY ? D3().utcYear.every(Math.ceil(years / count)) : count);
   const loc = locale();
   const part = opts => d => new Intl.DateTimeFormat(loc, { ...opts, timeZone: 'UTC' }).format(d);
   const year = part({ year: 'numeric' });

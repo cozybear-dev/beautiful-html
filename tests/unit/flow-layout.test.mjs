@@ -100,6 +100,23 @@ test('edge labels do not overlap each other or any node', () => {
     }
   }
 });
+test('an edge label does not sit on the name of a zone', () => {
+  const g = {
+    zones: [{ id: 'out', label: 'Outside' }, { id: 'edge', label: 'Edge' }, { id: 'in', label: 'Servers' }],
+    nodes: [{ id: 'staff', label: 'Staff laptop', zone: 'out' }, { id: 'supplier', label: 'Supplier laptop', zone: 'out' }, { id: 'broker', label: 'Access broker', zone: 'edge' },
+      { id: 'vpn', label: 'Legacy gateway', zone: 'edge' }, { id: 'files', label: 'File servers', zone: 'in' }],
+    edges: [{ from: 'staff', to: 'broker', label: 'signs in' }, { from: 'broker', to: 'files', label: 'per application' }, { from: 'supplier', to: 'vpn', label: 'password' }, { from: 'vpn', to: 'files', label: 'whole network' }],
+  };
+  for (const direction of ['right', 'down']) for (const gaps of [undefined, { node: 14, band: 20, rank: 54, labelPad: 18 }]) {
+    const layout = layoutFlow(g, { direction, measure, gaps });
+    const names = layout.zones.map(z => ({ x: z.x + 12, y: z.y + 5, w: z.labelSize.w - 12, h: 14 }));
+    for (const r of routeEdges(layout)) for (const name of names) {
+      const b = { x: r.label.x - r.label.w / 2, y: r.label.y - r.label.h / 2, w: r.label.w, h: r.label.h };
+      assert.equal(overlap(b, name), false, `${direction}: "${r.label.text}" covers a zone name`);
+    }
+  }
+});
+
 test('every routed edge has a path, sampled points and an arrow at its real target', () => {
   const L = layoutFlow(graphs.cycle, { direction: 'right', measure });
   const at = id => L.nodes.find(n => n.id === id);

@@ -14,9 +14,12 @@ STRUCTURE
   <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
   A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
   <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
-  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
-  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
-  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
 
 FIGURES
   <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
@@ -54,27 +57,19 @@ are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
 <body>
 <main class="bh-report">
 
-<header class="bh-header">
+<!-- Front page: a cover and a byline. This is an argument read from start to end, so nothing stands between the standfirst and the first section. -->
+<header class="bh-header bh-cover">
   <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Retention review, third quarter 2026</span></div>
   <h1>Enterprise churn halved after the April pricing change</h1>
   <p class="bh-standfirst">Monthly churn among enterprise customers fell from <strong>2.1% to 0.9%</strong> in five months. Smaller customers, who kept the old pricing, did not move. We recommend extending usage bands to mid-market in the first quarter.</p>
-  <dl class="bh-meta">
-    <div><dt>Prepared for</dt><dd>Executive team</dd></div>
-    <div><dt>Period</dt><dd>January to September 2026</dd></div>
-    <div><dt>Prepared by</dt><dd>Revenue analytics</dd></div>
-  </dl>
-  <div class="bh-keyfigures">
-    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Enterprise churn, September</p><p class="bh-keyfigure-value">0.9<small>%</small> <span id="spark-churn"></span></p><p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="good">1.2 points</span> since January</p></div>
-    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Accounts on usage bands</p><p class="bh-keyfigure-value">412</p><p class="bh-keyfigure-note">of 530 enterprise accounts</p></div>
-    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Revenue kept, a year</p><p class="bh-keyfigure-value">1.28<small>m€</small></p><p class="bh-keyfigure-note">at the September rate</p></div>
-  </div>
+  <p class="bh-byline">By Revenue analytics, for the executive team. Covers January to September 2026.</p>
 </header>
 
 <section class="bh-section" data-nav="What changed">
   <h2>Only the segment that got the new pricing improved</h2>
   <p>In April we replaced per-seat pricing with usage bands for enterprise customers. Their churn fell in the first full month and has stayed down. Mid-market and small-business customers kept per-seat pricing, and their churn in September is where it was in January.</p>
   <aside class="bh-aside"><h3>How churn is measured</h3><p>Customers lost in the month, as a share of customers at the start of the month. A downgrade is not counted as a loss.</p></aside>
-  <p>Nothing else changed for enterprise customers in the period: the product releases, the support model and the account team were the same for all three segments. That makes the other two segments a fair comparison.</p>
+  <p>Nothing else changed for enterprise customers in the period: the product releases, the support model and the account team were the same for all three segments. That makes the other two segments a fair comparison. At the September rate, the lower churn keeps about 1.28 million euros of enterprise revenue a year.</p>
   <figure class="bh-figure">
     <h3 class="bh-figure-title">Enterprise churn fell within a month of the change and stayed down</h3>
     <p class="bh-figure-sub">Monthly logo churn by segment, %</p>
@@ -175,7 +170,6 @@ month,segment,churn
 
 <script id="bh-figures">BH.ready(() => {
   const churn = BH.data('#d-churn');
-  BH.spark('#spark-churn', { values: churn.filter(d => d.segment === 'Enterprise').map(d => d.churn) });
   BH.line('#fig-churn', { data: churn, x: 'month', y: 'churn', series: 'segment', unit: '%',
     highlight: 'Enterprise', contextLabel: 'Other segments',
     annotations: [{ x: '2026-04', series: 'Enterprise', text: 'Pricing change' }] });

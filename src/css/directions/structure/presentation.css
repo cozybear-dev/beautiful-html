@@ -20,6 +20,9 @@
 @media screen {
   .bh-report { padding-block: 0; }
   .bh-report > .bh-header, .bh-report > .bh-section { min-height: 100vh; min-height: 100svh; align-content: center; padding-block: var(--bh-space-7); scroll-snap-align: start; }
+  .bh-report > .bh-header.bh-cover { margin-top: 0; padding-block: var(--bh-space-7); }
+  .bh-report > .bh-section.bh-band { margin-top: 0; }
+  .bh-report > .bh-cover ~ section.bh-section:first-of-type { padding-top: var(--bh-space-7); }
 }
 .bh-header > h1 { margin-top: var(--bh-space-6); max-width: 16em; line-height: 1.02; }
 .bh-section > h2 { border-top: 0; padding-top: 0; max-width: 20em; line-height: 1.06; }

@@ -46,6 +46,14 @@ test('BH.spark and BH.waffle draw inline', { skip }, async () => {
   });
 });
 
+test('a time axis over several years labels each year once', { skip }, async () => {
+  const html = page(fig('f'), `const rows = []; for (let i = 0; i < 15; i++) rows.push({ q: new Date(Date.UTC(2023, i * 3, 1)), v: 21 - i }); BH.line('#f', { data: rows, x: 'q', y: 'v' });`);
+  await withPage(html, DESKTOP, async p => {
+    const ticks = await p.evaluate(`[...document.querySelectorAll('#f svg [aria-label="x-axis tick label"] text')].map(t => t.textContent)`);
+    assert.deepEqual(ticks, ['2023', '2024', '2025', '2026']);
+  });
+});
+
 test('a bar chart always includes zero, whatever the data', { skip }, async () => {
   const html = page(fig('f'), `BH.bar('#f', { data: [{q:'Q1',v:980},{q:'Q2',v:1010},{q:'Q3',v:1040}], x: 'q', y: 'v', layout: 'vertical' });`);
   await withPage(html, DESKTOP, async p => {

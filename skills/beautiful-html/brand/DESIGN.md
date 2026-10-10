@@ -47,9 +47,9 @@ The kits already carry these colours, the typefaces and the logo. Do not paste t
 One accent, used sparingly, on navy ink.
 
 - **Primary** {colors.primary} is the brand amber. It is too light to draw with on white, so on a light page lines, bars, links and rules use the darker {colors.primary-drawn}; on the navy dark scheme the amber is used as it is. It marks the one series, bar or path a figure is about and covers less than a tenth of any page. At full strength it appears in two fixed places only: the logo's ampersand and the rule under the masthead.
-- **Base** {colors.base} is the navy. It is the ink of the light scheme and the page of the dark scheme.
+- **Base** {colors.base} is the navy. It is the ink of the light scheme, the page of the dark scheme, and the band of a cover (`bh-cover`), where the site's own hero is navy with a white headline.
 - **Ink muted** {colors.ink-muted} is for subtitles, notes and axis labels.
-- **Surface** {colors.surface} tints a callout and the zones of a diagram.
+- **Surface** {colors.surface} tints a callout, a block of code, the zones of a diagram, and the band of a section set apart (`bh-band`).
 - **Secondary** {colors.secondary}, the site's steel blue, belongs to illustrations and covers. It is not a data colour.
 - **Good, warning, critical** mean status and nothing else, and always appear with a shape and a word. The site's own status colours ({colors.good} aside) are too light for text on white, so the kit's checked ones are used.
 
@@ -65,7 +65,7 @@ The two-line wordmark with the amber ampersand, as on the site. It is `brand/log
 
 ## Layout
 
-A reading column of about seventy characters, a side column for notes and definitions, and figures that span both. Everything starts on the same left edge. Space separates; rules mark a new section; corners are square; there are no cards and no shadows.
+A reading column of about seventy characters, a side column for notes and definitions, and figures that span both. Everything starts on the same left edge. Space separates; rules mark a new section; corners are square; there are no cards and no shadows. The front page is not fixed: after the headline it holds what the report needs, which may be a byline, findings in words, one figure, or key figures. A page of numbers is right for a review of measures and wrong for most other things.
 
 ## Do's and Don'ts
 

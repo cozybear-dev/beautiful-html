@@ -12,27 +12,51 @@ Everything goes inside `<main class="bh-report">`. The page is a grid with a **t
 
 A section with `class="bh-section bh-split"` puts its text on the left and its one figure on the right, for the full height. Use it for a tall figure, such as a top-to-bottom diagram, that should stay on screen beside the words about it. It stacks on small screens and in print.
 
-## Header
+## Front page
+
+The header always has the masthead, the headline and a standfirst. The rest is chosen for this report.
 
 ```html
 <header class="bh-header">
   <div class="bh-masthead">
     <span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span>   <!-- the kit's logo; plain text for another organisation -->
-    <span class="bh-doc">Quarterly business review, Q3 2026</span>
+    <span class="bh-doc">Research note, October 2026</span>
   </div>
-  <h1>Active use rose 38% after onboarding, but two teams are not yet on board</h1>
-  <p class="bh-standfirst">Two sentences: the evidence, with <strong>the key number</strong>, and what follows.</p>
-  <dl class="bh-meta">
-    <div><dt>Prepared for</dt><dd>Northwind Logistics</dd></div>
-    <div><dt>Period</dt><dd>July to September 2026</dd></div>
-  </dl>
-  <div class="bh-keyfigures"> … </div>                 <!-- optional -->
+  <h1>The capability check runs inside the process it is meant to confine</h1>
+  <p class="bh-standfirst">Two sentences: the evidence, with <strong>the point that matters most</strong>, and what follows.</p>
+  <p class="bh-byline">By the detection team, for the platform owners. 10 October 2026.</p>
 </header>
 ```
 
+| Part | What it is | Use it when |
+|---|---|---|
+| `bh-byline` | One line: who it is from, who it is for, the date or period | Nearly always |
+| `bh-meta` | A short list of facts in the side column (`<dl>` of `<div><dt>…</dt><dd>…</dd></div>`) | The reader files or cites the document: customer, period, version, classification. Instead of a byline, not as well |
+| `bh-findings` | Three or four conclusions in words, under rules | The reader wants the verdicts before the evidence |
+| A `bh-figure` | One chart or diagram, as wide as the masthead | The figure is the finding. Leave out the standfirst if the figure's title says it |
+| `bh-keyfigures` | Three or four measures with their comparisons | The report is about those measures |
+| `bh-cover` on the header | The header becomes a navy title band, edge to edge | A document that is sent out or published. Works with any of the above; prints light |
+
+A heading inside the header is an `<h2>`, whatever it is: `<h2 class="bh-figure-title">`, or the `<h2>` of a finding. The kit sets it by its class, not its level.
+
+Put a strip of numbers there only when the report is about them. A count of the things in the report ("4 calls, 2 routes, 0 servers") is not a measure; say it in the standfirst or leave it out.
+
+## Findings
+
+Conclusions in words. In the header they open the report; in a section they close it, as next steps or controls.
+
+```html
+<ol class="bh-findings">
+  <li><h2>The legacy gateway still accepts passwords alone</h2><p>It predates single sign-on and was left running for two suppliers.</p></li>
+  <li><h2>Backups have never been restored in a test</h2><p>Nobody can say how long a recovery would take.</p></li>
+</ol>
+```
+
+An `<ol>` numbers them, so a meeting can refer to "finding 2"; a `<ul>` does not. Two to four, each a sentence that could stand alone and one line of support. Inside a section the headings are `<h3>`.
+
 ## Key figures
 
-Three or four numbers the report rests on. A ruled strip, not cards. Each needs a comparison.
+Three or four measures the report rests on. A ruled strip, not cards. Each needs a comparison. In the header when they are what the reader came for; in a section when they belong to one finding.
 
 ```html
 <div class="bh-keyfigures">
@@ -65,6 +89,9 @@ Three or four numbers the report rests on. A ruled strip, not cards. Each needs 
 ```
 
 `data-nav` is the short name used by the section navigator, which appears by itself when there are four or more sections. Use `<h3>` for sub-headings; never skip a level. `<p class="bh-lead">` sets a larger opening paragraph.
+
+- `class="bh-section bh-band"` sets one section on a tinted band, edge to edge: the part that is different in kind, such as the path of an attack among findings, or the method. One or two in a report; never every other section.
+- `<p class="bh-statement">` is one sentence set as large as the headline: the point the report comes down to. It can be a section by itself, with no `<h2>`. At most one or two.
 
 ## Figure
 
@@ -112,6 +139,22 @@ For the one thing the reader must decide or remember. At most one or two in a re
 - `bh-status` is a shape and a word: `data-status="good|warn|bad"`. Status colours mean status only.
 - Use a table when the reader needs exact values or to look one row up; use a chart when they need the pattern.
 
+## Code and terms
+
+```html
+<pre class="bh-code"><code>CoInitializeEx(NULL, COINIT_MULTITHREADED)
+<mark>  -> E_ACCESSDENIED          <i>// the capability check</i></mark>
+CoCreateInstance(CLSID_Known, …)
+  -> CO_E_NOTINITIALIZED</code></pre>
+
+<dl class="bh-terms">
+  <dt>LPAC</dt><dd>Less Privileged AppContainer: a sandbox that starts with no access to shared resources.</dd>
+  <dt>lpacCom</dt><dd>The capability that lets such a process start COM.</dd>
+</dl>
+```
+
+`bh-code` is for commands, calls, log lines and configuration, exactly as written. `<mark>` is the line that matters and `<i>` a comment beside it. Keep lines under about 70 characters; add `bh-wide` for longer ones. It scrolls on a screen and wraps on paper. `bh-terms` sets terms and their meanings, or settings and their values, in two columns.
+
 ## Comparison and timeline
 
 ```html
@@ -138,6 +181,7 @@ For the one thing the reader must decide or remember. At most one or two in a re
 
 ## Composition
 
+- Open with what this reader needs first; that is rarely the same thing in two reports. See "Front page".
 - Give the reader a figure early. A section that is only text needs a reason.
 - Vary the rhythm: text, a wide figure, a pair, a table. Avoid three identical blocks in a row.
 - Do not nest components: no figure in a callout, no callout in a table.

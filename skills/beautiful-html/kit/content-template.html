@@ -14,9 +14,12 @@ STRUCTURE
   <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
   A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
   <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
-  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
-  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
-  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
 
 FIGURES
   <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
@@ -61,11 +64,7 @@ are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
   </div>
   <h1>{{THE FINDING OF THE REPORT IN ONE SENTENCE}}</h1>
   <p class="bh-standfirst">{{TWO SENTENCES: THE EVIDENCE FOR THE FINDING AND WHAT FOLLOWS FROM IT}}</p>
-  <dl class="bh-meta">
-    <div><dt>Prepared for</dt><dd>{{READER}}</dd></div>
-    <div><dt>Period</dt><dd>{{PERIOD}}</dd></div>
-    <div><dt>Prepared by</dt><dd>{{AUTHOR}}</dd></div>
-  </dl>
+  <p class="bh-byline">{{WHO IT IS FROM, WHO IT IS FOR, AND THE DATE OR PERIOD, IN ONE LINE}}</p>
 </header>
 
 <section class="bh-section" data-nav="{{SHORT NAME}}">

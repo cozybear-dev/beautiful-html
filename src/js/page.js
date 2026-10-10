@@ -46,15 +46,19 @@ export function buildNav() {
   nav.appendChild(list);
   const header = main.querySelector(':scope > .bh-header');
   if (header) header.after(nav); else main.prepend(nav);
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(entries => {
-      for (const e of entries) if (e.isIntersecting) {
-        links.forEach(a => a.removeAttribute('aria-current'));
-        links.get(e.target).setAttribute('aria-current', 'true');
-      }
-    }, { rootMargin: '-15% 0px -75% 0px' });
-    sections.forEach(s => io.observe(s));
-  }
+  // The section being read is the last one whose top has passed a line a quarter
+  // of the way down the window. Above the first there is none; at the end of
+  // the page it is the last, however short that one is.
+  let queued = false;
+  const mark = () => {
+    queued = false;
+    let current = null;
+    for (const s of sections) if (s.getBoundingClientRect().top <= innerHeight * 0.25) current = s;
+    if (current && scrollY + innerHeight >= document.documentElement.scrollHeight - 2) current = sections[sections.length - 1];
+    links.forEach((a, s) => { if (s === current) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(mark); } }, { passive: true });
+  mark();
 }
 
 // Presentation: one section per screen. Show where you are and let the arrow

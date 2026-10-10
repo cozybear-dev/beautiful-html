@@ -11,6 +11,9 @@
   h1, h2, h3, h4 { break-after: avoid; }
   .bh-figure, .bh-keyfigures, .bh-callout, .bh-table-wrap, .bh-compare > *, .bh-timeline > li, .bh-multiple, tr { break-inside: avoid; }
   .bh-table-wrap, .bh-data .bh-table-wrap { overflow: visible; max-height: none; }
+  .bh-code { overflow: visible; white-space: pre-wrap; overflow-wrap: anywhere; break-inside: avoid; }
+  .bh-findings > li, .bh-statement { break-inside: avoid; }
+  .bh-report > .bh-section.bh-band { padding-inline: var(--bh-space-5); }
   p, li { orphans: 3; widows: 3; }
   a { color: inherit; text-decoration: none; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

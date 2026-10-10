@@ -284,7 +284,7 @@ export function layoutFlow(g, opts = {}) {
   const frames = zones.filter(z => span.has(z.id)).map(z => {
     const m = nodes.filter(n => !n.virtual && N.get(n.id).zone === z.id);
     const x0 = Math.min(...m.map(n => n.x)), y0 = Math.min(...m.map(n => n.y)), x1 = Math.max(...m.map(n => n.x + n.w)), y1 = Math.max(...m.map(n => n.y + n.h));
-    return { id: z.id, label: z.label || z.id, x: x0 - G.pad, y: y0 - G.pad - G.zoneLabel, w: x1 - x0 + 2 * G.pad, h: y1 - y0 + 2 * G.pad + G.zoneLabel };
+    return { id: z.id, label: z.label || z.id, labelSize: measureLabel(z.label || z.id), x: x0 - G.pad, y: y0 - G.pad - G.zoneLabel, w: x1 - x0 + 2 * G.pad, h: y1 - y0 + 2 * G.pad + G.zoneLabel };
   });
   const layout = {
     direction, nodes, zones: frames,

@@ -18,6 +18,8 @@ A direction is a layout of the one Hunt & Hackett look: its own type scale and l
 - An argument with evidence, read in order: `narrative`.
 - Presented live, one point at a time: `presentation`. Write less text per section; each should fit one screen at 1280 by 720.
 
+A direction sets how the page is laid out, not how the report opens: the front page is chosen separately, from the content (see `components.md`).
+
 If a report is emailed first and then presented, write it in `analytical` or `narrative` and produce a `presentation` copy with `tools/rekit.mjs`.
 
 ## Setting it

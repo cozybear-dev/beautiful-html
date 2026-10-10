@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- EDITING GUIDE: fixture for the front-page parts: cover, byline, findings, a figure in the header, band, statement, code and terms. -->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Remote access is now the weakest edge of the estate</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides"></style>
+</head>
+<body>
+<main class="bh-report">
+<header class="bh-header bh-cover">
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Perimeter review, October 2026</span></div>
+  <h1>Remote access is now the weakest edge of the estate</h1>
+  <p class="bh-standfirst">The office network is in good order and the routes around it are neglected. <strong>We recommend retiring the legacy gateway before year end.</strong></p>
+  <p class="bh-byline">Prepared for the board by the security team, 10 October 2026.</p>
+  <ol class="bh-findings">
+    <li><h2>The legacy gateway still accepts passwords alone</h2><p>It predates single sign-on and was left running for two suppliers.</p></li>
+    <li><h2>Patching is fast wherever it is automated</h2><p>The servers that lag are the ones still patched by hand.</p></li>
+    <li><h2>Backups have never been restored in a test</h2><p>Nobody can say how long a recovery would take.</p></li>
+  </ol>
+  <figure class="bh-figure">
+    <h2 class="bh-figure-title">The time to act on a new finding has fallen for three years</h2>
+    <p class="bh-figure-sub">Median days from report to fix, by quarter</p>
+    <div class="bh-plot" id="fig-cover"></div>
+    <figcaption class="bh-figure-note">Source: the findings register, January 2023 to July 2026.</figcaption>
+  </figure>
+</header>
+
+<section class="bh-section" data-nav="Exposure">
+  <h2>Exposure fell everywhere except remote access</h2>
+  <p>We compared what an outsider can reach today with what they could reach at the last review. Four of five categories shrank, and remote access grew, because two supplier connections were added to the old gateway in the summer.</p>
+  <pre class="bh-code"><code>$ scan --external --since 2026-04-04
+<mark>vpn-legacy.example.net   443/tcp   password only        <i># added for two suppliers in July</i></mark>
+portal.example.net       443/tcp   single sign-on</code></pre>
+  <dl class="bh-terms">
+    <dt>Gateway</dt><dd>The appliance that ends remote connections inside the network.</dd>
+    <dt>Broker</dt><dd>The service that checks the person and the device before any connection is made.</dd>
+  </dl>
+</section>
+
+<section class="bh-section bh-band" data-nav="Path">
+  <h2>One supplier laptop is two steps from the file servers</h2>
+  <p>The gateway places its users directly on the server network, so nothing stands between a supplier's laptop and the shared drives.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The gateway skips the broker that every other route passes</h3>
+    <p class="bh-figure-sub">Routes from outside to the file servers</p>
+    <div class="bh-plot" id="fig-path"></div>
+    <figcaption class="bh-figure-note">Source: firewall rules of 3 October 2026.</figcaption>
+  </figure>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Remote access is the only category that grew</h3>
+    <p class="bh-figure-sub">Services reachable from outside, by month</p>
+    <div class="bh-plot" id="fig-band"></div>
+    <figcaption class="bh-figure-note">Source: external scans.</figcaption>
+  </figure>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Supplier connections on the legacy gateway</caption>
+      <thead><tr><th scope="col">Supplier</th><th scope="col" class="bh-num">Accounts</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Facilities contractor</th><td class="bh-num">14</td><td><span class="bh-status" data-status="bad">Passwords only</span></td></tr>
+        <tr><th scope="row">Payroll provider</th><td class="bh-num">3</td><td><span class="bh-status" data-status="warn">Moving in November</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Recommendation</p>
+    <h3>Retire the legacy gateway by 15 December</h3>
+    <p>It is the only option that removes the appliance. Both suppliers have confirmed they can move.</p>
+  </div>
+</section>
+
+<section class="bh-section">
+  <p class="bh-statement">Until the gateway is gone, a supplier's password is the perimeter.</p>
+  <ul class="bh-findings">
+    <li><h3>Owner</h3><p>Head of infrastructure.</p></li>
+    <li><h3>Next review</h3><p>January 2027.</p></li>
+  </ul>
+</section>
+
+<footer class="bh-footer"><p>A test fixture. The organisation and its figures are invented.</p></footer>
+</main>
+
+<script id="bh-figures">BH.ready(() => {
+  const quarters = Array.from({ length: 15 }, (_, i) => ({ quarter: new Date(Date.UTC(2023, i * 3, 1)), days: [21, 19, 20, 17, 15, 14, 11, 9, 8, 7, 6, 5, 5, 4, 4][i] }));
+  BH.line('#fig-cover', { data: quarters, x: 'quarter', y: 'days', unit: 'days', zero: true });
+  BH.flow('#fig-path', {
+    zones: [{ id: 'out', label: 'Outside' }, { id: 'edge', label: 'Edge' }, { id: 'in', label: 'Servers' }],
+    nodes: [
+      { id: 'staff', label: 'Staff laptop', kind: 'person', zone: 'out' },
+      { id: 'supplier', label: 'Supplier laptop', kind: 'external', zone: 'out' },
+      { id: 'broker', label: 'Access broker', kind: 'gateway', zone: 'edge' },
+      { id: 'vpn', label: 'Legacy gateway', kind: 'gateway', zone: 'edge' },
+      { id: 'files', label: 'File servers', kind: 'store', zone: 'in' },
+    ],
+    edges: [
+      { from: 'staff', to: 'broker', label: 'signs in' },
+      { from: 'broker', to: 'files', label: 'per application' },
+      { from: 'supplier', to: 'vpn', label: 'password' },
+      { from: 'vpn', to: 'files', label: 'whole network' },
+    ],
+    highlight: ['supplier', 'vpn', 'files'],
+  });
+  const months = ['2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'];
+  const series = { 'Remote access': [6, 6, 8, 9, 9, 9], 'Web applications': [31, 30, 28, 27, 25, 24], 'File transfer': [5, 4, 3, 2, 1, 1] };
+  const rows = Object.entries(series).flatMap(([category, v]) => v.map((services, i) => ({ month: new Date(months[i] + '-01T00:00:00Z'), category, services })));
+  BH.line('#fig-band', { data: rows, x: 'month', y: 'services', series: 'category', highlight: 'Remote access' });
+});</script>

@@ -14,9 +14,12 @@ STRUCTURE
   <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
   A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
   <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
-  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
-  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
-  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+  After the headline the header holds what this report needs: bh-standfirst, bh-byline or bh-meta, and
+  perhaps bh-findings, bh-keyfigures or one bh-figure. class="bh-header bh-cover" makes it a title band.
+  Parts: bh-figure, bh-callout, bh-table (inside bh-table-wrap), bh-compare, bh-timeline, bh-findings,
+  bh-statement (one large sentence), bh-code, bh-terms, bh-aside (side note), bh-pair (two figures),
+  bh-status, bh-delta, bh-notes, bh-footer. A section with class bh-band sits on a tinted band.
+  Everything sits in the text column unless it has class bh-wide.
 
 FIGURES
   <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
@@ -54,16 +57,22 @@ are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
 <body>
 <main class="bh-report">
 
+<!-- Front page: a title screen. The impact is the report's first point, so its numbers get the next screen to themselves. -->
 <header class="bh-header">
   <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Incident review INC-2291, 17 September 2026</span></div>
   <h1>One cache setting took checkout down for 47 minutes</h1>
   <p class="bh-standfirst">A memory limit was lowered on the feature cache. Fourteen minutes later, <strong>no customer could pay</strong>. The fault was four systems away from where it showed.</p>
+  <p class="bh-byline">Prepared by the platform team for the incident review of 24 September 2026.</p>
+</header>
+
+<section class="bh-section" data-nav="Impact">
+  <h2>For 47 minutes, nobody could pay</h2>
   <div class="bh-keyfigures">
     <div class="bh-keyfigure"><p class="bh-keyfigure-label">Checkout unavailable</p><p class="bh-keyfigure-value">47<small>minutes</small></p><p class="bh-keyfigure-note">14:06 to 14:53 UTC</p></div>
     <div class="bh-keyfigure"><p class="bh-keyfigure-label">Failed checkouts</p><p class="bh-keyfigure-value">18,420</p><p class="bh-keyfigure-note">15,890 customers</p></div>
     <div class="bh-keyfigure"><p class="bh-keyfigure-label">Revenue lost, estimate</p><p class="bh-keyfigure-value">412<small>k€</small></p><p class="bh-keyfigure-note">plus 38 k€ in service credits</p></div>
   </div>
-</header>
+</section>
 
 <section class="bh-section" data-nav="What happened">
   <h2>Checkout failed fourteen minutes after the change</h2>

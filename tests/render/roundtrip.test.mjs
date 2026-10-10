@@ -16,7 +16,7 @@ const FILL = {
   'DIRECTION': 'analytical', 'THE FINDING OF THE REPORT IN ONE SENTENCE': 'Weekly orders passed 4,000 for the first time in June',
   'WHO THIS IS FROM': 'Operations', 'KIND OF DOCUMENT AND PERIOD': 'Monthly review, June 2026',
   'TWO SENTENCES: THE EVIDENCE FOR THE FINDING AND WHAT FOLLOWS FROM IT': 'Orders rose in every week of the month. The second warehouse shift is now needed on Mondays.',
-  'READER': 'Leadership team', 'PERIOD': 'June 2026', 'AUTHOR': 'Operations analytics', 'SHORT NAME': 'Orders',
+  'WHO IT IS FROM, WHO IT IS FOR, AND THE DATE OR PERIOD, IN ONE LINE': 'By Operations analytics, for the leadership team. June 2026.', 'SHORT NAME': 'Orders',
   'A FINDING, NOT A TOPIC': 'Orders grew every week in June', 'WHAT THE READER NEEDS TO KNOW TO READ THE FIGURE': 'Each point is one week of confirmed orders, counted on the day the order was placed.',
   'WHAT THE FIGURE SHOWS, AS A FINDING': 'Weekly orders rose from 3,410 to 4,120', 'WHAT IS MEASURED AND ITS UNIT': 'Confirmed orders per week',
   'SOURCE AND DATE': 'order system, extracted 1 July 2026', 'WHO PREPARED THIS, FROM WHAT DATA, AND WHEN': 'Prepared by Operations analytics from the order system on 1 July 2026.',

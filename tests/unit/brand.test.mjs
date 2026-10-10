@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { brandTokens, checkTokens, tokensToCss, REQUIRED_TOKENS } from '../../skills/beautiful-html/tools/brand.mjs';
+import { brandTokens, checkTokens, parseTokens, tokensToCss, REQUIRED_TOKENS } from '../../skills/beautiful-html/tools/brand.mjs';
+import { contrast } from '../../skills/beautiful-html/tools/palette.mjs';
 
 for (const accent of ['#2347d9', '#0b6e75', '#6b2d73', '#e4572e', '#111111', '#ffd400', '#7ac943']) {
   test(`brandTokens(${accent}) gives complete, passing light and dark sets`, () => {
@@ -23,7 +24,23 @@ test('the brand accent is kept exactly when it already works', () => {
 test('tokensToCss writes both schemes as overrides', () => {
   const css = tokensToCss(brandTokens({ accent: '#0b6e75' }));
   assert.match(css, /:root,\s*:root\[data-scheme="light"\]\s*\{[\s\S]*--bh-accent:\s*#0b6e75/);
-  assert.match(css, /:root\[data-scheme="dark"\]\s*\{[\s\S]*--bh-ground:/);
+  assert.match(css, /:root\[data-scheme="dark"\], \.bh-cover\s*\{[\s\S]*--bh-ground:/);
+});
+test('a cover takes the dark colours and a band swaps ground and surface, and both print light', () => {
+  const sets = brandTokens({ accent: '#fcaf15', base: '#080630' });
+  const css = tokensToCss(sets);
+  assert.deepEqual(parseTokens(css, 'dark'), sets.dark, 'the dark block is still read back whole');
+  assert.ok(css.includes(`.bh-band {\n  --bh-ground: ${sets.light.surface};\n  --bh-surface: ${sets.light.ground};\n}`));
+  assert.ok(css.includes(`:root[data-scheme="dark"] .bh-band {\n  --bh-ground: ${sets.dark.surface};\n  --bh-surface: ${sets.dark.ground};\n}`));
+  const print = css.slice(css.indexOf('@media print'));
+  assert.match(print, /:root\[data-scheme="dark"\], \.bh-cover \{\n  --bh-ground: #ffffff;/);
+  assert.ok(print.includes(`:root[data-scheme="dark"] .bh-band {\n  --bh-ground: ${sets.light.surface};`));
+});
+test('lines and marks hold their contrast on the surface, where a band puts them', () => {
+  for (const def of [{ accent: '#fcaf15', base: '#080630' }, { accent: '#0b6e75' }, { accent: '#2347d9', ground: '#fbfbf9' }]) {
+    const { light, dark } = brandTokens(def);
+    for (const t of [light, dark]) for (const name of ['rule-strong', 'neutral', 'accent']) assert.ok(contrast(t[name], t.surface) >= 3, `${name} ${t[name]} on ${t.surface}`);
+  }
 });
 test('a dark base colour becomes the light ink and the dark ground, and both sets still pass', () => {
   const { light, dark } = brandTokens({ accent: '#fcaf15', base: '#080630' });

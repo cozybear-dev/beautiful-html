@@ -13,7 +13,7 @@ A report is **one self-contained HTML file**: your content on top, a prebuilt ki
 ## The five steps
 
 1. **Brief.** Before writing, state in one line each: the reader, the one thing they should take away, the decision it supports, and how it will be shared. If the takeaway cannot be worked out from the request and the data, ask one question. See [references/brief-and-story.md](references/brief-and-story.md).
-2. **Shape.** Choose one art direction from the table below and list the sections. Each section is one finding.
+2. **Shape.** Choose one art direction and one front page from the tables below, and list the sections. Each section is one finding.
 3. **Write.** Copy `<skill>/kit/content-template.html` to `content.html` in the working folder and fill it in. Page parts are in [references/components.md](references/components.md), charts in [references/charts.md](references/charts.md), system and flow diagrams in [references/diagrams.md](references/diagrams.md). A complete worked report for each direction is in [examples/](examples/README.md); read the one for your direction before you write.
 4. **Assemble.** Join your content to the kit:
    `cat content.html <skill>/kit/<direction>.kit.html > report.html`
@@ -22,11 +22,22 @@ A report is **one self-contained HTML file**: your content on top, a prebuilt ki
 
 | Direction | Use it for | Looks like |
 |---|---|---|
-| `analytical` | Metrics, performance reviews, operational reports | An annual report's review pages: thin rules, ruled key figures, notes in a side column |
+| `analytical` | Metrics, performance reviews, operational reports | An annual report's review pages: thin rules, notes in a side column |
 | `narrative` | Findings and recommendations read from start to end | A research post: a narrower reading column, an italic standfirst, numbered figures |
 | `presentation` | A report shown on a screen in a meeting | One idea per screen, large type; usually `data-scheme="dark"` |
 
 More on choosing and switching: [references/directions.md](references/directions.md).
+
+**The front page is a choice, not a form.** Every report opens with the masthead, the headline and a standfirst. What follows depends on the content:
+
+| After the standfirst | Use it when |
+|---|---|
+| A byline, then straight into the first section | Most notes, analyses and write-ups |
+| `bh-findings`: three or four conclusions in words | Advice, assessments, board briefs |
+| One `bh-figure` | A single chart or diagram is the finding |
+| `bh-keyfigures` | The report is about measures the reader tracks: a review, an incident's impact |
+
+Add `bh-cover` to the header for a document that is sent out or published. Never count things to fill a strip of numbers: a report that is not about measures has none on its front page.
 
 ## Rules that always hold
 
@@ -66,6 +77,7 @@ The file is the source. Find the kit line with `grep -n "BH-KIT" report.html` an
 | Writing a page from scratch with your own `<style>` | Fill in the template; the kit styles it |
 | A chart library from a CDN, or SVG charts drawn by hand | The `BH` functions; they handle scales, labels, colour and small screens |
 | A grid of rounded cards for numbers | `bh-keyfigures`, a ruled strip |
+| Key figures on every front page | Choose the front page from the content; most reports open without numbers |
 | Colouring every series | `highlight` the one that matters |
 | Boxes and arrows placed by hand | `BH.flow`, which lays out, routes and labels |
 | Skipping the check because the report is small | Run it every time and look at the screenshots; it finds overflow, low contrast and colliding labels you cannot see in the source |

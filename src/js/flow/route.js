@@ -74,8 +74,8 @@ export function routeEdges(layout, { direction = layout.direction, arrow = 7 } =
   });
 
   // Pass 2: labels and arrowheads. A label goes where it covers no node, no
-  // other label and, if possible, no other edge.
-  const placed = [];
+  // other label, no zone's name and, if possible, no other edge.
+  const placed = (layout.zones || []).filter(z => z.labelSize).map(z => ({ x: z.x + 8, y: z.y + 2, w: z.labelSize.w, h: 20 }));
   return drawn.map(({ e, pts, d, labelCurve, xyPts }) => {
     // The arrowhead sits at the real target. A reversed edge was laid out
     // backwards, so its target is where the drawn path starts.
