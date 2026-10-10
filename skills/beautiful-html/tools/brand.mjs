@@ -4,6 +4,7 @@
 //
 //   node brand.mjs --accent "#0b6e75"              print token overrides to paste into <style id="bh-overrides">
 //   node brand.mjs --accent "#0b6e75" --ground "#fbfbf9"
+//   node brand.mjs --accent "#fcaf15" --base "#080630"   a brand with a dark base colour: its ink, and its dark ground
 //   node brand.mjs --check tokens.css              check a hand-written token block
 //
 // Every set it prints passes the same checks the kit's own directions pass:
@@ -54,28 +55,37 @@ function until(colour, grounds, min, direction) {
 }
 
 // A full token set from one accent. `ground` sets the page colour of the light scheme.
-export function brandTokens({ accent, ground = '#ffffff' } = {}) {
+// `base` is a brand's dark base colour: it becomes the ink of the light scheme and
+// the ground of the dark one, and the neutrals lean toward it instead of the accent.
+export function brandTokens({ accent, ground = '#ffffff', base } = {}) {
   if (!/^#[0-9a-fA-F]{6}$/.test(accent || '')) throw new Error('Give the accent as a six-digit hex colour, for example --accent "#0b6e75".');
+  if (base != null && !/^#[0-9a-fA-F]{6}$/.test(base)) throw new Error('Give the base as a six-digit hex colour, for example --base "#080630".');
   accent = accent.toLowerCase();
   const notes = [];
   const a = toOklch(accent);
-  const tint = a.C < 0.03 ? 0 : 0.011;                                   // neutrals lean slightly toward the accent
-  const n = (L, k = 1) => hex(L, tint * k, a.h);
+  const b = base ? toOklch(base.toLowerCase()) : null;
+  if (b && (b.L > 0.3 || contrast(base, ground) < 12)) { notes.push(`The base ${base} is too light to be the ink and the dark ground; the neutrals lean toward it and nothing else changes.`); }
+  const lean = b || a;
+  const solid = b && b.L <= 0.3 && contrast(base, ground) >= 12 ? b : null;
+  const tint = lean.C < 0.03 ? 0 : 0.011;                                // neutrals lean slightly toward the base, or the accent
+  const n = (L, k = 1) => hex(L, tint * k, lean.h);
   const warm = a.h > 20 && a.h < 110;
   const build = dark => {
     const t = {};
-    t.ground = dark ? n(0.17, 1.2) : ground.toLowerCase();
-    t.surface = dark ? n(0.215, 1.3) : hex(toOklch(ground).L - 0.035, tint * 0.6, a.h);
+    t.ground = dark ? (solid ? base.toLowerCase() : n(0.17, 1.2)) : ground.toLowerCase();
+    t.surface = dark ? (solid ? hex(solid.L + 0.05, solid.C * 0.85, solid.h) : n(0.215, 1.3)) : hex(toOklch(ground).L - 0.035, tint * 0.6, lean.h);
     const grounds = [t.ground, t.surface], dir = dark ? 1 : -1;
-    t.ink = dark ? n(0.95, 0.6) : n(0.2, 1.3);
+    t.ink = dark ? n(0.95, 0.6) : solid ? base.toLowerCase() : n(0.2, 1.3);
     t['ink-2'] = until(dark ? n(0.79) : n(0.43, 1.6), grounds, 7, dir);
     t['ink-3'] = until(dark ? n(0.67, 1.2) : n(0.52, 1.6), grounds, 4.6, dir);
-    t.rule = dark ? n(0.3, 1.2) : n(0.9, 0.8);
+    // On a brand's own dark ground the quiet lines keep its hue, or they read as grey on colour.
+    const own = (L, k) => hex(L, solid.C * k, solid.h);
+    t.rule = dark ? (solid ? own(0.3, 0.6) : n(0.3, 1.2)) : n(0.9, 0.8);
     t['rule-strong'] = until(dark ? n(0.56, 1.2) : n(0.65, 1.6), [t.ground], 3.1, dir);
     t.neutral = t['rule-strong'];
-    t['neutral-soft'] = dark ? n(0.38, 1.2) : n(0.84);
+    t['neutral-soft'] = dark ? (solid ? own(0.4, 0.5) : n(0.38, 1.2)) : n(0.84);
     // The accent must be strong enough to draw lines and bars with.
-    let acc = dark ? hex(Math.max(a.L, 0.74), a.C * 0.9, a.h) : accent;
+    let acc = dark && !(solid && a.L >= 0.74) ? hex(Math.max(a.L, 0.74), a.C * 0.9, a.h) : accent;
     const drawn = until(acc, [t.ground], 3.2, dir);
     if (!dark && drawn !== accent) notes.push(`The accent ${accent} is too light to draw with on ${t.ground}; lines, bars and rules use the darker ${drawn}. Keep ${accent} for large fills such as a cover band.`);
     acc = drawn;
@@ -125,8 +135,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       }
       process.exit(bad ? 1 : 0);
     }
-    if (!opt('--accent')) { console.log('Usage: node brand.mjs --accent "#rrggbb" [--ground "#rrggbb"]   or   node brand.mjs --check tokens.css'); process.exit(2); }
-    const sets = brandTokens({ accent: opt('--accent'), ground: opt('--ground') || '#ffffff' });
+    if (!opt('--accent')) { console.log('Usage: node brand.mjs --accent "#rrggbb" [--ground "#rrggbb"] [--base "#rrggbb"]   or   node brand.mjs --check tokens.css'); process.exit(2); }
+    const sets = brandTokens({ accent: opt('--accent'), ground: opt('--ground') || '#ffffff', base: opt('--base') || undefined });
     console.log(tokensToCss(sets));
     sets.notes.forEach(note => console.error(`Note: ${note}`));
   } catch (e) {
