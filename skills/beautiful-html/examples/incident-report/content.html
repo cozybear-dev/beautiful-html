@@ -30,7 +30,7 @@ FIGURES
     BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
     BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
     BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
-    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
+    BH.heatmap(target, { data, x, y, value, unit })      BH.timeline(target, { data, x, label, series, phases })
     BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
     BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
   x is the category or date, y is the value. data comes from BH.data('#d-x').
@@ -116,9 +116,17 @@ document.body.innerHTML='<pre style="font:1rem/1.6 system-ui,sans-serif;white-sp
 </section>
 
 <section class="bh-section" data-nav="Timeline">
-  <h2>Thirty of the 41 hours passed on one workstation</h2>
+  <h2>Forty-one hours unseen, then five and a half to contain</h2>
+  <p>The line below is to scale. Above it is what the intruder did; below it, what the response did. Almost all of its length is the time before anyone knew.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">The intruder went unseen for 41 hours and was removed within six</h3>
+    <p class="bh-figure-sub">The intrusion and the response, 14 to 16 September 2026, times in UTC</p>
+    <div class="bh-plot" id="fig-timeline"></div>
+    <figcaption class="bh-figure-note">Source: mail, endpoint and directory logs, and the responders' own log.</figcaption>
+  </figure>
+  <h3>Thirty of those hours passed on one workstation</h3>
   <p>The intruder touched five systems. On four of them the activity lasted a few hours at most. The long bar is the wait on WS-FIN-07, and it was the best chance to catch the intrusion: a remote-access tool was checking in every ten minutes, from a finance workstation, for more than a day.</p>
-  <aside class="bh-aside"><h3>How to read it</h3><p>A bar is the time the intruder was active on a system. A dot is an event described in the path above. The dashed line is the first alert.</p></aside>
+  <aside class="bh-aside"><h3>How to read it</h3><p>A bar is the time the intruder was active on a system. A dot is an event on the line above. The dashed line is the first alert.</p></aside>
   <figure class="bh-figure">
     <h3 class="bh-figure-title">The wait on the workstation is most of the intrusion</h3>
     <p class="bh-figure-sub">Intruder activity by system, hours since first access</p>
@@ -186,6 +194,17 @@ $user = "MERIDIAN\svc-backup"
 <footer class="bh-footer"><p>Hunt &amp; Hackett Incident Response, 2 October 2026. An example report: Meridian Freight, the people and the events in it are invented.</p></footer>
 </main>
 
+<script type="text/csv" id="d-events">
+time,side,event,detail
+2026-09-14 08:12,Intruder,A session is stolen,A relay page keeps the session cookie.
+2026-09-14 10:15,Intruder,A colleague opens the document,The macro starts a remote-access tool on WS-FIN-07.
+2026-09-15 16:20,Intruder,An administrator signs in,The intruder has waited thirty hours for this.
+2026-09-15 22:10,Intruder,A password is read from a script,
+2026-09-16 01:20,Intruder,The directory is replicated,
+2026-09-16 01:50,Response,First alert,Read by an analyst four minutes later.
+2026-09-16 03:05,Response,WS-FIN-07 isolated,
+2026-09-16 07:20,Response,Three accounts disabled,The intruder has no way left in.
+</script>
 <script type="text/csv" id="d-lanes">
 system,start,end
 Finance mailbox,0,2.5
@@ -234,7 +253,11 @@ DC-01,41,Directory replicated
     ],
   });
 
-  // A timeline of intervals by system: a form the kit has no function for, so it is drawn with BH.plot.
+  BH.timeline('#fig-timeline', { data: BH.data('#d-events'), x: 'time', label: 'event', text: 'detail', series: 'side', highlight: ['First alert'],
+    phases: [{ from: '2026-09-14 08:12', to: '2026-09-16 01:50', label: 'Undetected', tone: 'bad' },
+             { from: '2026-09-16 01:50', to: '2026-09-16 07:20', label: 'Containment', tone: 'good' }] });
+
+  // Intervals by system: a form the kit has no function for, so it is drawn with BH.plot.
   const lanes = BH.data('#d-lanes'), events = BH.data('#d-events');
   const systems = lanes.map(d => d.system);
   BH.plot('#fig-lanes', {

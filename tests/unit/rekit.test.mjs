@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { splitReport, rekit } from '../../skills/beautiful-html/tools/rekit.mjs';
 import { staticCheck } from '../../skills/beautiful-html/tools/check.mjs';
 import { DIRECTIONS } from '../../scripts/build-kit.mjs';
+import { tempDir } from '../helpers/tmp.mjs';
 
 const skill = fileURLToPath(new URL('../../skills/beautiful-html/', import.meta.url));
 const kit = d => readFileSync(join(skill, 'kit', `${d}.kit.html`), 'utf8');
@@ -47,7 +47,7 @@ test('the editing guide is short and says where to edit and what not to open', (
   for (const phrase of [/BH-KIT/, /never|do not/i, /targeted|search and replace/i, /BH\.line/, /BH\.flow/, /bh-overrides/, /data-scheme/]) assert.match(guide, phrase);
 });
 test('the CLI swaps the kit in place and reports a file with no kit plainly', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'bh-rekit-'));
+  const dir = tempDir('bh-rekit-');
   const file = join(dir, 'report.html');
   writeFileSync(file, fill(template()) + kit('analytical'));
   const ok = spawnSync(process.execPath, [CLI, file, '--direction', 'narrative'], { encoding: 'utf8' });

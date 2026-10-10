@@ -205,3 +205,88 @@ test('a hairline that runs under a label is not taken for its background', { ski
   const html = page('<svg width="300" height="40" role="img" aria-label="A label on a grid line" style="font-family: var(--bh-font-data)"><line x1="150" y1="0" x2="150" y2="40" stroke="var(--bh-rule)"></line><text x="150" y="24" text-anchor="middle" fill="var(--bh-ink)" font-size="14">Workstations</text></svg>', '');
   assert.deepEqual((await audit(html)).findings.filter(f => f.code === 'low-contrast').map(f => f.message), []);
 });
+
+// ----------------------------------------------------------------- timeline
+const INCIDENT = `const at = s => new Date(s + 'Z');
+const ev = [
+  { t: at('2026-09-14T08:12'), what: 'A session is stolen', who: 'Intruder' },
+  { t: at('2026-09-14T10:15'), what: 'A colleague opens the document', who: 'Intruder' },
+  { t: at('2026-09-15T16:20'), what: 'An administrator signs in', who: 'Intruder' },
+  { t: at('2026-09-15T22:10'), what: 'A password is read from a script', who: 'Intruder' },
+  { t: at('2026-09-16T01:20'), what: 'The directory is replicated', who: 'Intruder' },
+  { t: at('2026-09-16T01:50'), what: 'First alert', who: 'Response', note: 'Read by an analyst four minutes later.' },
+  { t: at('2026-09-16T03:05'), what: 'Workstation isolated', who: 'Response' },
+  { t: at('2026-09-16T07:20'), what: 'Accounts disabled', who: 'Response' },
+].map(e => ({ note: null, ...e }));          // as from CSV: every row has every column, and an empty cell is null
+const phases = [{ from: '2026-09-14 08:12', to: '2026-09-16 01:50', label: 'Undetected', tone: 'bad' }, { from: '2026-09-16 01:50', to: '2026-09-16 07:20', label: 'Response', tone: 'good' }];`;
+const TIMELINE = `${INCIDENT} BH.timeline('#f', { data: ev, x: 't', label: 'what', text: 'note', series: 'who', highlight: ['First alert'], phases });`;
+test('BH.timeline draws an incident from start to end, to scale, with nothing on top of anything', { skip }, async () => {
+  const html = page(fig('f', 'The intruder was inside for 41 hours and out within six'), TIMELINE);
+  for (const mode of [DESKTOP, PHONE, { name: 'print', width: 794, height: 1123, media: 'print' }, { ...DESKTOP, name: 'reduced-motion', reducedMotion: true }]) {
+    assert.deepEqual((await audit(html, mode)).findings.map(f => `${f.code}: ${f.message}`), [], mode.name);
+  }
+  await withPage(html, { ...DESKTOP, reducedMotion: true }, async p => {
+    const r = await p.evaluate(`(() => { const el = document.querySelector('#f'), svg = el.querySelector('svg.bh-tl'), fig = el.closest('figure');
+      const axis = svg.querySelector('.bh-tl-track').getBoundingClientRect(), axisY = axis.top + axis.height / 2;
+      const events = [...svg.querySelectorAll('.bh-tl-event')].map(g => { const m = g.querySelector('.bh-tl-mark').getBoundingClientRect(), l = g.querySelector('.bh-tl-label').getBoundingClientRect(), s = g.querySelector('.bh-tl-stem').getBoundingClientRect();
+        return { x: m.left + m.width / 2, label: [l.left, l.top, l.right, l.bottom], stem: [s.left + s.width / 2, s.top, s.bottom], above: l.bottom < axisY, key: g.classList.contains('is-key'), text: g.querySelector('.bh-tl-what').textContent }; });
+      let crossed = 0;
+      for (const a of events) for (const b of events) if (a !== b && a.stem[0] > b.label[0] + 1 && a.stem[0] < b.label[2] - 1 && a.stem[1] < b.label[3] - 1 && a.stem[2] > b.label[1] + 1) crossed++;
+      return { events, crossed, phases: [...svg.querySelectorAll('.bh-tl-phase-label')].map(t => t.textContent), legend: (el.querySelector('.bh-legend') || {}).textContent || '',
+        ticks: svg.querySelectorAll('.bh-tl-tick').length, role: el.getAttribute('role'), table: fig.querySelectorAll('details.bh-data tbody tr').length, error: !!el.querySelector('.bh-error') }; })()`);
+    assert.equal(r.error, false);
+    assert.equal(r.events.length, 8);
+    assert.deepEqual(r.events.map(e => e.above), [true, true, true, true, true, false, false, false], 'the first group is above the line, the second below');
+    const xs = r.events.map(e => e.x), span = xs[7] - xs[0];
+    assert.ok(xs.every((x, i) => i === 0 || x >= xs[i - 1]), 'events run from left to right in time');
+    assert.ok(Math.abs((xs[2] - xs[0]) / span - (32 + 8 / 60) / (47 + 8 / 60)) < 0.01, 'the line is to scale: the long wait is long');
+    assert.equal(r.crossed, 0, 'no stem runs through the label of another event');
+    assert.deepEqual(r.events.filter(e => e.key).map(e => e.text), ['First alert']);
+    assert.equal(r.phases.length, 2);
+    assert.match(r.phases[0], /Undetected.*41 h 38 min/);
+    assert.match(r.phases[1], /Response.*5 h 30 min/);
+    assert.match(r.legend, /Intruder[\\s\\S]*Response/);
+    assert.ok(r.ticks >= 3);
+    assert.equal(r.role, 'img');
+    assert.equal(r.table, 8);
+  });
+});
+test('on a phone a timeline becomes a list in order, which says where the long gaps are', { skip }, async () => {
+  const html = page(fig('f'), TIMELINE);
+  await withPage(html, { ...PHONE, reducedMotion: true }, async p => {
+    const r = await p.evaluate(`(() => { const el = document.querySelector('#f'); return { svg: !!el.querySelector('svg.bh-tl'), items: [...el.querySelectorAll('.bh-tl-item')].map(li => li.querySelector('.bh-tl-what').textContent),
+      when: el.querySelector('.bh-tl-item .bh-tl-when').textContent, gaps: [...el.querySelectorAll('.bh-tl-gap')].map(li => li.textContent.trim()), phases: [...el.querySelectorAll('.bh-tl-phase')].map(li => li.textContent.replace(/\\s+/g, ' ').trim()),
+      note: (el.querySelector('.bh-tl-text') || {}).textContent, wide: el.scrollWidth > el.clientWidth + 1 }; })()`);
+    assert.equal(r.svg, false);
+    assert.equal(r.items.length, 8);
+    assert.equal(r.items[0], 'A session is stolen');
+    assert.match(r.when, /(14 Sep|Sep 14).*08:12/);
+    assert.ok(r.gaps.some(g => /30 h 5 min/.test(g)), `gaps: ${r.gaps.join(' | ')}`);
+    assert.deepEqual(r.phases, ['Undetected 41 h 38 min', 'Response 5 h 30 min']);
+    assert.equal(r.note, 'Read by an analyst four minutes later.');
+    assert.equal(r.wide, false);
+  });
+});
+test('a timeline too crowded to label along a line is drawn as the list instead', { skip }, async () => {
+  const html = page(fig('f'), `const ev = Array.from({ length: 9 }, (_, i) => ({ t: new Date(Date.UTC(2026, 8, 16, 1, 20 + i * 2)), what: 'Event number ' + (i + 1) + ' in a burst' })).concat([{ t: new Date(Date.UTC(2026, 8, 14, 8, 0)), what: 'Start' }]);
+    BH.timeline('#f', { data: ev, x: 't', label: 'what' });`);
+  assert.deepEqual((await audit(html)).findings.map(f => `${f.code}: ${f.message}`), []);
+  await withPage(html, { ...DESKTOP, reducedMotion: true }, async p => {
+    assert.deepEqual(await p.evaluate(`[!!document.querySelector('#f svg.bh-tl'), document.querySelectorAll('#f .bh-tl-item').length]`), [false, 10]);
+  });
+});
+test('a timeline counts in numbers as well as dates, and says what is wrong with a bad description', { skip }, async () => {
+  const html = page(fig('a') + fig('b') + fig('c') + fig('d'), `const steps = [{ h: 0, what: 'Start' }, { h: 2, what: 'Document opened' }, { h: 32, what: 'Administrator signs in' }, { h: 41, what: 'Directory replicated' }];
+    BH.timeline('#a', { data: steps, x: 'h', label: 'what', unit: 'h' });
+    BH.timeline('#b', { data: steps, x: 'h' });
+    BH.timeline('#c', { data: steps.map((s, i) => ({ ...s, who: 'Team ' + i })), x: 'h', label: 'what', series: 'who' });
+    BH.timeline('#d', { data: steps, x: 'h', label: 'what', phases: [{ from: 10, to: 4, label: 'Backwards' }] });`);
+  await withPage(html, { ...DESKTOP, reducedMotion: true }, async p => {
+    const r = await p.evaluate(`[document.querySelectorAll('#a .bh-tl-event').length, document.querySelector('#a .bh-tl-event .bh-tl-when').textContent, ...['#b', '#c', '#d'].map(s => document.querySelector(s + ' .bh-error').textContent)]`);
+    assert.equal(r[0], 4);
+    assert.match(r[1], /^0.h$/);
+    assert.match(r[2], /needs the label option/);
+    assert.match(r[3], /one or two groups/);
+    assert.match(r[4], /ends before it starts/);
+  });
+});

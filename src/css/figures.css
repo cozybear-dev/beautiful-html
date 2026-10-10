@@ -26,6 +26,22 @@
 .bh-heat-ramp i { width: 1.4em; height: 0.7em; background: var(--c); }
 .bh-heat text { font-variant-numeric: tabular-nums lining-nums; }
 
+/* Timeline: flags on a line of time, or the same events as a list in order. */
+.bh-tl { display: block; overflow: visible; }
+.bh-tl text { font-variant-numeric: tabular-nums lining-nums; }
+.bh-tl-list { list-style: none; margin: 0; padding: 0 0 0 5px; font-family: var(--bh-font-data); }
+.bh-tl-list > li { position: relative; margin: 0; padding: 0 0 var(--bh-space-4) var(--bh-space-5); border-left: 3px solid var(--tone, var(--bh-neutral-soft)); }
+.bh-tl-list > li:last-child { padding-bottom: 0; }
+.bh-tl-item::before { content: ""; position: absolute; left: -8px; top: 0.2em; width: 9px; height: 9px; border-radius: 50%; background: var(--bh-ink); border: 2px solid var(--bh-ground); }
+.bh-tl-item[data-group="1"]::before { background: var(--bh-ground); border-color: var(--bh-ink); }
+.bh-tl-item.is-key::before { left: -10px; width: 13px; height: 13px; background: var(--bh-accent); border-color: var(--bh-ground); }
+.bh-tl-list .bh-tl-when { font-size: var(--bh-size-micro); line-height: 1.3; color: var(--bh-ink-2); }
+.bh-tl-list .bh-tl-what { margin-top: 1px; font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); line-height: var(--bh-leading-snug); color: var(--bh-ink); }
+.bh-tl-list .bh-tl-text { margin-top: 2px; font-size: var(--bh-size-small); line-height: 1.45; color: var(--bh-ink-2); }
+.bh-tl-list > .bh-tl-phase { padding-bottom: var(--bh-space-3); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
+.bh-tl-phase strong { color: var(--bh-ink); }
+.bh-tl-list > .bh-tl-gap { border-left-style: dotted; font-size: var(--bh-size-micro); line-height: 1.3; color: var(--bh-ink-2); padding-block: var(--bh-space-3) var(--bh-space-5); }
+
 /* Small multiples: the same chart once per case, on one scale. */
 .bh-multiples { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr)); gap: var(--bh-space-5) var(--bh-space-5); }
 .bh-multiple { min-width: 0; }

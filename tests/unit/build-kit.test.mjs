@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildKit, logo } from '../../scripts/build-kit.mjs';
+import { tempDir } from '../helpers/tmp.mjs';
 
 test('analytical kit builds within budget and is self-contained', async () => {
   const { path, bytes } = await buildKit('analytical');
@@ -22,7 +23,7 @@ test('analytical kit builds within budget and is self-contained', async () => {
 test('the logo is one plain drawing with a viewBox, and anything else is refused', () => {
   assert.match(logo(), /^<svg\s[^>]*viewBox=/);
   assert.ok(!/<style|\sclass=/.test(logo()), 'its rules would apply to the whole report');
-  const file = join(mkdtempSync(join(tmpdir(), 'bh-logo-')), 'logo.svg');
+  const file = join(tempDir('bh-logo-'), 'logo.svg');
   for (const bad of ['<p>not a drawing</p>', '<svg width="10" height="10"><path d="M0 0h1"/></svg>',
     '<svg viewBox="0 0 1 1"><style>.a{fill:red}</style><path class="a" d="M0 0h1"/></svg>', '<svg viewBox="0 0 1 1"><path class="a" d="M0 0h1"/></svg>']) {
     writeFileSync(file, bad);

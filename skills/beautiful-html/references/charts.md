@@ -10,6 +10,7 @@
 | How do the parts add up? | `BH.bar` with `mode: 'stacked'` | A pie; more than 5 parts |
 | Do these two things move together? | `BH.scatter` | Two lines on two axes |
 | How does the same pattern differ by group? | `facet` (small multiples) | Seven lines on one chart |
+| What happened when, and how long did each part take? | `BH.timeline` | A list of timestamps; a Gantt chart of every task |
 | Where is it concentrated, across two groupings? | `BH.heatmap` | A table of numbers; a 3D chart |
 | What share is it? | `BH.waffle`, or just the number | A gauge |
 | Where does volume go between stages? | `BH.sankey` (see `diagrams.md`) | Stacked bars |
@@ -100,6 +101,35 @@ A value for every pair of two categories: `x` names the columns, `y` the rows, `
 - The value is written in each cell when it fits; on a phone, or with many columns, the cells carry colour only and the data table has the numbers.
 - The scale starts at zero when the data is near it. `domain: [lo, hi]` sets it.
 - At most 40 rows and 31 columns. Aggregate first: a heatmap of raw events is noise.
+
+## `BH.timeline`
+
+```html
+<script type="text/csv" id="d-events">
+time,side,event,detail
+2026-09-14 08:12,Intruder,A session is stolen,A relay page keeps the session cookie.
+2026-09-16 01:50,Response,First alert,Read by an analyst four minutes later.
+2026-09-16 07:20,Response,Accounts disabled,
+</script>
+```
+
+```js
+BH.timeline('#fig-timeline', { data: BH.data('#d-events'), x: 'time', label: 'event', text: 'detail', series: 'side',
+  highlight: ['First alert'],
+  phases: [{ from: '2026-09-14 08:12', to: '2026-09-16 01:50', label: 'Undetected', tone: 'bad' },
+           { from: '2026-09-16 01:50', to: '2026-09-16 07:20', label: 'Containment', tone: 'good' }] });
+```
+
+What happened when, from start to end, drawn to scale: an incident, an outage, a project, a migration. Each event is a flag on a line of time. Because the line is to scale, a long silence looks long and a burst looks like a burst, which is usually the point.
+
+- `x` is the moment: dates and times (`2026-09-14 08:12`, read as UTC) or plain numbers such as hours since the start, with `unit`. `label` is what happened, in a few words; long labels wrap to at most three lines.
+- `series` splits the events into two sides: the first group named stands above the line, the second hangs below it. Use it for two parties in one story: the intruder and the response, the supplier and us. More than two groups is refused.
+- `phases` colour the line and are bracketed and named above it, with their length worked out for you ("41 h 38 min"). `tone` is `bad`, `warn`, `good` or `accent`; leave it out for a neutral phase. Tones are status colours, so use them only where a phase is good or bad.
+- `highlight` names the one or two events the figure turns on. `text` is a column with a sentence of detail for each event.
+- On a phone, or when events crowd too tightly to label along a line, the same events are set as a list in order. The list shows the `text` detail and says in words where the long gaps are ("30 h 5 min later"). `layout: 'list'` asks for the list everywhere.
+- Six to ten events is right. For more, keep the turning points and put the rest in a table.
+
+For dated items that need no scale, such as a plan with four dates, the `bh-timeline` list in `components.md` is enough.
 
 ## `BH.spark` and `BH.waffle`
 

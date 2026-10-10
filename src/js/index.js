@@ -7,6 +7,7 @@ import { drawDot } from './charts/dot.js';
 import { drawScatter } from './charts/scatter.js';
 import { drawPlot, drawSpark, drawWaffle } from './charts/small.js';
 import { drawHeatmap, heatmapTable } from './charts/heatmap.js';
+import { drawTimeline, timelineTable } from './charts/timeline.js';
 import { drawFlow, flowTable } from './flow/render.js';
 import { drawSankey, sankeyTable } from './flow/sankey.js';
 import { buildLogo, buildNav, buildProgress, buildSteps } from './page.js';
@@ -17,6 +18,7 @@ BH.bar = (target, o = {}) => figure('bar', target, o, drawBar, { table: opts => 
 BH.dot = (target, o = {}) => figure('dot', target, o, drawDot, { table: opts => tableSpec(opts, ['x', 'series', 'y', 'y2']) });
 BH.scatter = (target, o = {}) => figure('scatter', target, o, drawScatter, { table: opts => tableSpec(opts, ['label', 'series', 'x', 'y', 'size']) });
 BH.heatmap = (target, o = {}) => figure('heatmap', target, o, drawHeatmap, { table: heatmapTable });
+BH.timeline = (target, o = {}) => figure('timeline', target, o, drawTimeline, { table: timelineTable });
 BH.spark = (target, o = {}) => figure('spark', target, o, drawSpark, { inline: 'bh-spark' });
 BH.waffle = (target, o = {}) => figure('waffle', target, o, drawWaffle, { inline: 'bh-waffle-wrap' });
 BH.plot = (target, spec = {}) => figure('plot', target, spec, drawPlot);

@@ -169,6 +169,8 @@ CoCreateInstance(CLSID_Known, …)
 </ol>
 ```
 
+`bh-timeline` is a plain list of dated items. To show how long things took, or two sides of one story, draw it to scale with `BH.timeline` (see `charts.md`).
+
 `bh-compare` sets two to four options side by side under rules. Keep each to a heading and a sentence or two; the text is set small, so anything longer belongs in the section body. In a timeline, `data-key` marks the moments that matter.
 
 ## Notes and footer

@@ -6,7 +6,7 @@ license: MIT. Embedded fonts and libraries keep their own licences; see licenses
 
 # beautiful-html
 
-A report is **one self-contained HTML file**: your content on top, a prebuilt kit underneath. The kit holds the typefaces, the layout, the chart and diagram code, and the motion. The kit is Hunt & Hackett's: navy ink, Playfair Display headings over Lato, the logo in the masthead. You write the content and call the kit's functions. You do not design the page, write layout CSS, load a chart library, or draw charts by hand; that is what produces the generic look this skill replaces.
+A report is **one self-contained HTML file**: your content on top, a prebuilt kit underneath. The kit holds the typefaces, the layout, the chart and diagram code, and the motion. The kit is Hunt & Hackett's: navy ink, Playfair Display headings over Lato, the logo in the masthead. You write the content and call the kit's functions. You do not design the page, write layout CSS, load a chart library, or draw charts by hand.
 
 `<skill>` below means the folder that contains this file.
 
@@ -59,6 +59,7 @@ Add `bh-cover` to the header for a document that is sent out or published. Never
 | Size or ranking | `BH.bar(target, { data, x, y, highlight, unit })`; add `series` with `mode: 'grouped'` or `'stacked'` |
 | Before and after, or values on one scale | `BH.dot(target, { data, x, y, y2, unit })` |
 | How two measures relate | `BH.scatter(target, { data, x, y, label, trend })` |
+| What happened when, to scale | `BH.timeline(target, { data, x, label, series, phases })` |
 | A value for every pair of two groupings | `BH.heatmap(target, { data, x, y, value, unit })` |
 | The same chart for several groups | add `facet: 'column'` to line, bar, dot or scatter |
 | How systems connect, what flows where | `BH.flow(target, { nodes, edges, zones, highlight, steps, flow })`; `bh-step` blocks make it follow the text |
@@ -82,7 +83,6 @@ The file is the source. Find the kit line with `grep -n "BH-KIT" report.html` an
 | Colouring every series | `highlight` the one that matters |
 | Boxes and arrows placed by hand | `BH.flow`, which lays out, routes and labels |
 | Skipping the check because the report is small | Run it every time and look at the screenshots; it finds overflow, low contrast and colliding labels you cannot see in the source |
-| Opening `report.html` to inspect it | Read `content.html`; the report is the same text plus the kit |
 | A third or fourth round of polishing | Stop after two; deliver, and say what remains |
 
 ## Delivering

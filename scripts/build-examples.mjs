@@ -2,7 +2,7 @@
 // screen as examples/<name>/preview.png, and writes the assembled report to
 // dist/examples/<name>.html so a person can open it. Dev-only. Fails if an
 // example is not clean.
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -41,6 +41,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     const first = report.screenshots.find(s => s.endsWith('desktop-01.png'));
     if (first) copyFileSync(first, join(dir, 'preview.png'));
     copyFileSync(file, join(open, `${name}.html`));
+    rmSync(work, { recursive: true, force: true });
     console.log(`${name.padEnd(17)} ${direction.padEnd(13)} ${(report.bytes / 1024).toFixed(0)} KB, ${report.findings.length} finding(s)${first ? '' : ', no screenshot (no browser?)'}`);
     for (const f of report.findings) { failed = true; console.log(`  ${f.level} ${f.code}: ${f.message}`); }
   }

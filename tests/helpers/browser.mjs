@@ -1,9 +1,9 @@
 // Shared browser for render tests. Tests skip with a notice when none is found.
-import { mkdtempSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { findBrowser, launch, auditFile } from '../../skills/beautiful-html/tools/check.mjs';
+import { tempDir } from './tmp.mjs';
 
 export const browserPath = findBrowser();
 export const skip = browserPath ? false : 'no Chromium-based browser found; set BH_BROWSER to run render tests';
@@ -11,7 +11,7 @@ export const DESKTOP = { name: 'desktop', width: 1440, height: 900 };
 export const PHONE = { name: 'phone', width: 390, height: 844 };
 
 let browser;
-const dir = mkdtempSync(join(tmpdir(), 'bh-test-'));
+const dir = tempDir('bh-test-');
 let n = 0;
 
 export async function getBrowser() {

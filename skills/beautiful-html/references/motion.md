@@ -4,7 +4,7 @@ The kit moves things for three reasons only. You get all of it by using the kit;
 
 | Kind | What moves | When |
 |---|---|---|
-| Entrance | The header settles in. Each figure animates once as it scrolls into view: lines draw, bars grow from the baseline, key figures count up, diagram edges draw in the order of the flow | Once |
+| Entrance | The header settles in. Each figure animates once as it scrolls into view: lines draw, bars grow from the baseline, key figures count up, diagram edges draw in the order of the flow, a timeline runs from start to end | Once |
 | Flow | Dots travel along a diagram's edges, showing direction; more dots where more flows | While the diagram is on screen, with a Pause button |
 | Response | Pointing at a diagram node lights what feeds it and what it feeds; a walkthrough moves step by step; a pinned diagram shows the step of the text being read | When the reader acts |
 

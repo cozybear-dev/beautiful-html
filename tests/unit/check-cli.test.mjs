@@ -2,15 +2,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, writeFileSync, existsSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { findBrowser } from '../../skills/beautiful-html/tools/check.mjs';
+import { tempDir } from '../helpers/tmp.mjs';
 
 const CLI = fileURLToPath(new URL('../../skills/beautiful-html/tools/check.mjs', import.meta.url));
-const dir = mkdtempSync(join(tmpdir(), 'bh cli '));
-const emptyHome = mkdtempSync(join(tmpdir(), 'bh-home-'));
+const dir = tempDir('bh cli ');
+const emptyHome = tempDir('bh-home-');
 const good = `<!doctype html>
 <!-- EDITING GUIDE: test -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>T</title></head>

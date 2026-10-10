@@ -30,7 +30,7 @@ FIGURES
     BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
     BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
     BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
-    BH.heatmap(target, { data, x, y, value, unit })      x names the columns, y the rows
+    BH.heatmap(target, { data, x, y, value, unit })      BH.timeline(target, { data, x, label, series, phases })
     BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
     BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
   x is the category or date, y is the value. data comes from BH.data('#d-x').

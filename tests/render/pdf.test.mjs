@@ -4,18 +4,18 @@
 // of the section after it, in a layout that looked right in every other view.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkReport, findBrowser } from '../../skills/beautiful-html/tools/check.mjs';
 import { examples } from '../../scripts/build-examples.mjs';
 import { assemble, fixture } from '../helpers/assemble.mjs';
 import { pdfAvailable, pdfPages, textOffPage, textOverlaps } from '../helpers/pdf.mjs';
+import { tempDir } from '../helpers/tmp.mjs';
 
 const skip = !findBrowser() ? 'no Chromium-based browser found' : !(await pdfAvailable()) ? 'pdfjs-dist is not installed (npm install)' : false;
 const skill = fileURLToPath(new URL('../../skills/beautiful-html/', import.meta.url));
-const work = mkdtempSync(join(tmpdir(), 'bh-pdf-'));
+const work = tempDir('bh-pdf-');
 
 async function printed(html, name) {
   const file = join(work, `${name}.html`);

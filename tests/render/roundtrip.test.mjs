@@ -2,12 +2,12 @@
 // look, and still pass the whole check.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkReport, findBrowser } from '../../skills/beautiful-html/tools/check.mjs';
 import { rekit, splitReport } from '../../skills/beautiful-html/tools/rekit.mjs';
+import { tempDir } from '../helpers/tmp.mjs';
 
 const skip = findBrowser() ? false : 'no Chromium-based browser found';
 const skill = fileURLToPath(new URL('../../skills/beautiful-html/', import.meta.url));
@@ -25,7 +25,7 @@ const FILL = {
 const fill = t => t.replace(/\{\{\s*([A-Z][A-Z0-9_ ,:]*?)\s*\}\}/g, (m, key) => { assert.ok(key in FILL, `the template has an unknown placeholder ${m}`); return FILL[key]; });
 
 test('template → report → edit in place → another look, clean at every stage', { skip }, async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'bh-round-'));
+  const dir = tempDir('bh-round-');
   const file = join(dir, 'report.html');
   const content = fill(readFileSync(join(skill, 'kit', 'content-template.html'), 'utf8'));
   writeFileSync(file, content + kit('analytical'));

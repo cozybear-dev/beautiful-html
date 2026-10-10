@@ -127,6 +127,8 @@ const AUDIT_SOURCE = () => readFileSync(join(HERE, 'audit.js'), 'utf8');
 
 function startBrowser(browserPath, extraArgs) {
   const profile = mkdtempSync(join(tmpdir(), 'bh-profile-'));
+  // The profile is removed when the browser is closed, and again as the process ends in case it never was.
+  process.once('exit', () => { try { rmSync(profile, { recursive: true, force: true }); } catch { /* leave it to the OS */ } });
   const args = ['--headless=new', '--remote-debugging-pipe', '--no-first-run', '--no-default-browser-check', '--disable-gpu',
     '--hide-scrollbars', '--disable-extensions', '--disable-background-networking', '--disable-component-update', '--disable-sync',
     '--mute-audio', '--force-color-profile=srgb', `--user-data-dir=${profile}`, ...extraArgs, 'about:blank'];

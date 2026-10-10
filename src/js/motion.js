@@ -85,6 +85,11 @@ export function enterFigure(el) {
     }
     for (const g of el.querySelectorAll('.bh-edge-label-group, .bh-zone')) out.push(fade(g, 200, med));
     for (const g of el.querySelectorAll('.bh-dots')) out.push(fade(g, slow, med));
+    // Timeline: the line runs from start to end, and each flag is raised as it passes.
+    for (const g of el.querySelectorAll('.bh-tl-track, .bh-tl-phases')) out.push(anim(g, [{ clipPath: 'inset(-8px 100% -8px 0)' }, { clipPath: 'inset(-8px 0 -8px 0)' }], { duration: slow }));
+    for (const g of el.querySelectorAll('.bh-tl-event')) out.push(fade(g, Number(g.dataset.at || 0) * slow, med));
+    for (const g of el.querySelectorAll('.bh-tl-ticks')) out.push(fade(g, 0, med));
+    [...el.querySelectorAll('.bh-tl-list > li')].forEach((li, i) => out.push(fade(li, Math.min(i * 60, 600), med)));
     // Heatmap cells arrive column by column.
     for (const g of el.querySelectorAll('.bh-heat g')) out.push(fade(g, Math.min(Number(g.dataset.col || 0) * 30 + Number(g.dataset.row || 0) * 12, 600), med));
     // Sankey ribbons wipe in along the flow.

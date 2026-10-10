@@ -1,12 +1,12 @@
 // The shipped examples are what agents copy from, so they must be clean.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkReport, findBrowser } from '../../skills/beautiful-html/tools/check.mjs';
 import { examples } from '../../scripts/build-examples.mjs';
+import { tempDir } from '../helpers/tmp.mjs';
 
 const skip = findBrowser() ? false : 'no Chromium-based browser found';
 const skill = fileURLToPath(new URL('../../skills/beautiful-html/', import.meta.url));
@@ -28,7 +28,7 @@ for (const example of all) {
     assert.ok(!/\{\{[A-Z]/.test(content), 'placeholders left in');
     assert.match(content, /<style id="bh-overrides">\s*(\/\*[^*]*\*\/)?\s*<\/style>/, 'an example styles nothing itself');
     assert.ok(existsSync(join(dir, 'preview.png')) && statSync(join(dir, 'preview.png')).size > 20000, 'preview.png is missing');
-    const work = mkdtempSync(join(tmpdir(), `bh-example-${name}-`));
+    const work = tempDir(`bh-example-${name}-`);
     const file = join(work, 'report.html');
     writeFileSync(file, content + readFileSync(join(skill, 'kit', `${direction}.kit.html`), 'utf8'));
     const report = await checkReport(file, { out: join(work, 'check') });
@@ -71,5 +71,5 @@ test('between them the examples use both schemes in more than one direction', ()
 });
 test('between them the examples use every figure function', () => {
   const text = all.map(read).join('\n');
-  for (const fn of ['line', 'bar', 'dot', 'scatter', 'heatmap', 'spark', 'waffle', 'plot', 'flow', 'sankey', 'data']) assert.match(text, new RegExp(`BH\\.${fn}\\(`), `no example uses BH.${fn}`);
+  for (const fn of ['line', 'bar', 'dot', 'scatter', 'heatmap', 'timeline', 'spark', 'waffle', 'plot', 'flow', 'sankey', 'data']) assert.match(text, new RegExp(`BH\\.${fn}\\(`), `no example uses BH.${fn}`);
 });

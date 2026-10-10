@@ -22,7 +22,7 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 // The figures and page parts the gallery points to: what each is for, and how it appears in a content file.
 const FIGURES = [
   ['Change over time', 'BH.line', 'line'], ['Size or ranking', 'BH.bar', 'bar'], ['Before and after', 'BH.dot', 'dot'],
-  ['How two measures relate', 'BH.scatter', 'scatter'], ['A value for every pair of two groupings', 'BH.heatmap', 'heatmap'],
+  ['How two measures relate', 'BH.scatter', 'scatter'], ['What happened when, to scale', 'BH.timeline', 'timeline'], ['A value for every pair of two groupings', 'BH.heatmap', 'heatmap'],
   ['How systems connect, what flows where', 'BH.flow', 'flow'], ['Volumes between stages', 'BH.sankey', 'sankey'],
   ['A trend beside a number', 'BH.spark', 'spark'], ['A share of a whole', 'BH.waffle', 'waffle'], ['A form made for one report', 'BH.plot', 'plot'],
 ];

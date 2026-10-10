@@ -1,17 +1,17 @@
 // The example site: every example as a report, and a gallery that links to them.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSite } from '../../scripts/build-site.mjs';
 import { examples } from '../../scripts/build-examples.mjs';
 import { GALLERY } from '../../site/examples.mjs';
 import { staticCheck } from '../../skills/beautiful-html/tools/check.mjs';
+import { tempDir } from '../helpers/tmp.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const out = mkdtempSync(join(tmpdir(), 'bh-site-'));
+const out = tempDir('bh-site-');
 const built = await buildSite({ out, render: false });
 const index = readFileSync(join(out, 'index.html'), 'utf8');
 

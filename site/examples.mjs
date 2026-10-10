@@ -2,7 +2,7 @@
 // `shot` is the desktop screen used as the card's picture: 1 is the front page.
 export const GALLERY = [
   { name: 'incident-report', kind: 'Incident report', reader: 'For a customer\'s CISO, after an intrusion', shot: 3, lead: true,
-    look: 'Scroll through "The path". The diagram stays beside the text and shows the hop you are reading. Further down, a timeline drawn for this report alone, and the three log lines that carry the case.',
+    look: 'Scroll through "The path": the diagram stays beside the text and shows the hop you are reading. Then the whole incident on one line, drawn to scale, with the intruder above it and the response below.',
     ask: 'Here are the responder\'s notes and three log extracts for IR-2026-031. Write the incident report for the customer\'s CISO, and take the reader through the path one hop at a time.' },
   { name: 'threat-landscape', kind: 'Published data story', reader: 'For customers and the press, read on a screen', shot: 1, lead: true,
     look: 'It opens on the chart that is the finding. Below it: the same decline in four sectors on one scale, a heatmap of tactics by sector, and a thousand alerts narrowed to nine.',

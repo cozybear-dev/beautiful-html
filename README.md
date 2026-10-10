@@ -22,7 +22,7 @@ Eight worked examples ship with the skill; these are the first screens of six. T
 - **One file.** Fonts, styles, charts and data are embedded. It opens offline, makes no network requests, and weighs about 0.8 MB.
 - **Three art directions**: three layouts of the one Hunt & Hackett look, for reports that are scanned, read, or shown on a screen.
 - **A front page chosen for the content**: a navy cover, a byline, findings in words, the one figure that matters, or key figures. Numbers open a report only when the report is about them.
-- **Charts that follow the evidence**: direct labels, one highlighted series, titles that state the finding, bars from zero, palettes checked for colour-blind readers. Lines, bars, dumbbells, scatters, heatmaps, small multiples, Sankeys.
+- **Charts that follow the evidence**: direct labels, one highlighted series, titles that state the finding, bars from zero, palettes checked for colour-blind readers. Lines, bars, dumbbells, scatters, heatmaps, small multiples, Sankeys, and timelines drawn to scale.
 - **Flow diagrams** of how systems connect, laid out automatically to minimise crossings, with zones, a highlighted path, hover tracing and step-by-step walkthroughs. A diagram can stay beside the text and follow the step being read.
 - **Motion with a purpose**: figures draw in once, dots show the direction of flow, and readers who ask for reduced motion, or print, get the final state.
 - **A checker** with no dependencies that renders the report at desktop and phone widths, in print and with reduced motion, and reports overflow, low contrast, colliding labels, network requests and more, with screenshots.
