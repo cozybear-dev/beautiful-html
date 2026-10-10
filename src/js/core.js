@@ -2,6 +2,7 @@
 // tokens, mounting, errors, re-rendering and the data table.
 import { formatDate, formatNumber } from './format.js';
 import { parseCsv } from './data.js';
+import { enterFigure, enterPage, settle } from './motion.js';
 
 // A one-line stub in the report head collects BH.ready() callbacks before this
 // file loads; they are taken over here.
@@ -70,7 +71,7 @@ function describe(el) {
 
 // Draw a figure now and again whenever its width, the scheme or the medium
 // changes. `draw(el, options, width)` returns a node (or nodes) to mount.
-export function figure(kind, target, options, draw, { table, inline } = {}) {
+export function figure(kind, target, options, draw, { table, inline, after } = {}) {
   let el;
   try { el = resolveTarget(target, kind); } catch (e) { console.error(e.message); return null; }
   el.classList.add(inline || 'bh-plot');
@@ -86,6 +87,8 @@ export function figure(kind, target, options, draw, { table, inline } = {}) {
       el.replaceChildren(...nodes.filter(Boolean));
       if (!inline) describe(el);
       if (table) attachTable(el, table(entry.options));
+      if (after) after(el, entry.options, entry);
+      enterFigure(el);
       el.dispatchEvent(new CustomEvent('bh:render', { bubbles: true }));
     } catch (e) {
       showError(el, kind, e);
@@ -109,7 +112,8 @@ const resizeWatch = new ResizeObserver(entries => {
   resizeTimer = setTimeout(() => changed.forEach(e => e.render()), 120);
 });
 export const rerenderAll = () => live.forEach(e => e.render());
-addEventListener('beforeprint', rerenderAll);
+// Paper shows the final state: finish all motion, then redraw at the print width.
+addEventListener('beforeprint', () => { settle(); rerenderAll(); });
 addEventListener('afterprint', rerenderAll);
 
 // --------------------------------------------------------------- data table
@@ -204,6 +208,7 @@ BH.done = new Promise(resolve => { done = resolve; });
 // real typeface. Later BH.ready() calls run at once.
 export async function start() {
   try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch { /* draw anyway */ }
+  enterPage();
   const run = fn => { try { const r = fn(BH); if (r && typeof r.then === 'function') pending.push(r.catch(e => console.error(e))); } catch (e) { console.error(e); } };
   BH.q.splice(0).forEach(run);
   BH.ready = run;

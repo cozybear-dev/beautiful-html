@@ -88,14 +88,14 @@ function horizontal(o, rows, names, mode, width, kind) {
   if (mode === 'grouped') {
     names.forEach((name, k) => {
       const own = shown.filter(d => d[o.series] === name);
-      marks.push(P().barX(own, { y: o.x, x: o.y, fill: colorOf(name), ...insets(k), className: 'bh-bar-mark' }));
+      marks.push(P().barX(own, { y: o.x, x: o.y, fill: colorOf(name), ...insets(k), className: 'bh-bar-x' }));
       marks.push(...valueLabel(own, k, d => d[o.y], 400));
     });
   } else if (mode === 'stacked') {
-    marks.push(P().barX(shown, { y: o.x, x: o.y, fill, order: names, ...insets(0), insetLeft: 0.75, insetRight: 0.75, className: 'bh-bar-mark' }));
+    marks.push(P().barX(shown, { y: o.x, x: o.y, fill, order: names, ...insets(0), insetLeft: 0.75, insetRight: 0.75, className: 'bh-bar-x' }));
     marks.push(...valueLabel(cats.map(c => ({ [o.x]: c, total: total(c) })), 0, d => d.total));
   } else {
-    marks.push(P().barX(shown, { y: o.x, x: o.y, fill, ...insets(0), className: 'bh-bar-mark' }));
+    marks.push(P().barX(shown, { y: o.x, x: o.y, fill, ...insets(0), className: 'bh-bar-x' }));
     marks.push(...valueLabel(shown, 0, d => d[o.y]));
   }
   marks.push(P().ruleX([0], { stroke: v('ink') }));
@@ -141,10 +141,10 @@ function vertical(o, rows, names, mode, width, kind) {
   if (mode === 'grouped') {
     const n = names.length, g = 1.5, w = Math.max(1, (bw - (n - 1) * g) / n);
     names.forEach((name, k) => marks.push(P().barY(rows.filter(d => d[o.series] === name), {
-      x: o.x, y: o.y, fill: colorOf(name), insetLeft: k * (w + g), insetRight: Math.max(0, bw - k * (w + g) - w), className: 'bh-bar-mark',
+      x: o.x, y: o.y, fill: colorOf(name), insetLeft: k * (w + g), insetRight: Math.max(0, bw - k * (w + g) - w), className: 'bh-bar-y',
     })));
   } else {
-    marks.push(P().barY(rows, { x: o.x, y: o.y, fill, ...(mode === 'stacked' ? { order: names, insetTop: 0.75, insetBottom: 0.75 } : {}), className: 'bh-bar-mark' }));
+    marks.push(P().barY(rows, { x: o.x, y: o.y, fill, ...(mode === 'stacked' ? { order: names, insetTop: 0.75, insetBottom: 0.75 } : {}), className: 'bh-bar-y' }));
   }
   if (showValues) {
     const totals = cats.map(c => ({ c, t: total(c) }));

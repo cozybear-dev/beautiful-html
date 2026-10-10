@@ -222,7 +222,7 @@ export async function launch(browserPath) {
         const nav = await send('Page.navigate', { url });
         if (nav.errorText) throw new Error(`could not open ${url}: ${nav.errorText}`);
         await loaded;
-        await page.evaluate('__bhPrepare()');
+        if (mode.prepare !== false) await page.evaluate('__bhPrepare()');
       },
       // Errors seen by the browser itself: script failures and network activity.
       problems() {
