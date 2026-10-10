@@ -1,0 +1,12 @@
+time_utc,system,event
+13:52,Feature cache,Config change deployed: max memory lowered from 24 GB to 8 GB (change CHG-4471)
+13:53,Feature cache,Mass eviction begins; hit rate falls from 97% to 12%
+13:55,Fraud service,p95 latency climbs as features are recomputed from the feature store
+14:06,Payments service,Connection pool to Fraud service exhausted (200 of 200 in use)
+14:06,Checkout service,Checkout error rate passes 30%; first customer reports
+14:09,On-call,Page fires on checkout error rate; incident declared SEV-1
+14:21,On-call,"Payments restarted; no effect, pool exhausts again within 90 seconds"
+14:38,On-call,Fraud latency identified as the cause; cache config change found
+14:46,Feature cache,Config rolled back to 24 GB; cache begins to warm
+14:53,Checkout service,Error rate below 5%; incident mitigated after 47 minutes
+15:10,Checkout service,Error rate back to baseline; incident closed

@@ -1,0 +1,15 @@
+id,name,type,zone,owner,data_held
+browser,Customer browser,client,Internet,Customer,Personal data
+cdn,CDN and WAF,gateway,Edge,Platform team,None stored
+lb,Load balancer,gateway,Edge,Platform team,None stored
+idp,Identity provider (SSO),external,Third party,Customer or Okta,Credentials
+api,API service,service,Application,Core team,Personal data in transit
+web,Web application,service,Application,Core team,None stored
+worker,Background workers,service,Application,Core team,Personal data in transit
+queue,Job queue,queue,Application,Platform team,Personal data in transit
+db,Primary database,database,Data,Data team,Personal data
+files,Document storage,database,Data,Data team,Customer documents
+search,Search index,database,Data,Data team,Pseudonymised
+warehouse,Reporting warehouse,database,Data,Analytics team,Pseudonymised
+mail,Email provider,external,Third party,Sendwell Inc.,Email addresses
+logs,Log platform,external,Third party,Logline Ltd.,No personal data (scrubbed)

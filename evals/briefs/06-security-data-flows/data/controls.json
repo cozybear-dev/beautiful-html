@@ -1,0 +1,29 @@
+{
+  "encryption_at_rest": "AES-256 for the primary database, document storage, search index and reporting warehouse; keys in a managed KMS, rotated yearly",
+  "data_residency": "All production systems run in the EU (Frankfurt and Dublin). The email provider processes in the EU; the log platform in the EU.",
+  "known_gap": {
+    "flow": "Primary database to Reporting warehouse",
+    "issue": "Nightly export uses unencrypted FTP inside the private network with a shared password",
+    "risk": "Medium: pseudonymised data, private network only",
+    "remediation": "Replace with TLS-encrypted managed replication",
+    "due": "2026-11-30",
+    "owner": "Analytics team"
+  },
+  "certifications": [
+    "ISO 27001 (2025)",
+    "SOC 2 Type II (period ending 2026-06-30)"
+  ],
+  "last_penetration_test": "2026-07-14, no critical or high findings open",
+  "subprocessors": [
+    {
+      "name": "Sendwell Inc.",
+      "purpose": "Transactional email",
+      "data": "Email address, message body"
+    },
+    {
+      "name": "Logline Ltd.",
+      "purpose": "Log storage",
+      "data": "Scrubbed application logs"
+    }
+  ]
+}

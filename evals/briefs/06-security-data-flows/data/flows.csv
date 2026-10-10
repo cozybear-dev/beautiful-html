@@ -1,0 +1,18 @@
+from,to,protocol,port,data,encryption_in_transit,authentication,requests_per_day
+browser,cdn,HTTPS,443,"Page requests, form data",TLS 1.3,Session cookie,2400000
+cdn,lb,HTTPS,443,Filtered requests,TLS 1.3,mTLS,2100000
+lb,web,HTTPS,8443,Page requests,TLS 1.2,mTLS,900000
+lb,api,HTTPS,8443,API requests,TLS 1.2,mTLS + JWT,1200000
+web,idp,HTTPS,443,SAML / OIDC sign-in,TLS 1.3,Signed assertions,42000
+web,api,HTTPS,8443,API requests,TLS 1.2,JWT,760000
+api,db,PostgreSQL,5432,Customer records,TLS 1.2,IAM role,3900000
+api,files,HTTPS,443,Uploaded documents,TLS 1.3,IAM role,61000
+api,search,HTTPS,9243,Search queries,TLS 1.2,API key,540000
+api,queue,AMQPS,5671,Job messages,TLS 1.2,Service account,380000
+queue,worker,AMQPS,5671,Job messages,TLS 1.2,Service account,380000
+worker,db,PostgreSQL,5432,Customer records,TLS 1.2,IAM role,820000
+worker,mail,HTTPS,443,"Recipient email address, message body",TLS 1.3,API key,96000
+worker,search,HTTPS,9243,Index updates (pseudonymised),TLS 1.2,API key,210000
+db,warehouse,FTP,21,Nightly export (pseudonymised),None,Shared password,1
+api,logs,HTTPS,443,Application logs (scrubbed),TLS 1.3,API key,5200000
+worker,logs,HTTPS,443,Application logs (scrubbed),TLS 1.3,API key,1100000

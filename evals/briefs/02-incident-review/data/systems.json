@@ -1,0 +1,150 @@
+{
+  "note": "Request path for a card checkout. \"failed\" marks the hop that failed first; \"degraded\" marks hops that slowed or errored as a result.",
+  "systems": [
+    {
+      "id": "web",
+      "name": "Web and mobile apps",
+      "type": "client",
+      "zone": "Customers"
+    },
+    {
+      "id": "gateway",
+      "name": "API gateway",
+      "type": "gateway",
+      "zone": "Edge"
+    },
+    {
+      "id": "checkout",
+      "name": "Checkout service",
+      "type": "service",
+      "zone": "Application"
+    },
+    {
+      "id": "payments",
+      "name": "Payments service",
+      "type": "service",
+      "zone": "Application"
+    },
+    {
+      "id": "fraud",
+      "name": "Fraud service",
+      "type": "service",
+      "zone": "Application"
+    },
+    {
+      "id": "cache",
+      "name": "Feature cache",
+      "type": "cache",
+      "zone": "Data"
+    },
+    {
+      "id": "features",
+      "name": "Feature store",
+      "type": "database",
+      "zone": "Data"
+    },
+    {
+      "id": "orders",
+      "name": "Orders database",
+      "type": "database",
+      "zone": "Data"
+    },
+    {
+      "id": "vault",
+      "name": "Token vault",
+      "type": "database",
+      "zone": "Data"
+    },
+    {
+      "id": "processor",
+      "name": "Card processor",
+      "type": "external",
+      "zone": "Third party"
+    }
+  ],
+  "calls": [
+    {
+      "from": "web",
+      "to": "gateway",
+      "what": "POST /checkout",
+      "during_incident": "degraded"
+    },
+    {
+      "from": "gateway",
+      "to": "checkout",
+      "what": "routes request",
+      "during_incident": "degraded"
+    },
+    {
+      "from": "checkout",
+      "to": "orders",
+      "what": "writes order",
+      "during_incident": "normal"
+    },
+    {
+      "from": "checkout",
+      "to": "payments",
+      "what": "authorise payment",
+      "during_incident": "degraded"
+    },
+    {
+      "from": "payments",
+      "to": "fraud",
+      "what": "score transaction (pool of 200 connections)",
+      "during_incident": "degraded"
+    },
+    {
+      "from": "fraud",
+      "to": "cache",
+      "what": "reads features",
+      "during_incident": "failed"
+    },
+    {
+      "from": "fraud",
+      "to": "features",
+      "what": "recomputes on cache miss",
+      "during_incident": "degraded"
+    },
+    {
+      "from": "payments",
+      "to": "vault",
+      "what": "reads card token",
+      "during_incident": "normal"
+    },
+    {
+      "from": "payments",
+      "to": "processor",
+      "what": "charges card",
+      "during_incident": "normal"
+    }
+  ],
+  "impact": {
+    "duration_minutes": 47,
+    "failed_checkouts": 18420,
+    "estimated_lost_revenue_eur": 412000,
+    "customers_affected": 15890,
+    "sla_credit_eur": 38000
+  },
+  "actions": [
+    {
+      "action": "Add a circuit breaker and 300 ms timeout on Payments to Fraud; fall back to rules-based scoring",
+      "owner": "Payments team",
+      "due": "2026-10-09"
+    },
+    {
+      "action": "Require a canary and automatic rollback for cache configuration changes",
+      "owner": "Platform team",
+      "due": "2026-10-23"
+    },
+    {
+      "action": "Alert on fraud scoring latency and cache hit rate, not only on checkout errors",
+      "owner": "SRE",
+      "due": "2026-10-02"
+    },
+    {
+      "action": "Load-test the checkout path with a cold feature cache each quarter",
+      "owner": "SRE",
+      "due": "2026-11-13"
+    }
+  ]
+}

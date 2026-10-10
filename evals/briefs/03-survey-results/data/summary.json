@@ -1,0 +1,12 @@
+{
+  "survey": "Employee engagement survey 2026",
+  "field_dates": "2026-09-01 to 2026-09-19",
+  "invited": 1585,
+  "responded": 1284,
+  "response_rate_pct": 81,
+  "engagement_index_2026": 74,
+  "engagement_index_2025": 71,
+  "enps_2026": 24,
+  "enps_2025": 19,
+  "method": "Favourable = agree or strongly agree on a five-point scale. Results for groups under 10 respondents are suppressed."
+}

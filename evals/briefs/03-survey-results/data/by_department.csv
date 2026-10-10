@@ -1,0 +1,65 @@
+department,respondents,theme,favourable_pct
+Engineering,312,My manager,89
+Engineering,312,Purpose,80
+Engineering,312,Teamwork,70
+Engineering,312,Career growth,34
+Engineering,312,Workload,64
+Engineering,312,Leadership,70
+Engineering,312,Tools,81
+Engineering,312,Pay and recognition,62
+Customer Support,228,My manager,88
+Customer Support,228,Purpose,82
+Customer Support,228,Teamwork,72
+Customer Support,228,Career growth,31
+Customer Support,228,Workload,49
+Customer Support,228,Leadership,70
+Customer Support,228,Tools,73
+Customer Support,228,Pay and recognition,59
+Sales,196,My manager,93
+Sales,196,Purpose,84
+Sales,196,Teamwork,76
+Sales,196,Career growth,49
+Sales,196,Workload,68
+Sales,196,Leadership,71
+Sales,196,Tools,78
+Sales,196,Pay and recognition,74
+Operations,284,My manager,85
+Operations,284,Purpose,83
+Operations,284,Teamwork,75
+Operations,284,Career growth,48
+Operations,284,Workload,63
+Operations,284,Leadership,73
+Operations,284,Tools,62
+Operations,284,Pay and recognition,64
+Marketing,88,My manager,91
+Marketing,88,Purpose,85
+Marketing,88,Teamwork,78
+Marketing,88,Career growth,51
+Marketing,88,Workload,68
+Marketing,88,Leadership,72
+Marketing,88,Tools,78
+Marketing,88,Pay and recognition,66
+Finance and Legal,72,My manager,90
+Finance and Legal,72,Purpose,83
+Finance and Legal,72,Teamwork,75
+Finance and Legal,72,Career growth,50
+Finance and Legal,72,Workload,67
+Finance and Legal,72,Leadership,70
+Finance and Legal,72,Tools,77
+Finance and Legal,72,Pay and recognition,65
+People,44,My manager,95
+People,44,Purpose,86
+People,44,Teamwork,78
+People,44,Career growth,54
+People,44,Workload,68
+People,44,Leadership,73
+People,44,Tools,76
+People,44,Pay and recognition,66
+Product and Design,60,My manager,88
+Product and Design,60,Purpose,85
+Product and Design,60,Teamwork,76
+Product and Design,60,Career growth,50
+Product and Design,60,Workload,69
+Product and Design,60,Leadership,73
+Product and Design,60,Tools,77
+Product and Design,60,Pay and recognition,63

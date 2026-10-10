@@ -1,0 +1,13 @@
+device,customer_type,variant,visitors,orders
+Desktop,New,control,98486,2570
+Desktop,New,new_checkout,98108,2863
+Desktop,Returning,control,73994,3663
+Desktop,Returning,new_checkout,74593,4069
+Mobile web,New,control,143019,2689
+Mobile web,New,new_checkout,143363,2663
+Mobile web,Returning,control,81602,2872
+Mobile web,Returning,new_checkout,81365,2775
+Tablet,New,control,21160,474
+Tablet,New,new_checkout,21073,501
+Tablet,Returning,control,12974,542
+Tablet,Returning,new_checkout,13079,573

@@ -1,6 +1,6 @@
 node_modules/
 .superpowers/
-evals/results/*/work/
+evals/results/
+*.check/
 *.log
 .DS_Store
-/tmp/

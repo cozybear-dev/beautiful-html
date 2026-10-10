@@ -1,0 +1,24 @@
+{
+  "experiment": "CHK-212 single-page checkout",
+  "hypothesis": "Collapsing the three-step checkout into one page raises order conversion.",
+  "primary_metric": "orders / visitors",
+  "guardrails": [
+    "revenue per visitor",
+    "payment error rate",
+    "refund rate"
+  ],
+  "allocation": "50/50 by visitor",
+  "start": "2026-08-31",
+  "end": "2026-09-27",
+  "minimum_detectable_effect_relative_pct": 3,
+  "significance_level": 0.05,
+  "payment_error_rate_pct": {
+    "control": 1.9,
+    "new_checkout": 2
+  },
+  "refund_rate_pct": {
+    "control": 3.1,
+    "new_checkout": 3
+  },
+  "known_issue": "On mobile web the single page pushes the pay button below the fold on screens under 700 px tall."
+}
