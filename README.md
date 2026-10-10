@@ -4,6 +4,8 @@
 
 Hunt & Hackett's skill for reports. It lets any coding agent turn data into a well-designed HTML report in the Hunt & Hackett house style: one self-contained file with sound charts, system flow diagrams and purposeful motion, checked before it goes out.
 
+**[See the eight example reports](https://cozybear-dev.github.io/beautiful-html/)**: each one opens as a report, with its source and a PDF beside it.
+
 Left alone, an agent picks the most common fonts, colours and chart settings it saw in training, and never looks at what it made. This skill replaces those defaults with a prebuilt kit the agent composes from, a short procedure, and a checker that renders the result and reports what is wrong with it.
 
 | | | |
@@ -13,7 +15,7 @@ Left alone, an agent picks the most common fonts, colours and chart settings it 
 | ![A service review that opens on key figures](skills/beautiful-html/examples/service-review/preview.png) | ![A board brief that opens on three findings](skills/beautiful-html/examples/board-brief/preview.png) | ![A debrief for a meeting that opens on a title screen](skills/beautiful-html/examples/incident-debrief/preview.png) |
 | A quarterly service review: key figures | A board brief: findings in words | A debrief for a meeting: a title screen |
 
-Eight worked examples ship with the skill; these are the first screens of six. `npm run site` builds a gallery of all eight, with each report, its source and a PDF, into `dist/site/`; the same gallery is what GitHub Pages publishes. They are listed in [skills/beautiful-html/examples/README.md](skills/beautiful-html/examples/README.md).
+Eight worked examples ship with the skill; these are the first screens of six. The [gallery](https://cozybear-dev.github.io/beautiful-html/) has all eight, each with its report, its source and a PDF; `npm run site` builds the same gallery into `dist/site/`. They are listed in [skills/beautiful-html/examples/README.md](skills/beautiful-html/examples/README.md).
 
 ## What you get
 
@@ -52,8 +54,6 @@ The current `skills` installer needs Node 22.20 or later. On an older Node, `npx
 git clone https://github.com/cozybear-dev/beautiful-html && cd beautiful-html
 node scripts/package-zip.mjs        # writes dist/beautiful-html.zip
 ```
-
-All three routes work with a private repository; each person needs read access to it.
 
 ## Use
 
