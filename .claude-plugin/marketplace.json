@@ -4,13 +4,13 @@
     "name": "cozybear-dev"
   },
   "metadata": {
-    "description": "The beautiful-html skill: well-designed, self-contained HTML reports from any coding agent."
+    "description": "The beautiful-html skill: Hunt & Hackett reports as well-designed, self-contained HTML, from any coding agent."
   },
   "plugins": [
     {
       "name": "beautiful-html",
       "source": "./",
-      "description": "Well-designed, self-contained HTML reports with sound charts, system flow diagrams and purposeful motion, from a prebuilt kit and an automated check.",
+      "description": "Hunt & Hackett reports: well-designed, self-contained HTML in the house style, with sound charts, system flow diagrams and purposeful motion, from a prebuilt kit and an automated check.",
       "version": "0.1.0",
       "author": {
         "name": "cozybear-dev"

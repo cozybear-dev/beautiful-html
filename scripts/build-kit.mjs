@@ -21,6 +21,19 @@ const VENDOR = ['d3.min.js', 'plot.umd.min.js', 'd3-sankey.min.js'];
 const version = () => JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version;
 const read = path => readFileSync(path, 'utf8');
 
+// The brand's logo, kept with the brand file. It is built into every kit and
+// shown wherever a report has <span class="bh-logo">. No file, no logo.
+export const LOGO_PATH = join(root, 'skills', 'beautiful-html', 'brand', 'logo.svg');
+export function logo(path = LOGO_PATH) {
+  if (!existsSync(path)) return '';
+  const svg = read(path).replace(/<\?xml[^>]*\?>|<!--[\s\S]*?-->/g, '').trim();
+  if (!/^<svg\s[^>]*viewBox=[\s\S]*<\/svg>$/.test(svg)) throw new Error(`${path} must be a single <svg> element with a viewBox`);
+  // It is set into the page as markup, and its rules would apply to the whole report.
+  const unsafe = svg.match(/<script|<style|<foreignObject|\son\w+\s*=|href\s*=|url\(|\sclass\s*=/i);
+  if (unsafe) throw new Error(`${path} may not contain "${unsafe[0].trim()}": use plain shapes with fill attributes`);
+  return svg;
+}
+
 // Inline scripts end at the first "</script", and "<!--" can switch the parser
 // into an escaped state, so neither may appear literally inside the kit's JS.
 const safeForInlineScript = js => js.replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');
@@ -62,7 +75,7 @@ async function buildJs(direction) {
     target: 'es2020',
     write: false,
     legalComments: 'none',
-    define: { __BH_VERSION__: JSON.stringify(version()), __BH_DIRECTION__: JSON.stringify(direction) },
+    define: { __BH_VERSION__: JSON.stringify(version()), __BH_DIRECTION__: JSON.stringify(direction), __BH_LOGO__: JSON.stringify(logo()) },
   });
   const ours = result.outputFiles[0].text.trim();
   const vendor = VENDOR.map(f => read(join(src, 'vendor', f)).trim());

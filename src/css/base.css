@@ -20,6 +20,7 @@ body {
   line-height: var(--bh-leading-body);
   font-kerning: normal;
   font-synthesis: none;
+  font-variant-numeric: lining-nums;   /* Playfair Display sets old-style figures unless told otherwise */
   font-variant-ligatures: common-ligatures;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

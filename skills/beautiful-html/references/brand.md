@@ -1,53 +1,40 @@
 # Brand
 
-The kit ships brand-neutral. A brand is a small set of token overrides in the report's `<style id="bh-overrides">` block, plus a logo. Nothing else changes: the layout, type scale and figure rules stay.
+The kit is Hunt & Hackett's. Its colours, typefaces and logo are built in, so a report needs nothing added to be on brand. `brand/DESIGN.md` describes the look and what it is for; read it once before writing.
 
-## Apply a brand colour
+## What is built in
 
-Start from the brand's main colour. The tool turns it into a complete colour system for light and dark and checks every part of it:
+- **Navy ink** on white, and the same navy as the page in the dark scheme.
+- **Amber as the one accent.** On white it is drawn in a darker shade so lines, bars and links stay legible; on navy it is the brand amber itself.
+- **Playfair Display** for headings and big figures, **Lato** for text and data.
+- **Square corners**, thin rules, no cards and no shadows.
+- **The logo** at the left of the masthead, over a rule in the brand amber.
 
-```
-node <skill>/tools/brand.mjs --accent "#0b6e75"
-```
-
-Paste what it prints into `<style id="bh-overrides">` in `content.html`. It writes:
-
-- ink, rule and surface greys tinted slightly toward the accent;
-- an accent strong enough to draw lines and bars with, and a darker one for text and links;
-- a six-colour chart palette that begins with the accent and stays distinct for colour-blind readers;
-- a seven-step sequential ramp, a diverging pair and three status colours;
-- the same again for the dark scheme, and light colours for print.
-
-Read any `Note:` it prints. If the brand colour is too light to draw with (a yellow, a pale green), it says which darker shade it used and keeps the original for large fills only.
-
-`--ground "#fbfbf9"` sets a page colour other than white. `--check tokens.css` checks a block you wrote by hand.
-
-Do not pick chart colours by eye, and do not add a seventh. If a brand guide lists secondary colours, they belong in illustrations and covers, not in data.
+Leave `<style id="bh-overrides">` empty. Do not paste colour tokens into a report.
 
 ## Logo
 
-Put the logo in the masthead as inline SVG so the file stays self-contained:
+The template's masthead already asks for the logo; keep that line:
 
 ```html
-<span class="bh-org"><svg viewBox="0 0 120 24" role="img" aria-label="Northwind">…</svg></span>
+<span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span>
 ```
 
-It is shown 20 px high. Use `fill="currentColor"` for a one-colour mark so it follows the scheme. A bitmap logo must be embedded as a `data:` URI; prefer SVG.
+The kit swaps the name for the logo and uses the name as its label. It is shown 48 px high; the wordmark takes the ink of the scheme and the ampersand stays amber. Do not paste the logo's paths into a report, and do not put it anywhere else.
 
-## Typefaces
+A report written for a customer is still a Hunt & Hackett report: the masthead stays as it is, and the customer is named under "Prepared for".
 
-The typefaces are part of each direction and are embedded in its kit, which is why reports work offline. A brand typeface cannot be added from the report: a kit has to be built with it (see "Building a kit" in the repository README). If the brand face is not available, pick the direction whose face sits closest and let colour and logo carry the brand.
+## Colour in figures
 
-## The brand file
+Chart colours come from the kit: a six-colour palette that begins with the accent and stays distinct for colour-blind readers, a seven-step sequential ramp, a diverging pair and three status colours. Do not pick chart colours by eye, and do not add a seventh. The site's steel blue belongs to illustrations and covers, not to data.
 
-`brand/DESIGN.md` describes the brand in the open DESIGN.md format: tokens in the front matter, and prose that says what the brand is like and how to use it. Keep your organisation's version of this file with the skill, so every report starts from it:
+## What a report may not change
 
-1. Replace the colours and names in the front matter.
-2. Run `brand.mjs` with the primary colour and keep its output next to the file.
-3. Rewrite the prose: one specific reference, what the accent is for, what never to do.
+Typefaces, type sizes, spacing, the layout grid, figure rules, and what the status colours mean. A report that needs a different shape gets a different direction (see `directions.md`), not local overrides.
 
-When a report is for a named customer or business unit, read the brand file first. If there are several brands, keep one file per brand and say in the brief which applies.
+## Changing the brand itself
 
-## What a brand may not change
+This is a change to the kit, made in the repository, not in a report:
 
-Type sizes, spacing, the layout grid, figure rules, and the status colours' meaning. A brand that needs those changed needs its own direction, which is a change to the kit, not to a report.
+- **Colours** are generated, never typed: `node <skill>/tools/brand.mjs --accent "#fcaf15" --base "#080630"` prints the complete token set for light, dark and print, and checks every part of it. `--base` is the brand's dark colour: the ink of the light scheme and the page of the dark one. `--check tokens.css` checks a block written by hand.
+- **Typefaces and the logo** are embedded when the kits are built. See "Building a kit" in the repository README.

@@ -1,16 +1,11 @@
 /* narrative: findings and recommendations that are read from start to end.
-   Reference: a research institute's briefing paper. A serif reading column,
-   figures wider than the text and numbered, side notes, data in a sans. */
+   Reference: a Hunt & Hackett research post. Playfair Display headings over a
+   Lato reading column, figures wider than the text and numbered, side notes. */
 :root {
-  --bh-measure: 60ch;
+  --bh-measure: 51ch;
   --bh-size-body: 1.125rem;
   --bh-size-lead: 1.4375rem;
   --bh-size-h3: 1.1875rem;
-  --bh-leading-body: 1.6;
-  --bh-weight-display: 600;
-  --bh-weight-figure: 400;
-  --bh-tracking-display: -0.014em;
-  --bh-tracking-h2: -0.008em;
   --bh-figure-word: "Figure";
 }
 .bh-report { counter-reset: bh-figure; }
@@ -26,9 +21,8 @@
   color: var(--bh-accent-ink);
 }
 .bh-figure-title { font-family: var(--bh-font-data); font-weight: var(--bh-weight-strong); }
-.bh-standfirst { color: var(--bh-ink); font-style: italic; }
+.bh-standfirst { font-style: italic; }
 .bh-standfirst strong { font-style: normal; }
 .bh-section > h2 { border-top-color: var(--bh-rule-strong); }
-.bh-masthead { border-bottom-color: var(--bh-rule-strong); }
 .bh-quote { font-style: italic; }
 .bh-callout > h3, .bh-callout > h4 { font-size: var(--bh-size-lead); }

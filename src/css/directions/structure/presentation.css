@@ -14,10 +14,8 @@
   --bh-measure: 44ch;
   --bh-side: clamp(18rem, 42vw, 40rem);
   --bh-leading-body: 1.45;
-  --bh-weight-display: 700;
-  --bh-weight-figure: 700;
-  --bh-tracking-display: -0.03em;
-  --bh-tracking-h2: -0.022em;
+  --bh-tracking-display: -0.018em;
+  --bh-tracking-h2: -0.012em;
 }
 @media screen {
   .bh-report { padding-block: 0; }

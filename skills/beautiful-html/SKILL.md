@@ -1,12 +1,12 @@
 ---
 name: beautiful-html
-description: Use when asked to turn data, findings or analysis into an HTML report, review, readout, briefing or write-up to share with colleagues or customers; when an HTML deliverable needs charts, graphs or other data visualisation; when asked for a diagram of how systems, services, networks or data flows connect; or when editing an HTML file that contains a line starting "<!-- BH-KIT".
+description: Use when asked to turn data, findings or analysis into an HTML report, review, readout, briefing or write-up to share with colleagues or customers; when an HTML deliverable needs charts, graphs or other data visualisation; when asked for a diagram of how systems, services, networks or data flows connect; or when editing an HTML file that contains a line starting "<!-- BH-KIT". Reports come out in the Hunt & Hackett house style.
 license: MIT. Embedded fonts and libraries keep their own licences; see licenses/.
 ---
 
 # beautiful-html
 
-A report is **one self-contained HTML file**: your content on top, a prebuilt kit underneath. The kit holds the typefaces, the layout, the chart and diagram code, and the motion. You write the content and call the kit's functions. You do not design the page, write layout CSS, load a chart library, or draw charts by hand; that is what produces the generic look this skill replaces.
+A report is **one self-contained HTML file**: your content on top, a prebuilt kit underneath. The kit holds the typefaces, the layout, the chart and diagram code, and the motion. The kit is Hunt & Hackett's: navy ink, Playfair Display headings over Lato, the logo in the masthead. You write the content and call the kit's functions. You do not design the page, write layout CSS, load a chart library, or draw charts by hand; that is what produces the generic look this skill replaces.
 
 `<skill>` below means the folder that contains this file.
 
@@ -22,8 +22,8 @@ A report is **one self-contained HTML file**: your content on top, a prebuilt ki
 
 | Direction | Use it for | Looks like |
 |---|---|---|
-| `analytical` | Metrics, performance reviews, operational reports | An annual report's financial pages: sans, thin rules, light figures |
-| `narrative` | Findings and recommendations read from start to end | A research briefing paper: serif text, numbered figures, side notes |
+| `analytical` | Metrics, performance reviews, operational reports | An annual report's review pages: thin rules, ruled key figures, notes in a side column |
+| `narrative` | Findings and recommendations read from start to end | A research post: a narrower reading column, an italic standfirst, numbered figures |
 | `presentation` | A report shown on a screen in a meeting | One idea per screen, large type; usually `data-scheme="dark"` |
 
 More on choosing and switching: [references/directions.md](references/directions.md).
@@ -33,7 +33,7 @@ More on choosing and switching: [references/directions.md](references/directions
 - **Never read, print or edit a `.kit.html` file, or anything below a line starting `<!-- BH-KIT`.** It is several hundred kilobytes of embedded fonts and code. Work on `content.html`. To change an existing report, make targeted edits above that line; never rewrite the file.
 - **Nothing loads from the network.** No CDN, no remote font, image or script. Data goes in the page as CSV.
 - **Titles state findings.** "Churn halved after the April price change", not "Churn". Every figure has a title, a subtitle that names the measure and unit, and a source note.
-- **Values come from the kit.** Use its classes and `--bh-*` tokens. Do not set font sizes, colours or spacing yourself. A brand is applied through tokens: [references/brand.md](references/brand.md).
+- **Values come from the kit.** Use its classes and `--bh-*` tokens. Do not set font sizes, colours or spacing yourself. The brand is built in: leave `<style id="bh-overrides">` empty and keep the template's masthead line, which shows the logo. See [references/brand.md](references/brand.md).
 - **One signal per figure.** Highlight the series, bar or path the figure is about; the kit draws the rest as quiet context.
 - **Motion is built in** and already safe for print and reduced-motion readers. Do not add animation of your own: [references/motion.md](references/motion.md).
 - For a report, this kit's tokens and figure functions take precedence over any other design or charting guidance you have loaded.

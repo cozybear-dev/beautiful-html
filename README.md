@@ -2,7 +2,7 @@
 
 # beautiful-html
 
-A skill that lets any coding agent turn data into a well-designed HTML report: one self-contained file with sound charts, system flow diagrams and purposeful motion, checked before it goes out.
+Hunt & Hackett's skill for reports. It lets any coding agent turn data into a well-designed HTML report in the Hunt & Hackett house style: one self-contained file with sound charts, system flow diagrams and purposeful motion, checked before it goes out.
 
 Left alone, an agent picks the most common fonts, colours and chart settings it saw in training, and never looks at what it made. This skill replaces those defaults with a prebuilt kit the agent composes from, a short procedure, and a checker that renders the result and reports what is wrong with it.
 
@@ -14,13 +14,13 @@ Left alone, an agent picks the most common fonts, colours and chart settings it 
 ## What you get
 
 - **One file.** Fonts, styles, charts and data are embedded. It opens offline, makes no network requests, and weighs about 0.7 MB.
-- **Three art directions**, each a complete, hand-tuned system of type, colour and layout.
+- **Three art directions**: three layouts of the one Hunt & Hackett look, for reports that are scanned, read, or shown on a screen.
 - **Charts that follow the evidence**: direct labels, one highlighted series, titles that state the finding, bars from zero, palettes checked for colour-blind readers.
 - **Flow diagrams** of how systems connect, laid out automatically to minimise crossings, with zones, a highlighted path, hover tracing and step-by-step walkthroughs.
 - **Motion with a purpose**: figures draw in once, dots show the direction of flow, and readers who ask for reduced motion, or print, get the final state.
 - **A checker** with no dependencies that renders the report at desktop and phone widths, in print and with reduced motion, and reports overflow, low contrast, colliding labels, network requests and more, with screenshots.
 - **Reports that stay editable.** The content sits at the top of the file with a short guide, so whoever receives it can change it again, with or without this skill.
-- **A brand in one command**: one colour in, a complete checked token set out.
+- **The Hunt & Hackett look, built in**: navy ink, amber as the one accent, Playfair Display over Lato, and the logo in the masthead. There is nothing to configure.
 
 ## Install
 
@@ -48,7 +48,7 @@ git clone https://github.com/cozybear-dev/beautiful-html && cd beautiful-html
 node scripts/package-zip.mjs        # writes dist/beautiful-html.zip
 ```
 
-All three routes work with a private repository; each person needs read access to it. If you fork the repository to set your own brand, use your fork's name in these commands.
+All three routes work with a private repository; each person needs read access to it.
 
 ## Use
 
@@ -61,20 +61,21 @@ The agent picks the skill up from the request. It states the reader and the take
 Useful follow-ups:
 
 - "Make a presentation version of this in the dark scheme."
-- "Use our brand colour #0b6e75."
 - "Add a diagram of how the request reaches the database, and walk through it step by step."
 - "Give me a PDF as well."
 - With a report someone sent you: "Update the September figures in this report."
 
 To run the checker yourself: `node skills/beautiful-html/tools/check.mjs report.html`. It needs Node 18 or later and any Chrome, Edge, Chromium or Brave on the machine.
 
-## Set your brand before you distribute
+## The brand
 
-1. Run `node skills/beautiful-html/tools/brand.mjs --accent "#yourcolour"` and keep the output.
-2. Edit `skills/beautiful-html/brand/DESIGN.md`: your colours in the front matter, and prose that says what your brand is like and what never to do. Paste the token block from step 1 into it.
-3. Commit, and distribute your fork.
+The look is taken from huntandhackett.com and is built into the kits, so every report carries it without any setup:
 
-Agents read the brand file before writing, and paste the tokens into each report.
+- **Colour:** navy `#080630` as ink, and as the page in the dark scheme; amber `#fcaf15` as the one accent, drawn darker on white so it stays legible.
+- **Type:** Playfair Display for headings and big figures, Lato for text and data.
+- **Logo:** the Hunt & Hackett wordmark at the left of the masthead, over an amber rule.
+
+`skills/beautiful-html/brand/DESIGN.md` describes the look for agents and people, and `skills/beautiful-html/brand/logo.svg` is the logo. Changing any of it means building the kits again; see "Building a kit" below.
 
 ## What is in the repository
 
@@ -98,13 +99,14 @@ npm test                 # 180+ tests; browser tests skip if no browser is found
 npm run examples         # check the examples and refresh their previews
 ```
 
-- **A different typeface or default accent for a direction:** edit `src/directions.mjs`, add the family to `scripts/fetch-fonts.mjs` and run `node scripts/fetch-fonts.mjs`, then `npm run build`. Use fonts whose licence allows embedding; the shipped ones are under the SIL Open Font License.
+- **A different typeface or accent:** edit `src/directions.mjs`, add the family to `scripts/fetch-fonts.mjs` and run `node scripts/fetch-fonts.mjs`, then `npm run build`. Use fonts whose licence allows embedding; the shipped ones are under the SIL Open Font License.
 - **Layout rules for a direction:** `src/css/directions/structure/`.
+- **The logo:** `skills/beautiful-html/brand/logo.svg` is built into every kit and shown where a report has `<span class="bh-logo">`; its height is `--bh-logo-height` in `src/css/tokens.css`. Replace the file and run `npm run build`. Without the file the kits carry no logo, and the name inside the span is shown as text.
 - **Colour tokens are generated**, never typed: `tools/brand.mjs` derives them from the accent, and `tests/unit/directions.test.mjs` checks every direction in both schemes.
 
 ## Does it work?
 
-Six briefs were each run twice through Claude Code (Opus 5.5): once with nothing installed, once with the skill.
+Six briefs were each run twice through Claude Code (Opus 5.5): once with nothing installed, once with the skill. These runs were made with the kit's earlier, brand-neutral look and have not been repeated since it took on the Hunt & Hackett look.
 
 | | Without the skill | With the skill |
 |---|---|---|
@@ -125,4 +127,4 @@ Only findings that apply to any HTML report are counted. Two of the six briefs s
 
 ## Licence
 
-The skill is under the MIT licence. Every report embeds fonts under the SIL Open Font License and D3, Observable Plot and d3-sankey under the ISC and BSD licences; the texts are in `skills/beautiful-html/licenses/`.
+The skill is under the MIT licence. Every report embeds fonts under the SIL Open Font License and D3, Observable Plot and d3-sankey under the ISC and BSD licences; the texts are in `skills/beautiful-html/licenses/`. The Hunt & Hackett name and logo belong to Hunt & Hackett and are not covered by the MIT licence.

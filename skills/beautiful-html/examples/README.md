@@ -16,4 +16,4 @@ To open one as a report:
 cat examples/analytical/content.html kit/analytical.kit.html > example.html
 ```
 
-All names, companies and figures in the examples are invented.
+The examples carry the Hunt & Hackett masthead to show the house look. Their subjects are not Hunt & Hackett work: all names, companies and figures in them are invented.

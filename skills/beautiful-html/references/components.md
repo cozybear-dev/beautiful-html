@@ -17,7 +17,7 @@ A section with `class="bh-section bh-split"` puts its text on the left and its o
 ```html
 <header class="bh-header">
   <div class="bh-masthead">
-    <span class="bh-org">Routewise</span>              <!-- text, or an inline <svg> logo -->
+    <span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span>   <!-- the kit's logo; plain text for another organisation -->
     <span class="bh-doc">Quarterly business review, Q3 2026</span>
   </div>
   <h1>Active use rose 38% after onboarding, but two teams are not yet on board</h1>

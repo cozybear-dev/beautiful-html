@@ -13,6 +13,7 @@ WHERE TO EDIT
 STRUCTURE
   <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
   A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  <span class="bh-logo">Name</span> in the masthead is replaced by the logo built into the kit.
   Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
   bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
   bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
@@ -33,7 +34,7 @@ FIGURES
 
 LOOK
   Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
-  To apply a brand, override tokens in <style id="bh-overrides">.
+  The Hunt & Hackett look is built into the kit: leave <style id="bh-overrides"> empty.
   On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
 
 Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
@@ -54,7 +55,7 @@ are in the beautiful-html skill: https://github.com/cozybear-dev/beautiful-html
 <main class="bh-report">
 
 <header class="bh-header">
-  <div class="bh-masthead"><span class="bh-org">Platform engineering</span><span class="bh-doc">Incident review INC-2291, 17 September 2026</span></div>
+  <div class="bh-masthead"><span class="bh-org"><span class="bh-logo">Hunt &amp; Hackett</span></span><span class="bh-doc">Incident review INC-2291, 17 September 2026</span></div>
   <h1>One cache setting took checkout down for 47 minutes</h1>
   <p class="bh-standfirst">A memory limit was lowered on the feature cache. Fourteen minutes later, <strong>no customer could pay</strong>. The fault was four systems away from where it showed.</p>
   <div class="bh-keyfigures">

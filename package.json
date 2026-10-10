@@ -2,7 +2,7 @@
   "name": "beautiful-html",
   "version": "0.1.0",
   "private": true,
-  "description": "Agent skill for well-designed, self-contained HTML reports",
+  "description": "Hunt & Hackett's agent skill for well-designed, self-contained HTML reports",
   "type": "module",
   "license": "MIT",
   "engines": {

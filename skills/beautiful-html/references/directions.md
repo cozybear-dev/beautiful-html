@@ -1,13 +1,13 @@
 # Art directions
 
-A direction is a complete look: typefaces, type scale, layout rules and colour. It is carried by the kit file you assemble with, so the same `content.html` can be produced in any direction.
+A direction is a layout of the one Hunt & Hackett look: its own type scale and layout rules, with the same typefaces, colours and logo. It is carried by the kit file you assemble with, so the same `content.html` can be produced in any direction.
 
 | | `analytical` | `narrative` | `presentation` |
 |---|---|---|---|
 | Use for | Metrics, reviews, operational reports | Findings read start to end, often for customers | Shown on a screen in a meeting |
-| Reference | Financial pages of an annual report | A research institute's briefing paper | An investor-day screen |
-| Type | Source Sans 3 throughout | STIX Two Text; Source Sans 3 for data | Atkinson Hyperlegible Next |
-| Body size | 17 px | 18 px | 20 px |
+| Reference | Review pages of an annual report | A Hunt & Hackett research post | An investor-day screen |
+| Standfirst | Light | Italic | Light |
+| Body size | 18 px | 18 px | 20 px |
 | Layout | Text column plus a side column for notes | Narrower reading column; figures numbered "Figure 1" | Each section fills the screen |
 | Navigation | Sticky section list (4+ sections) | Sticky section list (4+ sections) | "3 / 7" badge; arrow and Page keys move between sections |
 | Scheme | `light` | `light` | `dark` for a dim room, `light` for a bright one |
@@ -43,4 +43,4 @@ The content is kept as it is. Run the check on the new file: a longer line or a 
 
 ## What you may not change
 
-The type scale, spacing scale and layout grid belong to the direction. A report that needs a different look gets a different direction or a brand (see `brand.md`), not local overrides.
+The type scale, spacing scale and layout grid belong to the direction. A report that needs a different look gets a different direction, not local overrides. The typefaces, colours and logo are the same in all three: see `brand.md`.

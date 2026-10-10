@@ -1,4 +1,19 @@
-// Page furniture built by the kit: the section navigator.
+// Page furniture built by the kit: the brand's logo and the section navigator.
+
+// The logo is built into the kit from brand/logo.svg. A report asks for it with
+// <span class="bh-logo">Name</span>: the name becomes the logo's label, and is
+// what a reader sees from a kit that has no logo.
+export function buildLogo(svg) {
+  if (!svg) return;
+  for (const el of document.querySelectorAll('.bh-logo')) {
+    if (el.querySelector('svg, img')) continue;
+    const name = el.textContent.trim();
+    el.innerHTML = svg;
+    const mark = el.firstElementChild;
+    if (mark && name) { mark.setAttribute('role', 'img'); mark.setAttribute('aria-label', name); }
+  }
+}
+
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'section';
 
 // A sticky list of sections, for reports with four or more. Each section may

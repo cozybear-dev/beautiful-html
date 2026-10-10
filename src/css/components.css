@@ -11,22 +11,22 @@
   align-items: baseline;
   gap: var(--bh-space-2) var(--bh-space-5);
   padding-bottom: var(--bh-space-3);
-  border-bottom: 1px solid var(--bh-ink);
+  border-bottom: 2px solid var(--bh-brand);
   font-family: var(--bh-font-data);
   font-size: var(--bh-size-small);
   line-height: var(--bh-leading-snug);
 }
 .bh-org { font-weight: var(--bh-weight-strong); display: inline-flex; align-items: center; gap: var(--bh-space-2); }
-.bh-org svg, .bh-org img { height: 1.25rem; width: auto; display: block; }
+.bh-org svg, .bh-org img { height: var(--bh-logo-height); width: auto; display: block; }
+.bh-logo { display: block; }
 .bh-doc { color: var(--bh-ink-2); }
 .bh-header > h1 { grid-column: wide; margin-top: var(--bh-space-7); max-width: 22em; }
 .bh-standfirst {
   margin-top: var(--bh-space-5);
   font-size: var(--bh-size-lead);
+  font-weight: var(--bh-weight-lead);
   line-height: 1.4;
-  color: var(--bh-ink-2);
 }
-.bh-standfirst strong { color: var(--bh-ink); }
 .bh-header > .bh-meta { margin-top: var(--bh-space-5); }
 .bh-meta { font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); display: grid; gap: var(--bh-space-3); align-content: start; }
 .bh-meta dt { color: var(--bh-ink-3); }
@@ -46,7 +46,7 @@
   border-top: 1px solid var(--bh-ink);
 }
 .bh-section > h2 + * { margin-top: var(--bh-space-5); }
-.bh-lead { font-size: var(--bh-size-lead); line-height: 1.4; }
+.bh-lead { font-size: var(--bh-size-lead); font-weight: var(--bh-weight-lead); line-height: 1.4; }
 
 /* -------------------------------------------------------------- key figures
    A ruled strip, not a row of cards. The number is the content. */

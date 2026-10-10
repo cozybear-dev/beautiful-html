@@ -42,7 +42,6 @@ The first screen answers the reader's question. Do not open with background.
 
 The kit fixes type, spacing and colour, so reports are consistent. What makes one report unlike another is the content: which figures you choose, what is highlighted, the order of the argument, and one or two touches from the subject itself:
 
-- an accent taken from the subject or the brand (see `brand.md`);
 - the subject's own diagram convention: zones for networks, stages for pipelines, a timeline for incidents;
 - the unit and precision its readers use.
 

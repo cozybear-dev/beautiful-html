@@ -1,30 +1,35 @@
 ---
 version: alpha
-name: Neutral
-description: The brand-neutral default for beautiful-html reports. Replace this file with your organisation's brand.
+name: Hunt & Hackett
+description: The Hunt & Hackett look for reports, taken from huntandhackett.com. It is built into the kits, logo included, so a report needs no overrides.
 colors:
-  primary: "#2347d9"
-  ink: "#13161d"
-  ink-muted: "#4b505a"
-  surface: "#f1f3f8"
+  primary: "#fcaf15"
+  primary-drawn: "#bd8100"
+  base: "#080630"
+  secondary: "#4866a0"
+  ink: "#080630"
+  ink-muted: "#4d4f5a"
+  surface: "#f2f3f8"
   ground: "#ffffff"
+  dark: "#1a192f"
+  gray: "#8d8d94"
   good: "#14733f"
   warning: "#8f5600"
   critical: "#bd2f25"
 typography:
   display:
-    fontFamily: Source Sans 3
-    fontWeight: 600
+    fontFamily: Playfair Display
+    fontWeight: 400
   body:
-    fontFamily: Source Sans 3
-    fontSize: 1.0625rem
-    lineHeight: 1.55
+    fontFamily: Lato
+    fontSize: 1.125rem
+    lineHeight: 1.65
   data:
-    fontFamily: Source Sans 3
+    fontFamily: Lato
     fontSize: 0.75rem
 rounded:
-  sm: 2px
-  md: 6px
+  sm: 0px
+  md: 0px
 spacing:
   sm: 8px
   md: 16px
@@ -33,34 +38,43 @@ spacing:
 
 ## Overview
 
-The financial review pages of a well-set annual report: confident, plain and exact. White paper, near-black ink, thin rules that mark where one part ends and the next begins, and one blue used only to point at what matters. The reader came for the numbers and the argument; nothing competes with them.
+A Hunt & Hackett research post, set as a report: a regular-weight Playfair Display headline, Lato text in deep navy on white, square corners, and amber as the one colour that points. The dark scheme is the site's hero: the same headline on navy {colors.base} with the amber at full strength. It should read as a security firm that writes carefully, not as a dashboard.
 
-This is a placeholder. To make it yours, change the colours above, run `node tools/brand.mjs --accent "<your primary colour>"`, keep its output with this file, and rewrite this prose around one specific reference for your brand.
+The kits already carry these colours, the typefaces and the logo. Do not paste token overrides into a report; leave `<style id="bh-overrides">` empty. The tokens were generated with `node tools/brand.mjs --accent "#fcaf15" --base "#080630"`.
 
 ## Colors
 
-One accent, used sparingly.
+One accent, used sparingly, on navy ink.
 
-- **Primary** {colors.primary} marks the one series, bar or path a figure is about, plus links and the rule above a recommendation. It covers less than a tenth of any page.
-- **Ink** {colors.ink} carries all text and the rules that open sections.
+- **Primary** {colors.primary} is the brand amber. It is too light to draw with on white, so on a light page lines, bars, links and rules use the darker {colors.primary-drawn}; on the navy dark scheme the amber is used as it is. It marks the one series, bar or path a figure is about and covers less than a tenth of any page. At full strength it appears in two fixed places only: the logo's ampersand and the rule under the masthead.
+- **Base** {colors.base} is the navy. It is the ink of the light scheme and the page of the dark scheme.
 - **Ink muted** {colors.ink-muted} is for subtitles, notes and axis labels.
 - **Surface** {colors.surface} tints a callout and the zones of a diagram.
-- **Good, warning, critical** mean status and nothing else, and always appear with a shape and a word.
+- **Secondary** {colors.secondary}, the site's steel blue, belongs to illustrations and covers. It is not a data colour.
+- **Good, warning, critical** mean status and nothing else, and always appear with a shape and a word. The site's own status colours ({colors.good} aside) are too light for text on white, so the kit's checked ones are used.
 
-Chart colours are generated from the primary colour and checked for colour-vision deficiencies. They are not chosen by hand.
+Chart colours are generated from the amber and checked for colour-vision deficiencies. They are not chosen by hand.
 
 ## Typography
 
-One family. Headings are semibold and tight; big figures are light; data labels are small with digits that line up. Sizes come from a fixed scale with a clear jump from text to headings.
+Two families, as on the site. Headings and big figures are Playfair Display at regular weight: size does the work, never bold. Text, labels and data are Lato: regular for reading, bold for emphasis, and light for the standfirst and lead paragraphs, as in the site's intros. Figures are lining everywhere, so a number in a headline matches the same number in a key figure. Body text is 18 px on a 1.65 line.
+
+## Logo
+
+The two-line wordmark with the amber ampersand, as on the site. It is `brand/logo.svg`, built into every kit, and goes once at the left of the masthead through the template's `<span class="bh-logo">Hunt &amp; Hackett</span>`, 48 px high, over a rule in the brand amber. The wordmark is navy on white and white on navy; the ampersand is always {colors.primary}.
 
 ## Layout
 
-A reading column of about seventy characters, a side column for notes and definitions, and figures that span both. Everything starts on the same left edge. Space separates; rules mark a new section; there are no cards and no shadows.
+A reading column of about seventy characters, a side column for notes and definitions, and figures that span both. Everything starts on the same left edge. Space separates; rules mark a new section; corners are square; there are no cards and no shadows.
 
 ## Do's and Don'ts
 
 - Do state the finding in every heading and figure title.
-- Do highlight one thing per figure.
-- Don't use the primary colour for decoration, backgrounds or more than one series.
-- Don't add gradients, shadows, rounded cards, icons as bullets, or labels in capitals above headings.
+- Do highlight one thing per figure, in amber.
+- Do use `data-scheme="dark"` when a report is shown on a screen; it is the navy the site opens with.
+- Do keep the template's logo line in the masthead; the logo goes nowhere else.
+- Don't set headings in bold or in capitals.
+- Don't redraw, recolour or resize the logo.
+- Don't use amber for body text, backgrounds or more than one series.
+- Don't add gradients, shadows, rounded corners, icons as bullets, or the site's organic blob shapes.
 - Don't set a size, colour or gap that is not in the kit.

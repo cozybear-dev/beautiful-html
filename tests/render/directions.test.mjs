@@ -39,3 +39,14 @@ test('narrative numbers its figures', { skip }, async () => {
     assert.match(labels[0], /Figure/);
   });
 });
+test('the masthead shows the logo, labelled with the name, in the ink of the scheme', { skip }, async () => {
+  for (const scheme of ['light', 'dark']) {
+    await withPage(specimen('analytical', scheme), DESKTOP, async p => {
+      const [label, text, height, wordmark, ink] = await p.evaluate(`(() => { const s = document.querySelector('.bh-logo > svg'); return [s.getAttribute('aria-label'), s.parentNode.textContent.trim(), Math.round(s.getBoundingClientRect().height), getComputedStyle(s.querySelector('path')).fill, getComputedStyle(document.body).color]; })()`);
+      assert.equal(label, 'Hunt & Hackett');
+      assert.equal(text, '', 'the name is replaced by the logo, not shown beside it');
+      assert.equal(height, 48);
+      assert.equal(wordmark, ink, `${scheme}: the wordmark follows the scheme`);
+    });
+  }
+});

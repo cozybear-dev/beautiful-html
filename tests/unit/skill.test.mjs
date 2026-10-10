@@ -66,5 +66,5 @@ test('the brand file follows the DESIGN.md shape', () => {
 });
 test('licences for everything embedded ship with the skill', () => {
   const files = readdirSync(join(skill, 'licenses'));
-  for (const needed of [/source-?sans/i, /stix/i, /atkinson/i, /d3/i, /plot/i]) assert.ok(files.some(f => needed.test(f)), `no licence file matching ${needed}`);
+  for (const needed of [/lato/i, /playfair/i, /d3/i, /plot/i]) assert.ok(files.some(f => needed.test(f)), `no licence file matching ${needed}`);
 });

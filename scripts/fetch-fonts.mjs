@@ -11,9 +11,8 @@ const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 // dir: folder name here and in google/fonts (ofl/<dir>). query: Google Fonts css2 family spec.
 export const FAMILIES = [
-  { family: 'Source Sans 3', dir: 'sourcesans3', query: 'Source+Sans+3:ital,wght@0,200..900;1,200..900' },
-  { family: 'STIX Two Text', dir: 'stixtwotext', query: 'STIX+Two+Text:ital,wght@0,400..700;1,400..700' },
-  { family: 'Atkinson Hyperlegible Next', dir: 'atkinsonhyperlegiblenext', query: 'Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800' },
+  { family: 'Lato', dir: 'lato', query: 'Lato:ital,wght@0,300;0,400;0,700;1,400' },
+  { family: 'Playfair Display', dir: 'playfairdisplay', query: 'Playfair+Display:ital,wght@0,400..900;1,400..900' },
 ];
 
 async function get(url, headers = {}) {
