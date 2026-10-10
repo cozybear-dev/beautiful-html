@@ -1,0 +1,5 @@
+@font-face { font-family: "Source Sans 3"; src: url(font:sourcesans3/roman.woff2) format("woff2"); font-weight: 200 900; font-style: normal; font-display: block; }
+@font-face { font-family: "Source Sans 3"; src: url(font:sourcesans3/italic.woff2) format("woff2"); font-weight: 200 900; font-style: italic; font-display: block; }
+:root {
+  --bh-font-text: "Source Sans 3", system-ui, sans-serif;
+}

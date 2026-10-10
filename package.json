@@ -1,0 +1,19 @@
+{
+  "name": "beautiful-html",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Agent skill for well-designed, self-contained HTML reports",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "fetch": "node scripts/fetch-vendor.mjs && node scripts/fetch-fonts.mjs",
+    "build": "node scripts/build-kit.mjs",
+    "test": "node --test tests/unit/ tests/render/",
+    "test:unit": "node --test tests/unit/",
+    "zip": "node scripts/package-zip.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}
