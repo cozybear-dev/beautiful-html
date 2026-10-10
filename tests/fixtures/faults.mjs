@@ -21,7 +21,7 @@ export const faults = {
   'console-error': page('<p>Text.</p><script>console.error("boom"); undefinedFunction();</script>'),
   'label-overlap': page(figure(chart('<text x="10" y="20" font-size="12">first label</text><text x="14" y="22" font-size="12">second label</text>'))),
   'clipped-text': page('<div style="width:80px;overflow:hidden;white-space:nowrap">This sentence is much longer than its box allows.</div>'),
-  'small-text': page('<p style="font-size:12px">Body text set far too small to read comfortably.</p>'),
+  'small-text': page('<p style="font-size:13px">Running prose set at thirteen pixels is too small to read comfortably on a screen, and a paragraph this long is clearly body text, not a caption or a label.</p>'),
   'long-lines': page(`<p>${'This is a sentence in a paragraph that runs the full width of the page. '.repeat(8)}</p>`, { style: 'main{max-width:none}' }),
   'figure-no-title': page(`<figure>${goodChart}</figure>`),
   'heading-skip': page('<h4>A heading that skips two levels</h4><p>Text.</p>'),
@@ -35,6 +35,10 @@ export const faults = {
 <script>document.getElementById('d').__bhFlow={nodes:[{id:'a',x:0,y:0,w:100,h:40},{id:'b',x:400,y:0,w:100,h:40},{id:'c',x:200,y:0,w:100,h:40}],
 edges:[{id:'a>b',points:[[100,20],[400,20]]}],crossings:0};</script>`),
 };
+
+// A label under the 11px floor, and a short caption at 13px that is fine.
+export const tinyLabel = page('<p>Text.</p><p style="font-size:9px">Tiny label</p>');
+export const shortCaption = page('<p>Text.</p><p style="font-size:13px">A short caption.</p>');
 
 // A page with a looping animation that does have a pause control.
 export const loopWithPause = page('<figure><h2>Moving dots</h2><div class="dot" role="img" aria-label="dot"></div><button type="button" data-bh-pause>Pause</button><figcaption>Source: test.</figcaption></figure>',
