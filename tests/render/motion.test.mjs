@@ -102,3 +102,11 @@ test('the audit passes a report that uses every kind of motion', { skip }, async
     assert.deepEqual(errors.map(f => `${f.code}: ${f.message}`), [], mode.name);
   }
 });
+
+test('motion: false keeps one figure static while others still animate', { skip }, async () => {
+  await withPage(page('', fig('a') + fig('b', 'Second')), DESKTOP, async p => {
+    await p.evaluate(`(async () => { const d = [1,2,3,4].map(i => ({ m: new Date(Date.UTC(2026, i, 1)), v: i })); BH.line('#a', { data: d, x: 'm', y: 'v', motion: false }); BH.line('#b', { data: d, x: 'm', y: 'v' }); await ${frames(3)}; })()`);
+    assert.equal(await p.evaluate(`document.querySelector('#a').getAnimations({ subtree: true }).length`), 0);
+    assert.ok(await p.evaluate(`document.querySelector('#b').getAnimations({ subtree: true }).length`) > 0);
+  });
+});

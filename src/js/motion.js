@@ -35,6 +35,9 @@ const watch = 'IntersectionObserver' in window ? new IntersectionObserver(entrie
   }
 }, { threshold: 0.15 }) : null;
 
+// Mark a figure as needing no entrance (motion: false on that figure).
+export function skipEntrance(el) { const w = waiting.get(el); if (w) { w.animations.forEach(a => a.cancel()); w.counters.forEach(c => c.finish()); waiting.delete(el); } entered.add(el); }
+
 // Register an entrance for `el`. `build()` returns WAAPI animations (created
 // paused at their first frame) and/or counters; they play when `el` is seen.
 export function enter(el, build) {

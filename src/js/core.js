@@ -2,7 +2,7 @@
 // tokens, mounting, errors, re-rendering and the data table.
 import { formatDate, formatNumber } from './format.js';
 import { parseCsv } from './data.js';
-import { enterFigure, enterPage, settle } from './motion.js';
+import { enterFigure, enterPage, settle, skipEntrance } from './motion.js';
 
 // A one-line stub in the report head collects BH.ready() callbacks before this
 // file loads; they are taken over here.
@@ -88,7 +88,7 @@ export function figure(kind, target, options, draw, { table, inline, after } = {
       if (!inline) describe(el);
       if (table) attachTable(el, table(entry.options));
       if (after) after(el, entry.options, entry);
-      enterFigure(el);
+      if (entry.options.motion === false) skipEntrance(el); else enterFigure(el);
       el.dispatchEvent(new CustomEvent('bh:render', { bubbles: true }));
     } catch (e) {
       showError(el, kind, e);

@@ -24,7 +24,7 @@ BH.flow = (target, o = {}) => {
     // Dots along the edges show direction; they are rebuilt whenever the diagram is redrawn.
     after(el, opts, entry) {
       const stepsCleanup = entry.cleanup;
-      const dots = opts.flow ? flowDots(el) : null;
+      const dots = opts.flow && opts.motion !== false ? flowDots(el) : null;
       entry.cleanup = () => { if (stepsCleanup) stepsCleanup(); if (dots) dots.stop(); };
     },
   });
