@@ -1,0 +1,94 @@
+<!doctype html>
+<!-- EDITING GUIDE
+This report is one self-contained file made with the beautiful-html kit. It works offline
+and can be emailed, printed, presented, and edited again by anyone who receives it.
+
+WHERE TO EDIT
+  The report itself (text, data, figure calls) is everything above the line that starts "<!-- BH-KIT".
+  Below that line are embedded fonts and code on a few very long lines. Never open, print or
+  rewrite that part. Change this file with targeted edits (search and replace), never by
+  writing the whole file again. To read it safely: grep -n "BH-KIT" <file>, then read only the
+  lines before that number.
+
+STRUCTURE
+  <main class="bh-report"> holds one <header class="bh-header"> and <section class="bh-section"> blocks.
+  A section opens with an <h2> that states a finding; data-nav="Short name" names it in the navigator.
+  Parts: bh-masthead, bh-standfirst, bh-meta, bh-keyfigures, bh-figure, bh-callout, bh-table (inside
+  bh-table-wrap), bh-compare, bh-timeline, bh-aside (side note), bh-pair (two figures), bh-status,
+  bh-delta, bh-notes, bh-footer. Everything sits in the text column unless it has class bh-wide.
+
+FIGURES
+  <figure class="bh-figure"><h3 class="bh-figure-title">The finding</h3>
+    <p class="bh-figure-sub">What is measured, and its unit</p><div class="bh-plot" id="fig-x"></div>
+    <figcaption class="bh-figure-note">Source: where the data is from, and when</figcaption></figure>
+  Data sits in <script type="text/csv" id="d-x"> blocks: paste rows, do not retype numbers.
+  Figures are drawn inside BH.ready(() => { ... }) in the script with id="bh-figures":
+    BH.line(target, { data, x, y, series, highlight, unit, annotations: [{ x, text }] })
+    BH.bar(target, { data, x, y, series, mode: 'grouped' | 'stacked', highlight, unit })
+    BH.dot(target, { data, x, y, y2, unit, names })      BH.scatter(target, { data, x, y, label, trend })
+    BH.flow(target, { nodes: [{ id, label, kind, zone }], edges: [{ from, to, label }], zones, highlight, steps, flow })
+    BH.sankey(target, { links: [{ source, target, value }] })    BH.spark(el, { values })    BH.waffle(el, { value })
+  x is the category or date, y is the value. data comes from BH.data('#d-x').
+  A figure that cannot be drawn says why, in its place.
+
+LOOK
+  Colour, type and spacing come from tokens (--bh-*). Never set sizes or colours by hand.
+  To apply a brand, override tokens in <style id="bh-overrides">.
+  On <html>: data-scheme="light" or "dark" sets the scheme; data-bh-motion="off" makes it static.
+
+Full reference, the checker (tools/check.mjs) and the look-swapping tool (tools/rekit.mjs)
+are in the beautiful-html skill.
+-->
+<html lang="en" data-bh-direction="{{DIRECTION}}" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{THE FINDING OF THE REPORT IN ONE SENTENCE}}</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides">
+/* Brand and per-report token overrides. Usually empty. */
+</style>
+</head>
+<body>
+<main class="bh-report">
+
+<header class="bh-header">
+  <div class="bh-masthead">
+    <span class="bh-org">{{WHO THIS IS FROM}}</span>
+    <span class="bh-doc">{{KIND OF DOCUMENT AND PERIOD}}</span>
+  </div>
+  <h1>{{THE FINDING OF THE REPORT IN ONE SENTENCE}}</h1>
+  <p class="bh-standfirst">{{TWO SENTENCES: THE EVIDENCE FOR THE FINDING AND WHAT FOLLOWS FROM IT}}</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>{{READER}}</dd></div>
+    <div><dt>Period</dt><dd>{{PERIOD}}</dd></div>
+    <div><dt>Prepared by</dt><dd>{{AUTHOR}}</dd></div>
+  </dl>
+</header>
+
+<section class="bh-section" data-nav="{{SHORT NAME}}">
+  <h2>{{A FINDING, NOT A TOPIC}}</h2>
+  <p>{{WHAT THE READER NEEDS TO KNOW TO READ THE FIGURE}}</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">{{WHAT THE FIGURE SHOWS, AS A FINDING}}</h3>
+    <p class="bh-figure-sub">{{WHAT IS MEASURED AND ITS UNIT}}</p>
+    <div class="bh-plot" id="fig-1"></div>
+    <figcaption class="bh-figure-note">Source: {{SOURCE AND DATE}}</figcaption>
+  </figure>
+</section>
+
+<footer class="bh-footer">
+  <p>{{WHO PREPARED THIS, FROM WHAT DATA, AND WHEN}}</p>
+</footer>
+
+</main>
+
+<script type="text/csv" id="d-1">
+{{CSV ROWS WITH A HEADER LINE}}
+</script>
+
+<script id="bh-figures">BH.ready(() => {
+  const rows = BH.data('#d-1');
+  BH.line('#fig-1', { data: rows, x: '{{DATE COLUMN}}', y: '{{VALUE COLUMN}}' });
+});</script>

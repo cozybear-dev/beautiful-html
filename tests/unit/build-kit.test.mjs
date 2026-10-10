@@ -7,7 +7,8 @@ test('analytical kit builds within budget and is self-contained', async () => {
   const { path, bytes } = await buildKit('analytical');
   const kit = readFileSync(path, 'utf8');
   assert.ok(bytes < 1_100_000, `kit is ${bytes} bytes`);
-  assert.match(kit.split('\n')[0], /^<!-- BH-KIT v\d+\.\d+\.\d+ analytical:/);
+  assert.equal(kit.split('\n')[0], '');
+  assert.match(kit.split('\n')[1], /^<!-- BH-KIT v\d+\.\d+\.\d+ analytical:/);
   assert.match(kit, /<style id="bh-kit-css">/);
   assert.match(kit, /<script id="bh-kit-js">/);
   assert.ok(kit.trimEnd().endsWith('</html>'));

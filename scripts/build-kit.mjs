@@ -76,7 +76,10 @@ export async function buildKit(direction, { css: extraCss, out } = {}) {
   const { css, fonts } = await buildCss(direction, extraCss);
   if (fonts > FONT_BUDGET) throw new Error(`${direction}: ${fonts} bytes of fonts exceeds the ${FONT_BUDGET} budget`);
   const js = await buildJs(direction);
+  // The kit starts with a line break, so its marker begins a line even when the
+  // content file it is appended to does not end with one.
   const kit = [
+    '',
     `<!-- BH-KIT v${version()} ${direction}: embedded fonts, styles and code. Do not open, print or edit below this line. -->`,
     `<style id="bh-kit-css">${css}</style>`,
     `<script id="bh-kit-js">${js}</script>`,
