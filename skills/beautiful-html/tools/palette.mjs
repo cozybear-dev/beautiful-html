@@ -3,7 +3,7 @@
 // published algorithms: WCAG 2 relative luminance, OKLab (Ottosson, 2020), and
 // the Machado, Oliveira and Fernandes (2009) simulation matrices at full
 // severity. Pure; usable from tests and from the command line:
-//   node scripts/validate-palette.mjs "#1f5fbf,#d9730d,…" "#ffffff"
+//   node tools/palette.mjs "#1f5fbf,#d9730d,…" "#ffffff"
 import { pathToFileURL } from 'node:url';
 
 const toRgb = hex => {
@@ -76,7 +76,7 @@ export function validatePalette(hexes, surface, thresholds = THRESHOLDS) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const [list, surface = '#ffffff'] = process.argv.slice(2);
-  if (!list) { console.log('Usage: node scripts/validate-palette.mjs "#hex,#hex,…" "#surface"'); process.exit(2); }
+  if (!list) { console.log('Usage: node tools/palette.mjs "#hex,#hex,…" "#surface"'); process.exit(2); }
   const { ok, failures } = validatePalette(list.split(',').map(s => s.trim()), surface);
   console.log(ok ? 'PASS' : failures.join('\n'));
   process.exit(ok ? 0 : 1);
@@ -127,4 +127,23 @@ export function suggestPalette(accent, surface, n = 6, thresholds = THRESHOLDS) 
     chosen.push(best);
   }
   return chosen;
+}
+
+// ------------------------------------------------------------------ OKLCH
+
+export function toOklch(hex) {
+  const [L, a, b] = oklab(hex);
+  return { L, C: Math.hypot(a, b), h: (Math.atan2(b, a) * 180 / Math.PI + 360) % 360 };
+}
+// The nearest sRGB colour to an OKLCH value: chroma is reduced until it fits.
+export function fromOklch(L, C, h) {
+  L = Math.min(1, Math.max(0, L));
+  let lo = 0, hi = Math.max(0, C), best = oklchToHex(L, 0, h) || (L > 0.5 ? '#ffffff' : '#000000');
+  const exact = oklchToHex(L, hi, h);
+  if (exact) return exact;
+  for (let i = 0; i < 18; i++) {
+    const mid = (lo + hi) / 2, hex = oklchToHex(L, mid, h);
+    if (hex) { best = hex; lo = mid; } else hi = mid;
+  }
+  return best;
 }

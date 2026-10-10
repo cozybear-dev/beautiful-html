@@ -33,9 +33,9 @@ export function fontBytes(css) {
   return total;
 }
 
-async function buildCss(direction) {
+async function buildCss(direction, extraCss) {
   const parts = CSS_FILES.filter(f => existsSync(join(src, 'css', f))).map(f => read(join(src, 'css', f)));
-  parts.push(read(join(src, 'css', 'directions', `${direction}.css`)));
+  parts.push(extraCss || read(join(src, 'css', 'directions', `${direction}.css`)));
   const all = parts.join('\n');
 
   // @font-face rules go outside the cascade layer; everything else goes inside
@@ -69,9 +69,11 @@ async function buildJs(direction) {
   return safeForInlineScript([...vendor, ours].join('\n'));
 }
 
-export async function buildKit(direction) {
+// `css` and `out` override the direction's own stylesheet and the output path;
+// they exist so candidate looks can be built without touching the real kits.
+export async function buildKit(direction, { css: extraCss, out } = {}) {
   if (!DIRECTIONS.includes(direction)) throw new Error(`unknown direction "${direction}"`);
-  const { css, fonts } = await buildCss(direction);
+  const { css, fonts } = await buildCss(direction, extraCss);
   if (fonts > FONT_BUDGET) throw new Error(`${direction}: ${fonts} bytes of fonts exceeds the ${FONT_BUDGET} budget`);
   const js = await buildJs(direction);
   const kit = [
@@ -83,7 +85,7 @@ export async function buildKit(direction) {
     '',
   ].join('\n');
   mkdirSync(kitDir, { recursive: true });
-  const path = join(kitDir, `${direction}.kit.html`);
+  const path = out || join(kitDir, `${direction}.kit.html`);
   writeFileSync(path, kit);
   const bytes = Buffer.byteLength(kit);
   if (bytes > KIT_BUDGET) throw new Error(`${direction}: kit is ${bytes} bytes, over the ${KIT_BUDGET} budget`);

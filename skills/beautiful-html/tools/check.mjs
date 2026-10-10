@@ -244,8 +244,8 @@ export async function launch(browserPath) {
         }
         return out;
       },
-      async screenshot({ y, height, width }) {
-        const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y, width, height, scale: 1 } });
+      async screenshot({ y, height, width, format = 'png', quality }) {
+        const r = await send('Page.captureScreenshot', { format, quality, captureBeyondViewport: true, clip: { x: 0, y, width, height, scale: 1 } });
         return Buffer.from(r.data, 'base64');
       },
       async pdf({ paper = 'a4', preferCss = true } = {}) {

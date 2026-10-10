@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { contrast, deltaE, simulate, validatePalette } from '../../scripts/validate-palette.mjs';
+import { contrast, deltaE, simulate, validatePalette } from '../../skills/beautiful-html/tools/palette.mjs';
 
 test('contrast matches WCAG reference values', () => {
   assert.equal(Math.round(contrast('#000000', '#ffffff')), 21);
@@ -21,7 +21,7 @@ test('a colour too faint for the ground fails on contrast', () => {
   assert.match(r.failures.join(' '), /contrast/i);
 });
 
-import { suggestPalette } from '../../scripts/validate-palette.mjs';
+import { suggestPalette } from '../../skills/beautiful-html/tools/palette.mjs';
 
 test('suggestPalette builds a passing six-colour palette around an accent, on light and dark grounds', () => {
   for (const [accent, surface] of [['#1f5fbf', '#ffffff'], ['#8fb4ff', '#101418'], ['#b3261e', '#fbfaf7']]) {

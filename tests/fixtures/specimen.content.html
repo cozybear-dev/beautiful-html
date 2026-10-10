@@ -1,0 +1,111 @@
+<!doctype html>
+<!-- EDITING GUIDE: specimen used to compare and test the art directions. -->
+<html lang="en-GB" data-bh-direction="analytical" data-scheme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enterprise churn halved after the April pricing change</title>
+<style>html{visibility:hidden}</style>
+<script>window.BH={q:[],ready(f){this.q.push(f)}}</script>
+<style id="bh-overrides"></style>
+</head>
+<body>
+<main class="bh-report">
+<header class="bh-header">
+  <div class="bh-masthead"><span class="bh-org">Meridian</span><span class="bh-doc">Retention review, third quarter 2026</span></div>
+  <h1>Enterprise churn halved after the April pricing change</h1>
+  <p class="bh-standfirst">Monthly churn among enterprise customers fell from <strong>2.1% to 0.9%</strong> in five months. Smaller customers did not move, so the gain is real but narrow.</p>
+  <dl class="bh-meta">
+    <div><dt>Prepared for</dt><dd>Executive team</dd></div>
+    <div><dt>Period</dt><dd>January to September 2026</dd></div>
+    <div><dt>Prepared by</dt><dd>Revenue analytics</dd></div>
+  </dl>
+  <div class="bh-keyfigures">
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Enterprise churn, September</p><p class="bh-keyfigure-value">0.9<small>%</small> <span id="sp1"></span></p><p class="bh-keyfigure-note"><span class="bh-delta" data-dir="down" data-tone="good">1.2 points</span> since January</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Revenue retained</p><p class="bh-keyfigure-value">1,284<small>k€</small></p><p class="bh-keyfigure-note">a year, at the new rate</p></div>
+    <div class="bh-keyfigure"><p class="bh-keyfigure-label">Customers on the new plan</p><p class="bh-keyfigure-value">412</p><p class="bh-keyfigure-note">of 530 enterprise accounts</p></div>
+  </div>
+</header>
+
+<section class="bh-section" data-nav="What changed">
+  <h2>Only the segment that got the new pricing improved</h2>
+  <p>In April we replaced per-seat pricing with usage bands for enterprise customers. Their churn fell in the first full month and has stayed down. Mid-market and small-business customers kept the old pricing, and their churn is where it was in January.</p>
+  <aside class="bh-aside"><h3>How churn is measured</h3><p>Customers lost in the month, as a share of customers at the start of the month. A downgrade is not counted as a loss.</p></aside>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Enterprise churn fell within a month of the change and stayed down</h3>
+    <p class="bh-figure-sub">Monthly logo churn by segment, %</p>
+    <div class="bh-plot" id="fig-churn"></div>
+    <figcaption class="bh-figure-note">Source: billing system, January to September 2026.</figcaption>
+  </figure>
+  <div class="bh-callout">
+    <p class="bh-callout-label">Recommendation</p>
+    <h3>Extend usage bands to mid-market in the first quarter</h3>
+    <p>If mid-market responds half as well as enterprise did, that retains about 40 customers a year.</p>
+  </div>
+</section>
+
+<section class="bh-section" data-nav="How it works">
+  <h2>The new price is worked out where usage is already measured</h2>
+  <p>No new system was needed. The metering service already recorded usage for reporting; billing now reads the band from it once a month.</p>
+  <figure class="bh-figure">
+    <h3 class="bh-figure-title">Billing reads one number a month from the metering service</h3>
+    <p class="bh-figure-sub">How a usage band reaches an invoice</p>
+    <div class="bh-plot" id="fig-flow"></div>
+    <figcaption class="bh-figure-note">Source: billing architecture note, May 2026.</figcaption>
+  </figure>
+  <div class="bh-table-wrap">
+    <table class="bh-table">
+      <caption>Churn by segment, January and September 2026</caption>
+      <thead><tr><th scope="col">Segment</th><th scope="col" class="bh-num">Customers</th><th scope="col" class="bh-num">January</th><th scope="col" class="bh-num">September</th><th scope="col">Pricing</th></tr></thead>
+      <tbody>
+        <tr data-highlight><th scope="row">Enterprise</th><td class="bh-num">530</td><td class="bh-num">2.1%</td><td class="bh-num">0.9%</td><td><span class="bh-status" data-status="good">Usage bands</span></td></tr>
+        <tr><th scope="row">Mid-market</th><td class="bh-num">1,940</td><td class="bh-num">2.8%</td><td class="bh-num">2.5%</td><td>Per seat</td></tr>
+        <tr><th scope="row">Small business</th><td class="bh-num">6,210</td><td class="bh-num">4.1%</td><td class="bh-num">4.2%</td><td>Per seat</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</main>
+
+<script type="text/csv" id="d-churn">
+month,segment,churn
+2026-01,Enterprise,2.1
+2026-02,Enterprise,2.0
+2026-03,Enterprise,2.2
+2026-04,Enterprise,1.9
+2026-05,Enterprise,1.3
+2026-06,Enterprise,1.1
+2026-07,Enterprise,1.0
+2026-08,Enterprise,1.1
+2026-09,Enterprise,0.9
+2026-01,Mid-market,2.8
+2026-02,Mid-market,2.9
+2026-03,Mid-market,2.7
+2026-04,Mid-market,2.6
+2026-05,Mid-market,2.7
+2026-06,Mid-market,2.5
+2026-07,Mid-market,2.6
+2026-08,Mid-market,2.4
+2026-09,Mid-market,2.5
+2026-01,Small business,4.1
+2026-02,Small business,4.3
+2026-03,Small business,4.0
+2026-04,Small business,4.2
+2026-05,Small business,4.4
+2026-06,Small business,4.1
+2026-07,Small business,4.3
+2026-08,Small business,4.0
+2026-09,Small business,4.2
+</script>
+<script id="bh-figures">BH.ready(() => {
+  const churn = BH.data('#d-churn');
+  BH.spark('#sp1', { values: churn.filter(d => d.segment === 'Enterprise').map(d => d.churn) });
+  BH.line('#fig-churn', { data: churn, x: 'month', y: 'churn', series: 'segment', unit: '%', highlight: 'Enterprise', contextLabel: 'Other segments',
+    annotations: [{ x: '2026-04', series: 'Enterprise', text: 'Pricing change' }] });
+  BH.flow('#fig-flow', { flow: true,
+    zones: [{ id: 'product', label: 'Product' }, { id: 'finance', label: 'Finance systems' }],
+    nodes: [{ id: 'customer', label: 'Customer', kind: 'person' }, { id: 'app', label: 'Application', zone: 'product' }, { id: 'meter', label: 'Metering service', sub: 'usage per account', zone: 'product' },
+      { id: 'billing', label: 'Billing', zone: 'finance' }, { id: 'ledger', label: 'Ledger', kind: 'store', zone: 'finance' }],
+    edges: [{ from: 'customer', to: 'app', label: 'uses' }, { from: 'app', to: 'meter', label: 'records usage' }, { from: 'meter', to: 'billing', label: 'band, monthly' }, { from: 'billing', to: 'ledger', label: 'invoice' }],
+    highlight: ['meter', 'billing'], highlightLabel: 'The new link' });
+});</script>

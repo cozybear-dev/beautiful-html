@@ -2,7 +2,7 @@
 @page { size: A4; margin: 18mm 16mm 20mm; }
 @media print {
   html { font-size: 9.5pt; }
-  body { background: #fff; }
+  html { color-scheme: light; }
   .bh-report { padding-block: 0; grid-template-columns: [full-start wide-start text-start] minmax(0, var(--bh-measure)) [text-end] 2rem [side-start] minmax(0, 1fr) [side-end wide-end full-end]; }
   .bh-report .bh-aside, .bh-header > .bh-meta { grid-column: side; padding: 0; border: 0; }
   .bh-meta { grid-template-columns: none; }

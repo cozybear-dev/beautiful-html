@@ -5,13 +5,16 @@
   "description": "Agent skill for well-designed, self-contained HTML reports",
   "type": "module",
   "license": "MIT",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "fetch": "node scripts/fetch-vendor.mjs && node scripts/fetch-fonts.mjs",
-    "build": "node scripts/build-kit.mjs",
+    "build": "node scripts/make-directions.mjs && node scripts/build-kit.mjs",
     "test": "node --test tests/unit/ tests/render/",
     "test:unit": "node --test tests/unit/",
-    "zip": "node scripts/package-zip.mjs"
+    "zip": "node scripts/package-zip.mjs",
+    "directions": "node scripts/make-directions.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.0"

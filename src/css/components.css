@@ -12,6 +12,7 @@
   gap: var(--bh-space-2) var(--bh-space-5);
   padding-bottom: var(--bh-space-3);
   border-bottom: 1px solid var(--bh-ink);
+  font-family: var(--bh-font-data);
   font-size: var(--bh-size-small);
   line-height: var(--bh-leading-snug);
 }
@@ -27,7 +28,7 @@
 }
 .bh-standfirst strong { color: var(--bh-ink); }
 .bh-header > .bh-meta { margin-top: var(--bh-space-5); }
-.bh-meta { font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); display: grid; gap: var(--bh-space-3); align-content: start; }
+.bh-meta { font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); display: grid; gap: var(--bh-space-3); align-content: start; }
 .bh-meta dt { color: var(--bh-ink-3); }
 .bh-meta dd { color: var(--bh-ink); }
 @media (min-width: 62rem) {
@@ -58,7 +59,7 @@
 }
 .bh-header > .bh-keyfigures { grid-column: wide; }
 .bh-keyfigure { padding: var(--bh-space-3) 0 var(--bh-space-4); border-top: 1px solid var(--bh-rule); min-width: 0; }
-.bh-keyfigure-label { font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
+.bh-keyfigure-label { font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
 .bh-keyfigure-value {
   margin-top: var(--bh-space-1);
   font-family: var(--bh-font-display);
@@ -72,7 +73,7 @@
 }
 .bh-keyfigure-value small { font-size: var(--bh-size-h3); letter-spacing: 0; color: var(--bh-ink-2); }
 .bh-keyfigure-value .bh-spark { margin-left: auto; align-self: center; }
-.bh-keyfigure-note { margin-top: var(--bh-space-1); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
+.bh-keyfigure-note { margin-top: var(--bh-space-1); font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); }
 
 /* A change: direction is the arrow, good or bad is the tone. Never colour alone. */
 .bh-delta { font-weight: var(--bh-weight-strong); white-space: nowrap; color: var(--bh-ink); }
@@ -100,10 +101,10 @@
 }
 .bh-callout > * + * { margin-top: var(--bh-space-3); }
 .bh-callout > h3, .bh-callout > h4 { font-size: var(--bh-size-h3); }
-.bh-callout-label { font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); color: var(--bh-accent-ink); }
+.bh-callout-label { font-family: var(--bh-font-data); font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); color: var(--bh-accent-ink); }
 
 /* Status: a shape and a word, so it never depends on colour. */
-.bh-status { display: inline-flex; align-items: baseline; gap: 0.4em; font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); white-space: nowrap; color: var(--bh-ink); }
+.bh-status { font-family: var(--bh-font-data); display: inline-flex; align-items: baseline; gap: 0.4em; font-size: var(--bh-size-small); font-weight: var(--bh-weight-strong); white-space: nowrap; color: var(--bh-ink); }
 .bh-status::before { content: ""; width: 0.6em; height: 0.6em; flex: none; background: currentColor; align-self: center; }
 .bh-status[data-status="good"] { color: var(--bh-good); }
 .bh-status[data-status="good"]::before { border-radius: 50%; }
@@ -114,7 +115,7 @@
 
 /* ------------------------------------------------------------------- table */
 .bh-table-wrap { overflow-x: auto; margin-top: var(--bh-space-5); }
-.bh-table { width: 100%; border-collapse: collapse; font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); }
+.bh-table { width: 100%; border-collapse: collapse; font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); }
 .bh-table caption { caption-side: top; text-align: left; font-size: var(--bh-size-h3); font-weight: var(--bh-weight-display); font-family: var(--bh-font-display); padding-bottom: var(--bh-space-3); color: var(--bh-ink); }
 .bh-table th, .bh-table td { padding: var(--bh-space-2) var(--bh-space-4) var(--bh-space-2) 0; text-align: left; vertical-align: baseline; }
 .bh-table th:last-child, .bh-table td:last-child { padding-right: 0; }
@@ -140,28 +141,28 @@
 .bh-timeline { list-style: none; padding: 0; margin-top: var(--bh-space-5); }
 .bh-timeline > li { display: grid; grid-template-columns: 5.5rem 1fr; gap: var(--bh-space-4); padding: var(--bh-space-3) 0; border-top: 1px solid var(--bh-rule); margin: 0; }
 .bh-timeline > li:last-child { border-bottom: 1px solid var(--bh-rule); }
-.bh-timeline time, .bh-timeline .bh-when { font-variant-numeric: tabular-nums; color: var(--bh-ink-2); font-size: var(--bh-size-small); padding-top: 0.15em; }
+.bh-timeline time, .bh-timeline .bh-when { font-family: var(--bh-font-data); font-variant-numeric: tabular-nums; color: var(--bh-ink-2); font-size: var(--bh-size-small); padding-top: 0.15em; }
 .bh-timeline > li[data-key] time, .bh-timeline > li[data-key] .bh-when { color: var(--bh-ink); font-weight: var(--bh-weight-strong); }
 .bh-timeline p + p { margin-top: var(--bh-space-1); color: var(--bh-ink-2); font-size: var(--bh-size-small); }
 
 /* --------------------------------------------------- side notes and quotes */
-.bh-aside { font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.bh-aside { font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
 .bh-aside > * + * { margin-top: var(--bh-space-2); }
-.bh-aside h3, .bh-aside h4 { font-size: var(--bh-size-small); color: var(--bh-ink); font-family: var(--bh-font-text); font-weight: var(--bh-weight-strong); }
+.bh-aside h3, .bh-aside h4 { font-size: var(--bh-size-small); color: var(--bh-ink); font-family: var(--bh-font-data); font-weight: var(--bh-weight-strong); }
 @media (max-width: 61.99rem) {
   .bh-aside { padding: var(--bh-space-3) 0; border-block: 1px solid var(--bh-rule); }
 }
 .bh-quote { font-family: var(--bh-font-display); font-size: var(--bh-size-lead); line-height: 1.35; }
-.bh-quote footer { margin-top: var(--bh-space-2); font-family: var(--bh-font-text); font-size: var(--bh-size-small); color: var(--bh-ink-2); }
+.bh-quote footer { margin-top: var(--bh-space-2); font-family: var(--bh-font-data); font-size: var(--bh-size-small); color: var(--bh-ink-2); }
 
 /* ---------------------------------------------------- notes, sources, footer */
-.bh-notes { font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.bh-notes { font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
 .bh-notes > * + * { margin-top: var(--bh-space-2); }
-.bh-notes h3, .bh-notes h4 { font-family: var(--bh-font-text); font-size: var(--bh-size-small); color: var(--bh-ink); }
+.bh-notes h3, .bh-notes h4 { font-family: var(--bh-font-data); font-size: var(--bh-size-small); color: var(--bh-ink); }
 .bh-footer { margin-top: var(--bh-space-8); }
 .bh-footer > * { grid-column: wide; }
 .bh-footer > :first-child { padding-top: var(--bh-space-4); border-top: 1px solid var(--bh-ink); }
-.bh-footer { font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
+.bh-footer { font-family: var(--bh-font-data); font-size: var(--bh-size-small); line-height: 1.5; color: var(--bh-ink-2); }
 .bh-footer > * + * { margin-top: var(--bh-space-2); }
 
 /* ------------------------------------------------------- section navigator
@@ -179,7 +180,7 @@
 .bh-nav > ol { grid-column: wide; list-style: none; margin: 0; padding: 0; display: flex; gap: var(--bh-space-5); overflow-x: auto; scrollbar-width: none; }
 .bh-nav > ol::-webkit-scrollbar { display: none; }
 .bh-nav li { margin: 0; flex: none; }
-.bh-nav a { display: block; padding: var(--bh-space-3) 0; font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.bh-nav a { font-family: var(--bh-font-data); display: block; padding: var(--bh-space-3) 0; font-size: var(--bh-size-small); line-height: var(--bh-leading-snug); color: var(--bh-ink-2); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; }
 .bh-nav a:hover { color: var(--bh-ink); }
 .bh-nav a[aria-current="true"] { color: var(--bh-ink); border-bottom-color: var(--bh-ink); }
 
@@ -190,6 +191,7 @@
   border: 1px solid var(--bh-rule-strong);
   border-radius: var(--bh-radius-1);
   padding: var(--bh-space-1) var(--bh-space-3);
+  font-family: var(--bh-font-data);
   font-size: var(--bh-size-small);
   line-height: var(--bh-leading-snug);
   color: var(--bh-ink);

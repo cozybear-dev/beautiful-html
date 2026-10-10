@@ -41,3 +41,39 @@ export function buildNav() {
     sections.forEach(s => io.observe(s));
   }
 }
+
+// Presentation: one section per screen. Show where you are and let the arrow
+// keys, Page Up and Page Down move between sections.
+export function buildProgress() {
+  const main = document.querySelector('main.bh-report');
+  if (!main || main.querySelector(':scope > .bh-progress')) return;
+  const screens = [...main.querySelectorAll(':scope > .bh-header, :scope > .bh-section')];
+  if (screens.length < 2) return;
+  const badge = document.createElement('div');
+  badge.className = 'bh-progress';
+  badge.setAttribute('aria-hidden', 'true');
+  main.appendChild(badge);
+  let current = 0;
+  const paint = () => { badge.textContent = `${current + 1} / ${screens.length}`; };
+  paint();
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) if (e.isIntersecting) { current = screens.indexOf(e.target); paint(); }
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    screens.forEach(s => io.observe(s));
+  }
+  const go = i => {
+    const next = Math.max(0, Math.min(screens.length - 1, i));
+    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.dataset.bhMotion !== 'off';
+    screens[next].scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+  };
+  document.addEventListener('keydown', e => {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    // Leave the keys alone inside anything that uses them itself.
+    if (e.target.closest && e.target.closest('input, textarea, select, button, summary, a, [contenteditable], .bh-flow-stage, .bh-node, .bh-table-wrap')) return;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); }
+    else if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(0); }
+    else if (e.key === 'End') { e.preventDefault(); go(screens.length - 1); }
+  });
+}

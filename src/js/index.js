@@ -8,7 +8,7 @@ import { drawScatter } from './charts/scatter.js';
 import { drawPlot, drawSpark, drawWaffle } from './charts/small.js';
 import { drawFlow, flowTable } from './flow/render.js';
 import { drawSankey, sankeyTable } from './flow/sankey.js';
-import { buildNav } from './page.js';
+import { buildNav, buildProgress } from './page.js';
 import { enabled, enter, flowDots, loop, settle } from './motion.js';
 
 BH.line = (target, o = {}) => figure('line', target, o, drawLine, { table: opts => tableSpec(opts, ['x', 'series', 'y']) });
@@ -38,5 +38,5 @@ BH.motion = { enabled, enter, loop };
 BH.settle = settle;
 
 window.BH = BH;
-buildNav();
+if (BH.direction === 'presentation') buildProgress(); else buildNav();
 start();

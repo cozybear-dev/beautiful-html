@@ -14,15 +14,6 @@ export const FAMILIES = [
   { family: 'Source Sans 3', dir: 'sourcesans3', query: 'Source+Sans+3:ital,wght@0,200..900;1,200..900' },
   { family: 'STIX Two Text', dir: 'stixtwotext', query: 'STIX+Two+Text:ital,wght@0,400..700;1,400..700' },
   { family: 'Atkinson Hyperlegible Next', dir: 'atkinsonhyperlegiblenext', query: 'Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800' },
-  { family: 'IBM Plex Sans', dir: 'ibmplexsans', query: 'IBM+Plex+Sans:ital,wght@0,100..700;1,100..700' },
-  { family: 'Public Sans', dir: 'publicsans', query: 'Public+Sans:ital,wght@0,100..900;1,100..900' },
-  { family: 'Hanken Grotesk', dir: 'hankengrotesk', query: 'Hanken+Grotesk:ital,wght@0,100..900;1,100..900' },
-  { family: 'Schibsted Grotesk', dir: 'schibstedgrotesk', query: 'Schibsted+Grotesk:ital,wght@0,400..900;1,400..900' },
-  { family: 'Bricolage Grotesque', dir: 'bricolagegrotesque', query: 'Bricolage+Grotesque:opsz,wght@12..96,200..800' },
-  { family: 'Familjen Grotesk', dir: 'familjengrotesk', query: 'Familjen+Grotesk:ital,wght@0,400..700;1,400..700' },
-  { family: 'Literata', dir: 'literata', query: 'Literata:ital,wght@0,200..900;1,200..900' },
-  { family: 'Source Serif 4', dir: 'sourceserif4', query: 'Source+Serif+4:ital,wght@0,200..900;1,200..900' },
-  { family: 'Newsreader', dir: 'newsreader', query: 'Newsreader:ital,wght@0,200..800;1,200..800' },
 ];
 
 async function get(url, headers = {}) {

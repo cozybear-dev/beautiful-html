@@ -1,0 +1,52 @@
+/* presentation: shown on a screen in a meeting.
+   Reference: an investor-day screen. Large type, one idea per screen, strong
+   figure and ground, big numbers. Each section fills the screen; the arrow
+   keys move between them. Printed, each section starts a page. */
+:root {
+  --bh-size-micro: 0.875rem;
+  --bh-size-small: 1rem;
+  --bh-size-body: 1.25rem;
+  --bh-size-h3: 1.5rem;
+  --bh-size-lead: 1.625rem;
+  --bh-size-h2: clamp(2rem, 1.1rem + 3.2vw, 3.25rem);
+  --bh-size-h1: clamp(2.5rem, 1rem + 6.4vw, 5.5rem);
+  --bh-size-figure: clamp(2.75rem, 1.6rem + 4vw, 4.5rem);
+  --bh-measure: 44ch;
+  --bh-side: 23rem;
+  --bh-leading-body: 1.45;
+  --bh-weight-display: 700;
+  --bh-weight-figure: 700;
+  --bh-tracking-display: -0.03em;
+  --bh-tracking-h2: -0.022em;
+}
+@media screen {
+  .bh-report { padding-block: 0; }
+  .bh-report > .bh-header, .bh-report > .bh-section { min-height: 100vh; min-height: 100svh; align-content: center; padding-block: var(--bh-space-7); scroll-snap-align: start; }
+}
+.bh-header > h1 { margin-top: var(--bh-space-6); max-width: 16em; line-height: 1.02; }
+.bh-section > h2 { border-top: 0; padding-top: 0; max-width: 20em; line-height: 1.06; }
+.bh-section > h2 + * { margin-top: var(--bh-space-6); }
+.bh-keyfigure-value { line-height: 1; }
+.bh-keyfigure { padding-block: var(--bh-space-4) var(--bh-space-5); }
+.bh-figure { margin-top: var(--bh-space-6); }
+.bh-nav { display: none; }
+/* Where you are: "3 / 7", fixed in the corner. Built by the kit. */
+.bh-progress {
+  position: fixed;
+  right: var(--bh-space-5);
+  bottom: var(--bh-space-4);
+  z-index: 5;
+  font-family: var(--bh-font-data);
+  font-size: var(--bh-size-small);
+  font-variant-numeric: tabular-nums;
+  color: var(--bh-ink-2);
+  background: var(--bh-ground);
+  padding: var(--bh-space-1) var(--bh-space-3);
+  border: 1px solid var(--bh-rule);
+  border-radius: var(--bh-radius-1);
+}
+@media (max-width: 40rem) { .bh-progress { display: none; } }
+@media print {
+  .bh-progress { display: none !important; }
+  .bh-report > .bh-section { break-before: page; padding-top: 0; }
+}
